@@ -16,6 +16,7 @@
             <div class="logo">Alsx<span>Beats</span></div>
             <ul class="nav-links">
                 <li><a href="#catalogue">Catálogo</a></li>
+                <li><a href="#licenses">Licencias</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
             <button class="btn btn-primary nav-btn" onclick="scrollToSection('contacto')">Comprar</button>
@@ -32,12 +33,12 @@
         <section class="catalogue" id="catalogue">
             <div class="beat-card">
                 <div class="image-container" onclick="playBeat('typelofiryb1video.wav', this.closest('.beat-card'))">
-                    <img src="typelofiryb1.png" alt="R&B Lo-Fi Type Beat">
+                    <img src="typelofiryb1video.png" alt="R&B Lo-Fi Type Beat">
                     <div class="play-overlay"><span>▶</span></div>
                 </div>
                 <h2>Lo-Fi Hip Hop / R&B Type Beat</h2>
-                <p class="price">€24 Basic <span class="divider">|</span> €99 Exclusive</p>
-                <button class="btn btn-secondary" onclick="scrollToSection('contacto');">Comprar</button>
+                <p class="price">€29 Lease <span class="divider">|</span> €299 Exclusive</p>
+                <button class="btn btn-secondary" onclick="scrollToSection('licenses');">Ver Licencias</button>
             </div>
 
             <div class="beat-card">
@@ -46,8 +47,8 @@
                     <div class="play-overlay"><span>▶</span></div>
                 </div>
                 <h2>Dark Drill Beat</h2>
-                <p class="price">€29 Lease <span class="divider">|</span> €99 Exclusive</p>
-                <button class="btn btn-secondary" onclick="scrollToSection('contacto');">Comprar</button>
+                <p class="price">€29 Lease <span class="divider">|</span> €299 Exclusive</p>
+                <button class="btn btn-secondary" onclick="scrollToSection('licenses');">Ver Licencias</button>
             </div>
 
             <div class="beat-card">
@@ -56,121 +57,70 @@
                     <div class="play-overlay"><span>▶</span></div>
                 </div>
                 <h2>R&B Type Beat</h2>
-                <p class="price">€29 Lease <span class="divider">|</span> €99 Exclusive</p>
-                <button class="btn btn-secondary" onclick="scrollToSection('contacto');">Comprar</button>
+                <p class="price">€29 Lease <span class="divider">|</span> €299 Exclusive</p>
+                <button class="btn btn-secondary" onclick="scrollToSection('licenses');">Ver Licencias</button>
             </div>
         </section>
 
-        <section class="contacto-section" id="contacto">
-            <h2>¿Tienes alguna duda o buscas un trabajo exclusivo?</h2>
-            <p class="contacto-subtitle">Hablemos. Estoy disponible para colaboraciones, licencias exclusivas y proyectos musicales a medida.</p>
+        <section class="licenses-section" id="licenses">
+            <h2>Planes de Licencias Flexibles</h2>
+            <p class="licenses-subtitle">Elige el permiso de uso que mejor se adapte al tamaño de tu proyecto musical.</p>
             
-            <div class="contacto-buttons-container">
-                <a href="mailto:alsxbeats@gmail.com" class="btn-contacto-custom btn-email-custom">
-                    <i class="fa-regular fa-envelope"></i> alsxbeats@gmail.com
-                </a>
-                
-                <a href="https://wa.me/34664072714" target="_blank" class="btn-contacto-custom btn-whatsapp-custom">
-                    <i class="fa-brands fa-whatsapp"></i> WhatsApp Business
-                </a>
-            </div>
-        </section>
-    </main>
+            <div class="licenses-grid">
+                <div class="license-card">
+                    <div class="license-header">
+                        <h3>Básica</h3>
+                        <div class="license-price">€29<span> / Lease</span></div>
+                    </div>
+                    <ul class="license-features">
+                        <li><i class="fa-solid fa-file-audio"></i> Archivo <strong>MP3</strong> de alta calidad</li>
+                        <li><i class="fa-solid fa-chart-line"></i> Hasta <strong>50,000</strong> Streams (Spotify/Apple)</li>
+                        <li><i class="fa-solid fa-video"></i> 1 Videoclip Oficial permitido</li>
+                        <li><i class="fa-solid fa-repeat"></i> Uso no exclusivo (el beat sigue a la venta)</li>
+                        <li><i class="fa-solid fa-building-shield"></i> 50% Derechos de Autor (Publishing)</li>
+                    </ul>
+                    <button class="btn btn-secondary-license" onclick="scrollToSection('contacto')">Adquirir Básica</button>
+                </div>
 
-    <footer>
-        <div class="social-links">
-            <a href="#">Facebook</a>
-            <a href="https://www.youtube.com/@AlsxBeatss" target="_blank">YouTube</a>
-            <a href="#">Instagram</a>
-            <a href="#">Twitter</a>
-        </div>
-        <p class="copy">&copy; 2026 AlsxBeats. Todos los derechos reservados.</p>
-    </footer>
+                <div class="license-card popular">
+                    <div class="badge-popular">Más Vendida</div>
+                    <div class="license-header">
+                        <h3>Premium</h3>
+                        <div class="license-price">€49<span> / Lease</span></div>
+                    </div>
+                    <ul class="license-features">
+                        <li><i class="fa-solid fa-file-wave"></i> Archivo <strong>WAV</strong> de estudio sin comprimir</li>
+                        <li><i class="fa-solid fa-chart-line"></i> Hasta <strong>500,000</strong> Streams</li>
+                        <li><i class="fa-solid fa-video"></i> Videoclips ilimitados para promoción</li>
+                        <li><i class="fa-solid fa-radio"></i> Difusión en Radio comercial permitida</li>
+                        <li><i class="fa-solid fa-building-shield"></i> 50% Derechos de Autor (Publishing)</li>
+                    </ul>
+                    <button class="btn btn-primary-license" onclick="scrollToSection('contacto')">Adquirir Premium</button>
+                </div>
 
-    <audio id="player" controls autoplay hidden>
-        <source src="" type="audio/mpeg">
-        Tu navegador no soporta el elemento audio.
-    </audio>
+                <div class="license-card">
+                    <div class="license-header">
+                        <h3>Ilimitada</h3>
+                        <div class="license-price">€99<span> / Lease</span></div>
+                    </div>
+                    <ul class="license-features">
+                        <li><i class="fa-solid fa-folder-open"></i> WAV + <strong>Stems / Pistas Separadas</strong></li>
+                        <li><i class="fa-solid fa-infinity"></i> Streams y Ventas <strong>Ilimitadas</strong></li>
+                        <li><i class="fa-solid fa-guitar"></i> Máxima flexibilidad para mezcla en estudio</li>
+                        <li><i class="fa-solid fa-repeat"></i> Uso no exclusivo ilimitado</li>
+                        <li><i class="fa-solid fa-building-shield"></i> 50% Derechos de Autor (Publishing)</li>
+                    </ul>
+                    <button class="btn btn-secondary-license" onclick="scrollToSection('contacto')">Adquirir Ilimitada</button>
+                </div>
 
-   <script>
-    let temporizadorPreview;
-    let intervaloFade;
-    let tarjetaActual = null;
-
-    function playBeat(beat, cardElement) {
-        const player = document.getElementById('player');
-        const currentOverlay = cardElement.querySelector('.play-overlay span');
-
-        // Si hacemos clic en la misma que ya suena -> Pausar y apagar
-        if (tarjetaActual === cardElement) {
-            if (!player.paused) {
-                limpiarTemporizadores();
-                player.pause();
-                player.volume = 1;
-                cardElement.classList.remove('playing');
-                if (currentOverlay) currentOverlay.textContent = '▶';
-                tarjetaActual = null;
-                return;
-            }
-        }
-
-        // Limpiar cualquier otra tarjeta reproduciendo
-        limpiarTemporizadores();
-        player.pause();
-        player.volume = 1;
-
-        document.querySelectorAll('.beat-card').forEach(card => {
-            card.classList.remove('playing');
-            const overlay = card.querySelector('.play-overlay span');
-            if (overlay) overlay.textContent = '▶';
-        });
-
-        // Activar tarjeta actual
-        cardElement.classList.add('playing');
-        if (currentOverlay) currentOverlay.textContent = '⏸';
-        tarjetaActual = cardElement;
-
-        // Reproducción
-        player.src = beat;
-        player.play();
-
-        // Preview de 10 segundos con Fade Out al final
-        const tiempoPreview = 10; 
-        const tiempoFade = 2;    
-
-        temporizadorPreview = setTimeout(() => {
-            let pasosVolume = 20;
-            let intervaloTiempo = (tiempoFade * 1000) / pasosVolume;
-
-            intervaloFade = setInterval(() => {
-                if (tarjetaActual === cardElement && player.volume > 0.06) {
-                    player.volume -= 0.05;
-                } else {
-                    limpiarTemporizadores();
-                    if (tarjetaActual === cardElement) {
-                        player.pause();
-                        player.volume = 1;
-                        cardElement.classList.remove('playing');
-                        if (currentOverlay) currentOverlay.textContent = '▶';
-                        tarjetaActual = null;
-                    }
-                }
-            }, intervaloTiempo);
-
-        }, (tiempoPreview - tiempoFade) * 1000);
-    }
-
-    function limpiarTemporizadores() {
-        clearTimeout(temporizadorPreview);
-        clearInterval(intervaloFade);
-    }
-
-    function scrollToSection(id) {
-        const section = document.getElementById(id);
-        if (section) {
-            section.scrollIntoView({ behavior: 'smooth' });
-        }
-    }
-</script>
-</body>
-</html>
+                <div class="license-card exclusive">
+                    <div class="license-header">
+                        <h3>Exclusiva</h3>
+                        <div class="license-price">€299<span>+</span></div>
+                    </div>
+                    <ul class="license-features">
+                        <li><i class="fa-solid fa-crown"></i> <strong>Propiedad Exclusiva</strong> (Se retira de la web)</li>
+                        <li><i class="fa-solid fa-box-open"></i> MP3, WAV y Stems / Pistas separadas</li>
+                        <li><i class="fa-solid fa-infinity"></i> Explotación comercial comercial 100% ilimitada</li>
+                        <li><i class="fa-solid fa-file-signature"></i> Contrato de exclusividad firmado a tu nombre</li>
+                        <li><i class
