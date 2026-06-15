@@ -635,3 +635,57 @@ footer {
         width: 50%;
     }
 }
+
+/* --- METADATOS EN PÁGINA DE LICENCIAS --- */
+.selected-beat-header {
+    display: flex;
+    align-items: flex-start; /* Alinea arriba para dar espacio a los datos */
+    gap: 20px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 24px;
+}
+
+.selected-beat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}
+
+.beat-metadata {
+    display: flex;
+    flex-wrap: wrap; /* Si no caben en pantalla de móvil, saltan abajo limpiamente */
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.beat-metadata span {
+    font-size: 12px !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+    background-color: rgba(15, 17, 26, 0.6);
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.beat-metadata span strong {
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 400;
+}
+
+.beat-metadata i {
+    color: #4ecdca; /* Tu celeste de marca AlsxBeats */
+    font-size: 12px;
+}
+
+/* Separación extra para las tarjetas de licencias de abajo */
+.options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 12px; 
+}

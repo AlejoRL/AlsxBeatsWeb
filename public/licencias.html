@@ -73,16 +73,54 @@
     </div>
 
     <script>
-        // Capturar los datos del beat desde la URL
+        // 1. Capturar los datos del beat desde la URL
         const urlParams = new URLSearchParams(window.location.search);
         const beatTitle = urlParams.get('title') || "Tu Beat Seleccionado";
         const beatImg = urlParams.get('img') || "alsxbeatsportada.png";
 
-        // Pintarlos en la pantalla
+        // 2. Pintar título e imagen principales
         document.getElementById('checkout-beat-title').textContent = beatTitle;
         document.getElementById('checkout-beat-img').src = beatImg;
 
-        // Redirigir automáticamente los botones al WhatsApp Business con un mensaje personalizado
+        // 3. Base de datos local para rellenar los metadatos dinámicamente según el título
+        // Aquí puedes cambiar los BPM, Claves o Fechas de tus beats cuando subas más
+        const infoBeats = {
+            "Dark Drill Beat": { fecha: "12 Jun 2026", genero: "Drill, Dark", bpm: "142", clave: "Sub Menor" },
+            "R&B Type Beat": { fecha: "05 Jun 2026", genero: "R&B, Soul", bpm: "95", clave: "Do Mayor" }
+        };
+
+        // Por defecto ponemos los datos del de Lo-Fi que vimos en la imagen
+        let fecha = "10 Abr 2026";
+        let genero = "Lo-Fi, R&B, Hip Hop";
+        let bpm = "90";
+        let clave = "F Menor";
+
+        // Si el título coincide con otro beat de la lista, actualizamos los datos
+        if (infoBeats[beatTitle]) {
+            fecha = infoBeats[beatTitle].fecha;
+            genero = infoBeats[beatTitle].genero;
+            bpm = infoBeats[beatTitle].bpm;
+            clave = infoBeats[beatTitle].clave;
+        }
+
+        // 4. Insertar los bloques de metadatos con sus iconos de FontAwesome
+        const infoContainer = document.querySelector('.selected-beat-info');
+        
+        // Creamos el contenedor de los metadatos
+        const metadataDiv = document.createElement('div');
+        metadataDiv.className = 'beat-metadata';
+        metadataDiv.innerHTML = `
+            <span><i class="fa-regular fa-calendar-days"></i> <strong>Fecha de Lanzamiento:</strong> ${fecha}</span>
+            <span><i class="fa-solid fa-music"></i> <strong>Géneros:</strong> ${genero}</span>
+            <span><i class="fa-solid fa-gauge-high"></i> <strong>BPM:</strong> ${bpm}</span>
+            <span><i class="fa-solid fa-key"></i> <strong>Clave:</strong> ${clave}</span>
+            <span><i class="fa-solid fa-user"></i> <strong>Productor:</strong> AlsxBeats</span>
+        `;
+        
+        // Lo pegamos dentro de la info del beat
+        infoContainer.appendChild(metadataDiv);
+
+        // 5. Redirigir automáticamente los botones al WhatsApp Business con el mensaje personalizado
         const whatsappBase = "https://wa.me/34664072714?text=";
         
         document.getElementById('btn-buy-basic').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, quiero adquirir la Licencia Básica (€29) para el beat: "${beatTitle}"`);
