@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adquirir Licencia - AlsxBeats</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="licencias-page-body">
+
+    <div class="checkout-container">
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Volver al catálogo</a>
+        
+        <div class="selected-beat-header">
+            <img id="checkout-beat-img" src="alsxbeatsportada.png" alt="Portada">
+            <div class="selected-beat-info">
+                <span>Estás comprando la licencia para:</span>
+                <h1 id="checkout-beat-title">Nombre del Beat</h1>
+            </div>
+        </div>
+
+        <div class="options-list">
+            
+            <div class="option-row">
+                <div class="option-details">
+                    <span class="option-name">Licencia Básica (Lease)</span>
+                    <span class="option-meta">Archivo MP3 • Límite 50k streams</span>
+                </div>
+                <div class="option-action">
+                    <span class="option-price">€29</span>
+                    <a id="btn-buy-basic" href="#" target="_blank" class="btn-checkout-sm">Comprar</a>
+                </div>
+            </div>
+
+            <div class="option-row highlighted">
+                <div class="option-details">
+                    <span class="option-name">Licencia Premium (WAV) <span class="badge-sm">Popular</span></span>
+                    <span class="option-meta">Archivo WAV • Límite 500k streams • Radio</span>
+                </div>
+                <div class="option-action">
+                    <span class="option-price">€49</span>
+                    <a id="btn-buy-premium" href="#" target="_blank" class="btn-checkout-sm primary">Comprar</a>
+                </div>
+            </div>
+
+            <div class="option-row">
+                <div class="option-details">
+                    <span class="option-name">Licencia Ilimitada (Stems)</span>
+                    <span class="option-meta">WAV + Pistas Separadas • Streams Ilimitados</span>
+                </div>
+                <div class="option-action">
+                    <span class="option-price">€99</span>
+                    <a id="btn-buy-unlimited" href="#" target="_blank" class="btn-checkout-sm">Comprar</a>
+                </div>
+            </div>
+
+            <div class="option-row gold">
+                <div class="option-details">
+                    <span class="option-name">Adquirir Exclusividad</span>
+                    <span class="option-meta">Contrato de Propiedad • El beat se borra de la web</span>
+                </div>
+                <div class="option-action">
+                    <span class="option-price">€299</span>
+                    <a id="btn-buy-exclusive" href="#" target="_blank" class="btn-checkout-sm gold-btn">Consultar</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Capturar los datos del beat desde la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const beatTitle = urlParams.get('title') || "Tu Beat Seleccionado";
+        const beatImg = urlParams.get('img') || "alsxbeatsportada.png";
+
+        // Pintarlos en la pantalla
+        document.getElementById('checkout-beat-title').textContent = beatTitle;
+        document.getElementById('checkout-beat-img').src = beatImg;
+
+        // Redirigir automáticamente los botones al WhatsApp Business con un mensaje personalizado
+        const whatsappBase = "https://wa.me/34664072714?text=";
+        
+        document.getElementById('btn-buy-basic').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, quiero adquirir la Licencia Básica (€29) para el beat: "${beatTitle}"`);
+        document.getElementById('btn-buy-premium').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, quiero adquirir la Licencia Premium (€49) para el beat: "${beatTitle}"`);
+        document.getElementById('btn-buy-unlimited').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, quiero adquirir la Licencia Ilimitada (€99) para el beat: "${beatTitle}"`);
+        document.getElementById('btn-buy-exclusive').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, me interesa consultar los términos de la Licencia Exclusiva (€299) para el beat: "${beatTitle}"`);
+    </script>
+</body>
+</html>

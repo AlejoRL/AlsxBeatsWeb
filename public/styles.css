@@ -424,214 +424,214 @@ footer {
     100% { opacity: 0.7; transform: scale(1); }
 }
 
-/* --- NUEVA SECCIÓN DE LICENCIAS (PRICING) --- */
-.licenses-section {
-    padding: 80px 24px 40px 24px;
-    margin-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    text-align: center;
-}
-
-.licenses-section h2 {
-    font-size: 36px;
-    font-weight: 700;
-    letter-spacing: -1px;
-    margin-bottom: 12px;
-    background: linear-gradient(135deg, #ffffff 60%, var(--accent-celeste) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.licenses-subtitle {
-    color: var(--text-muted);
-    font-size: 16px;
-    max-width: 600px;
-    margin: 0 auto 48px auto;
-}
-
-.licenses-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 24px;
-    align-items: stretch;
-}
-
-/* Base de la Tarjeta de Licencia */
-.license-card {
-    background-color: var(--bg-card);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    border-radius: 16px;
-    padding: 32px 24px;
+/* --- ESTILOS COMPACTOS PARA LA PÁGINA DE LICENCIAS (CHECKOUT) --- */
+.licencias-page-body {
+    background-color: #0f111a;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    text-align: left;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.checkout-container {
+    background-color: #1e2230;
+    width: 100%;
+    max-width: 650px;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.back-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
     transition: var(--transition-smooth);
-    position: relative;
 }
 
-.license-card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+.back-link:hover {
+    color: var(--text-white);
 }
 
-/* Cabecera de la Tarjeta */
-.license-header h3 {
+/* Encabezado del beat seleccionado */
+.selected-beat-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 24px;
+}
+
+#checkout-beat-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.selected-beat-info span {
+    font-size: 13px;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.selected-beat-info h1 {
     font-size: 22px;
     font-weight: 700;
-    margin-bottom: 12px;
     color: var(--text-white);
 }
 
-.license-price {
-    font-size: 38px;
-    font-weight: 700;
-    color: var(--text-white);
-    margin-bottom: 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    padding-bottom: 16px;
-}
-
-.license-price span {
-    font-size: 14px;
-    color: var(--text-muted);
-    font-weight: 400;
-}
-
-/* Lista de Características / Íconos */
-.license-features {
-    list-style: none;
-    margin-bottom: 32px;
-    flex-grow: 1;
-}
-
-.license-features li {
-    font-size: 14px;
-    color: #e2e8f0;
-    margin-bottom: 16px;
+/* Lista de filas de opciones */
+.options-list {
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
     gap: 12px;
-    line-height: 1.4;
 }
 
-.license-features li i {
-    color: var(--accent-celeste);
-    font-size: 16px;
-    margin-top: 2px;
+.option-row {
+    background-color: rgba(15, 17, 26, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    transition: var(--transition-smooth);
+}
+
+.option-row:hover {
+    border-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(15, 17, 26, 0.8);
+}
+
+/* Detalles del texto */
+.option-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.option-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-white);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.option-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* Acción y precio */
+.option-action {
+    display: flex;
+    align-items: center;
+    gap: 20px;
     flex-shrink: 0;
 }
 
-/* --- TARJETA POPULAR (PREMIUM) --- */
-.license-card.popular {
-    border: 2px solid var(--accent-celeste);
-    box-shadow: 0 4px 20px rgba(78, 205, 196, 0.1);
-    background-color: #1a1e2d;
-}
-
-.license-card.popular:hover {
-    box-shadow: 0 12px 30px rgba(78, 205, 196, 0.2);
-}
-
-.badge-popular {
-    position: absolute;
-    top: -12px;
-    right: 24px;
-    background: linear-gradient(135deg, var(--accent-celeste) 0%, var(--accent-glow) 100%);
-    color: #0f111a;
-    font-size: 11px;
+.option-price {
+    font-size: 18px;
     font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: var(--text-white);
 }
 
-/* --- TARJETA EXCLUSIVA --- */
-.license-card.exclusive {
-    border: 1px solid rgba(255, 215, 0, 0.15);
-}
-
-.license-card.exclusive h3 {
-    background: linear-gradient(135deg, #fff 30%, #ffd700 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.license-card.exclusive li i {
-    color: #ffd700;
-}
-
-.license-card.exclusive:hover {
-    border-color: rgba(255, 215, 0, 0.4);
-    box-shadow: 0 12px 30px rgba(255, 215, 0, 0.1);
-}
-
-/* --- BOTONES DE LAS TARJETAS --- */
-.btn-secondary-license {
-    background: rgba(255, 255, 255, 0.05);
+/* BOTONES MEDIANOS / PEQUEÑOS */
+.btn-checkout-sm {
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.08);
     color: var(--text-white);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
     transition: var(--transition-smooth);
+    text-align: center;
 }
 
-.btn-secondary-license:hover {
-    background: var(--text-white);
-    color: var(--bg-main);
+.btn-checkout-sm:hover {
+    background-color: var(--text-white);
+    color: #0f111a;
 }
 
-.btn-primary-license {
+/* Botón primario (Celeste) */
+.btn-checkout-sm.primary {
     background: linear-gradient(135deg, var(--accent-celeste) 0%, var(--accent-glow) 100%);
     color: #0f111a;
     border: none;
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(78, 205, 196, 0.2);
-    transition: var(--transition-smooth);
 }
 
-.btn-primary-license:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(78, 205, 196, 0.4);
+.btn-checkout-sm.primary:hover {
     filter: brightness(1.1);
+    box-shadow: 0 0 12px rgba(78, 205, 196, 0.3);
 }
 
-.btn-exclusive-license {
+/* Variación recomendada */
+.option-row.highlighted {
+    border: 1px solid rgba(78, 205, 196, 0.3);
+    background-color: rgba(78, 205, 196, 0.03);
+}
+
+.badge-sm {
+    background-color: var(--accent-celeste);
+    color: #0f111a;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+/* Variación oro para exclusiva */
+.option-row.gold {
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.btn-checkout-sm.gold-btn {
     background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
     color: #0f111a;
     border: none;
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: var(--transition-smooth);
 }
 
-.btn-exclusive-license:hover {
-    transform: translateY(-2px);
+.btn-checkout-sm.gold-btn:hover {
     filter: brightness(1.1);
-    box-shadow: 0 6px 18px rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
 }
 
-/* Ajustes Responsive adicionales */
-@media (max-width: 992px) {
-    .licenses-grid {
-        grid-template-columns: repeat(2, 1fr);
+/* Ajuste específico para el botón del catálogo principal */
+.btn-ver-licencias {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 550px) {
+    .option-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
     }
-}
-
-@media (max-width: 650px) {
-    .licenses-grid {
-        grid-template-columns: 1fr;
+    .option-action {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .btn-checkout-sm {
+        width: 50%;
     }
 }
