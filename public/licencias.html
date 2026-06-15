@@ -10,113 +10,208 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="licencias-page-body">
+<body class="fantom-body-bg">
 
-    <div class="checkout-container">
-        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Volver al catálogo</a>
-        
-        <div class="selected-beat-header">
-    <img id="checkout-beat-img" src="alsxbeatsportada.png" alt="Portada">
-    <div class="selected-beat-info">
-        <span>Estás comprando la licencia para:</span>
-        <h1 id="checkout-beat-title">Cargando título...</h1>
-        
-        <div id="wrapper-metadata"></div>
-    </div>
-</div>
-
-        <div class="options-list">
+    <main class="layout-fantom">
+        <aside class="fantom-sidebar">
+            <a href="index.html" class="btn-back-fantom"><i class="fa-solid fa-arrow-left"></i> Volver al catálogo</a>
             
-            <div class="option-row">
-                <div class="option-details">
-                    <span class="option-name">Licencia Básica (Lease)</span>
-                    <span class="option-meta">Archivo MP3 • Límite 50k streams</span>
+            <div class="fantom-cover-wrapper">
+                <img id="checkout-beat-img" src="alsxbeatsportada.png" alt="Portada del Beat">
+                <button class="fantom-play-btn" onclick="toggleSidebarPlay()"><i class="fa-solid fa-play"></i></button>
+            </div>
+
+            <h1 id="checkout-beat-title">Cargando título...</h1>
+            <p class="fantom-producer">Prod. AlsxBeats</p>
+
+            <div class="fantom-meta-list">
+                <div class="meta-item"><span>Publicado:</span> <strong id="meta-fecha">-- --- ----</strong></div>
+                <div class="meta-item"><span>BPM:</span> <strong id="meta-bpm">--</strong></div>
+                <div class="meta-item"><span>Clave:</span> <strong id="meta-clave">--</strong></div>
+                <div class="meta-item"><span>Género:</span> <strong id="meta-genero">--</strong></div>
+            </div>
+        </aside>
+
+        <section class="fantom-content">
+            <div class="fantom-section-header">
+                <h2>Licensing</h2>
+            </div>
+
+            <div class="fantom-licenses-grid">
+                <div class="fantom-card active" onclick="selectLicense('basic', this)">
+                    <div class="card-header-fantom">
+                        <h3>Basic License</h3>
+                        <span class="card-price">€29</span>
+                    </div>
+                    <p class="card-format">MP3</p>
                 </div>
-                <div class="option-action">
-                    <span class="option-price">€29</span>
-                    <a id="btn-buy-basic" href="#" target="_blank" class="btn-checkout-sm">Comprar</a>
+
+                <div class="fantom-card" onclick="selectLicense('premium', this)">
+                    <div class="card-header-fantom">
+                        <h3>Standard License</h3>
+                        <span class="card-price">€49</span>
+                        <span class="badge-fantom">Popular</span>
+                    </div>
+                    <p class="card-format">WAV, MP3</p>
+                </div>
+
+                <div class="fantom-card" onclick="selectLicense('unlimited', this)">
+                    <div class="card-header-fantom">
+                        <h3>Unlimited License</h3>
+                        <span class="card-price">€99</span>
+                    </div>
+                    <p class="card-format">WAV, STEMS, MP3</p>
+                </div>
+
+                <div class="fantom-card" onclick="selectLicense('exclusive', this)">
+                    <div class="card-header-fantom">
+                        <h3>Exclusive</h3>
+                        <span class="card-price">€299</span>
+                    </div>
+                    <p class="card-format">Contrato Completo</p>
                 </div>
             </div>
 
-            <div class="option-row highlighted">
-                <div class="option-details">
-                    <span class="option-name">Licencia Premium (WAV) <span class="badge-sm">Popular</span></span>
-                    <span class="option-meta">Archivo WAV • Límite 500k streams • Radio</span>
+            <div class="fantom-usage-section">
+                <div class="usage-header-row">
+                    <h3>Usage Terms: <span id="selected-license-name">Basic License</span></h3>
+                    <a id="fantom-action-btn" href="#" target="_blank" class="btn-fantom-buy">Comprar ahora</a>
                 </div>
-                <div class="option-action">
-                    <span class="option-price">€49</span>
-                    <a id="btn-buy-premium" href="#" target="_blank" class="btn-checkout-sm primary">Comprar</a>
-                </div>
+
+                <div class="fantom-usage-grid" id="usage-features-container">
+                    </div>
             </div>
+        </section>
+    </main>
 
-            <div class="option-row">
-                <div class="option-details">
-                    <span class="option-name">Licencia Ilimitada (Stems)</span>
-                    <span class="option-meta">WAV + Pistas Separadas • Streams Ilimitados</span>
-                </div>
-                <div class="option-action">
-                    <span class="option-price">€99</span>
-                    <a id="btn-buy-unlimited" href="#" target="_blank" class="btn-checkout-sm">Comprar</a>
-                </div>
-            </div>
+    <audio id="player" controls hidden>
+        <source src="" type="audio/mpeg">
+    </audio>
 
-            <div class="option-row gold">
-                <div class="option-details">
-                    <span class="option-name">Adquirir Exclusividad</span>
-                    <span class="option-meta">Contrato de Propiedad • El beat se borra de la web</span>
-                </div>
-                <div class="option-action">
-                    <span class="option-price">€299</span>
-                    <a id="btn-buy-exclusive" href="#" target="_blank" class="btn-checkout-sm gold-btn">Consultar</a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <script>
-    // 1. Capturar y decodificar correctamente los datos de la URL
+<script>
+    // 1. Capturar y decodificar los datos de la URL
     const urlParams = new URLSearchParams(window.location.search);
     const beatTitle = urlParams.get('title') || "Tu Beat Seleccionado";
     const beatImg = urlParams.get('img') || "alsxbeatsportada.png";
 
-    // 2. Pintar título e imagen principales sin cortar nada
+    // 2. Pintar título e imagen principales en la barra lateral
     document.getElementById('checkout-beat-title').textContent = beatTitle;
     document.getElementById('checkout-beat-img').src = beatImg;
 
-    // 3. Base de datos para asignar los datos según el beat cliqueado
-    // Buscamos coincidencia parcial para que detecte el de Lo-Fi aunque tenga un nombre largo
+    // 3. Mapeo de metadatos dinámicos por Beat
     let fecha = "10 Abr 2026";
     let genero = "Lo-Fi, R&B, Hip Hop";
     let bpm = "90";
     let clave = "F Menor";
+    let audioFile = "typelofiryb1video.wav";
 
     if (beatTitle.includes("Dark Drill")) {
-        fecha = "12 Jun 2026"; genero = "Drill, Dark"; bpm = "142"; clave = "Sub Menor";
+        fecha = "12 Jun 2026"; genero = "Drill, Dark"; bpm = "142"; clave = "Sub Menor"; audioFile = "beat2.mp3";
     } else if (beatTitle.includes("R&B Type")) {
-        fecha = "05 Jun 2026"; genero = "R&B, Soul"; bpm = "95"; clave = "Do Mayor";
+        fecha = "05 Jun 2026"; genero = "R&B, Soul"; bpm = "95"; clave = "Do Mayor"; audioFile = "beat3.mp3";
     }
 
-    // 4. Inyectar las etiquetas de metadatos dentro de su propio contenedor exclusivo
-    const metadataContainer = document.getElementById('wrapper-metadata');
-    metadataContainer.className = 'beat-metadata';
-    metadataContainer.innerHTML = `
-        <span><i class="fa-regular fa-calendar-days"></i> <strong>Fecha de Lanzamiento:</strong> ${fecha}</span>
-        <span><i class="fa-solid fa-music"></i> <strong>Géneros:</strong> ${genero}</span>
-        <span><i class="fa-solid fa-gauge-high"></i> <strong>BPM:</strong> ${bpm}</span>
-        <span><i class="fa-solid fa-key"></i> <strong>Clave:</strong> ${clave}</span>
-        <span><i class="fa-solid fa-user"></i> <strong>Productor:</strong> AlsxBeats</span>
-    `;
+    document.getElementById('meta-fecha').textContent = fecha;
+    document.getElementById('meta-genero').textContent = genero;
+    document.getElementById('meta-bpm').textContent = bpm;
+    document.getElementById('meta-clave').textContent = clave;
 
-    // 5. Enlaces de tus botones hacia WhatsApp Business
-    const whatsappBase = "https://wa.me/34664072714?text=";
-    
-    // Si tienes IDs asignados en tus botones de licencias, esto los mapea automáticamente:
-    if(document.getElementById('btn-buy-basic')) {
-        document.getElementById('btn-buy-basic').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, quiero adquirir la Licencia Básica (€29) para el beat: "${beatTitle}"`);
-        document.getElementById('btn-buy-premium').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, quiero adquirir la Licencia Premium (€49) para el beat: "${beatTitle}"`);
-        document.getElementById('btn-buy-unlimited').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, quiero adquirir la Licencia Ilimitada (€99) para el beat: "${beatTitle}"`);
-        document.getElementById('btn-buy-exclusive').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, me interesa consultar los términos de la Licencia Exclusiva (€299) para el beat: "${beatTitle}"`);
+    // 4. Base de datos de los términos de uso (Lo que cambia al hacer clic)
+    const termsData = {
+        basic: {
+            name: "Basic License (€29)",
+            whatsappText: `Hola AlsxBeats, quiero adquirir la Licencia Básica (€29) para el beat: "${beatTitle}"`,
+            features: [
+                { icon: "fa-solid fa-file-audio", label: "Archivos Incluidos", value: "MP3 de Alta Calidad" },
+                { icon: "fa-solid fa-cloud-arrow-down", label: "Distribución", value: "Hasta 50,000 streams" },
+                { icon: "fa-solid fa-video", label: "Vídeos Musicales", value: "1 Vídeo no monetizado" },
+                { icon: "fa-solid fa-radio", label: "Radiodifusión", value: "Sin derechos de radio" },
+                { icon: "fa-solid fa-gavel", label: "Derechos", value: "Uso no exclusivo (Lease)" }
+            ]
+        },
+        premium: {
+            name: "Standard License (€49)",
+            whatsappText: `Hola AlsxBeats, quiero adquirir la Licencia Premium (€49) para el beat: "${beatTitle}"`,
+            features: [
+                { icon: "fa-solid fa-file-audio", label: "Archivos Incluidos", value: "WAV + MP3 HQ" },
+                { icon: "fa-solid fa-cloud-arrow-down", label: "Distribución", value: "Hasta 500,000 streams" },
+                { icon: "fa-solid fa-video", label: "Vídeos Musicales", value: "Vídeos monetizados" },
+                { icon: "fa-solid fa-radio", label: "Radiodifusión", value: "Uso básico en Radio" },
+                { icon: "fa-solid fa-gavel", label: "Derechos", value: "Uso no exclusivo" }
+            ]
+        },
+        unlimited: {
+            name: "Unlimited License (€99)",
+            whatsappText: `Hola AlsxBeats, quiero adquirir la Licencia Ilimitada (€99) para el beat: "${beatTitle}"`,
+            features: [
+                { icon: "fa-solid fa-file-audio", label: "Archivos Incluidos", value: "WAV + STEMS (Pistas separadas)" },
+                { icon: "fa-solid fa-cloud-arrow-down", label: "Distribución", value: "Streams Ilimitados" },
+                { icon: "fa-solid fa-video", label: "Vídeos Musicales", value: "Uso comercial ilimitado" },
+                { icon: "fa-solid fa-radio", label: "Radiodifusión", value: "Radios comerciales permitidas" },
+                { icon: "fa-solid fa-gavel", label: "Derechos", value: "Uso comercial ilimitado" }
+            ]
+        },
+        exclusive: {
+            name: "Exclusive Purchase (€299)",
+            whatsappText: `Hola AlsxBeats, me interesa consultar los términos de la Licencia Exclusiva (€299) para el beat: "${beatTitle}"`,
+            features: [
+                { icon: "fa-solid fa-file-signature", label: "Archivos Incluidos", value: "Todos los formatos + Stems HD" },
+                { icon: "fa-solid fa-cloud-arrow-down", label: "Distribución", value: "Explotación Comercial Absoluta" },
+                { icon: "fa-solid fa-eye-slash", label: "Retirada de la Web", value: "El beat se borra de las tiendas" },
+                { icon: "fa-solid fa-signature", label: "Propiedad", value: "Contrato firmado exclusivo" },
+                { icon: "fa-solid fa-gavel", label: "Derechos", value: "Derechos Exclusivos Totales" }
+            ]
+        }
+    };
+
+    // 5. Lógica de selección interactiva
+    function selectLicense(licenseKey, element) {
+        document.querySelectorAll('.fantom-card').forEach(card => card.classList.remove('active'));
+        element.classList.add('active');
+
+        const currentData = termsData[licenseKey];
+        document.getElementById('selected-license-name').textContent = currentData.name;
+        
+        const whatsappBase = "https://wa.me/34664072714?text=";
+        document.getElementById('fantom-action-btn').href = whatsappBase + encodeURIComponent(currentData.whatsappText);
+
+        const container = document.getElementById('usage-features-container');
+        container.innerHTML = "";
+        currentData.features.forEach(feat => {
+            container.innerHTML += `
+                <div class="usage-item">
+                    <i class="${feat.icon}"></i>
+                    <div class="usage-text">
+                        <span>${feat.label}</span>
+                        <strong>${feat.value}</strong>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // Cargar la licencia básica por defecto al entrar
+    document.addEventListener("DOMContentLoaded", () => {
+        const firstCard = document.querySelector('.fantom-card');
+        if(firstCard) selectLicense('basic', firstCard);
+    });
+
+    // 6. Lógica del reproductor lateral integrado
+    function toggleSidebarPlay() {
+        const player = document.getElementById('player');
+        const playBtnIcon = document.querySelector('.fantom-play-btn i');
+        
+        if (!player.src.includes(audioFile)) {
+            player.src = audioFile;
+        }
+
+        if (player.paused) {
+            player.play();
+            playBtnIcon.className = "fa-solid fa-pause";
+        } else {
+            player.pause();
+            playBtnIcon.className = "fa-solid fa-play";
+        }
     }
 </script>
 </body>
