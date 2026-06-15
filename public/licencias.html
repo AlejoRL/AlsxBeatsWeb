@@ -30,6 +30,24 @@
                 <div class="meta-item"><span>Clave:</span> <strong id="meta-clave">--</strong></div>
                 <div class="meta-item"><span>Género:</span> <strong id="meta-genero">--</strong></div>
             </div>
+
+            <div class="fantom-sidebar-section">
+                <h3>Tags</h3>
+                <div class="fantom-tags-container" id="sidebar-tags">
+                    </div>
+            </div>
+
+            <div class="fantom-sidebar-section">
+                <h3>About</h3>
+                <p class="fantom-about-text" id="sidebar-about">
+                    </p>
+            </div>
+
+            <div class="fantom-report-container">
+                <button class="btn-fantom-report" onclick="alert('Gracias por reportar. Revisaremos el track a la brevedad.')">
+                    <i class="fa-solid fa-flag"></i> Report Track
+                </button>
+            </div>
         </aside>
 
         <section class="fantom-content">
@@ -88,131 +106,55 @@
         <source src="" type="audio/mpeg">
     </audio>
 
-<script>
-    // 1. Capturar y decodificar los datos de la URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const beatTitle = urlParams.get('title') || "Tu Beat Seleccionado";
-    const beatImg = urlParams.get('img') || "alsxbeatsportada.png";
+<footer>
+        </footer>
 
-    // 2. Pintar título e imagen principales en la barra lateral
-    document.getElementById('checkout-beat-title').textContent = beatTitle;
-    document.getElementById('checkout-beat-img').src = beatImg;
-
-    // 3. Mapeo de metadatos dinámicos por Beat
-    let fecha = "10 Abr 2026";
-    let genero = "Lo-Fi, R&B, Hip Hop";
-    let bpm = "90";
-    let clave = "F Menor";
-    let audioFile = "typelofiryb1video.wav";
-
-    if (beatTitle.includes("Dark Drill")) {
-        fecha = "12 Jun 2026"; genero = "Drill, Dark"; bpm = "142"; clave = "Sub Menor"; audioFile = "beat2.mp3";
-    } else if (beatTitle.includes("R&B Type")) {
-        fecha = "05 Jun 2026"; genero = "R&B, Soul"; bpm = "95"; clave = "Do Mayor"; audioFile = "beat3.mp3";
-    }
-
-    document.getElementById('meta-fecha').textContent = fecha;
-    document.getElementById('meta-genero').textContent = genero;
-    document.getElementById('meta-bpm').textContent = bpm;
-    document.getElementById('meta-clave').textContent = clave;
-
-    // 4. Base de datos de los términos de uso (Lo que cambia al hacer clic)
-    const termsData = {
-        basic: {
-            name: "Basic License (€29)",
-            whatsappText: `Hola AlsxBeats, quiero adquirir la Licencia Básica (€29) para el beat: "${beatTitle}"`,
-            features: [
-                { icon: "fa-solid fa-file-audio", label: "Archivos Incluidos", value: "MP3 de Alta Calidad" },
-                { icon: "fa-solid fa-cloud-arrow-down", label: "Distribución", value: "Hasta 50,000 streams" },
-                { icon: "fa-solid fa-video", label: "Vídeos Musicales", value: "1 Vídeo no monetizado" },
-                { icon: "fa-solid fa-radio", label: "Radiodifusión", value: "Sin derechos de radio" },
-                { icon: "fa-solid fa-gavel", label: "Derechos", value: "Uso no exclusivo (Lease)" }
-            ]
-        },
-        premium: {
-            name: "Standard License (€49)",
-            whatsappText: `Hola AlsxBeats, quiero adquirir la Licencia Premium (€49) para el beat: "${beatTitle}"`,
-            features: [
-                { icon: "fa-solid fa-file-audio", label: "Archivos Incluidos", value: "WAV + MP3 HQ" },
-                { icon: "fa-solid fa-cloud-arrow-down", label: "Distribución", value: "Hasta 500,000 streams" },
-                { icon: "fa-solid fa-video", label: "Vídeos Musicales", value: "Vídeos monetizados" },
-                { icon: "fa-solid fa-radio", label: "Radiodifusión", value: "Uso básico en Radio" },
-                { icon: "fa-solid fa-gavel", label: "Derechos", value: "Uso no exclusivo" }
-            ]
-        },
-        unlimited: {
-            name: "Unlimited License (€99)",
-            whatsappText: `Hola AlsxBeats, quiero adquirir la Licencia Ilimitada (€99) para el beat: "${beatTitle}"`,
-            features: [
-                { icon: "fa-solid fa-file-audio", label: "Archivos Incluidos", value: "WAV + STEMS (Pistas separadas)" },
-                { icon: "fa-solid fa-cloud-arrow-down", label: "Distribución", value: "Streams Ilimitados" },
-                { icon: "fa-solid fa-video", label: "Vídeos Musicales", value: "Uso comercial ilimitado" },
-                { icon: "fa-solid fa-radio", label: "Radiodifusión", value: "Radios comerciales permitidas" },
-                { icon: "fa-solid fa-gavel", label: "Derechos", value: "Uso comercial ilimitado" }
-            ]
-        },
-        exclusive: {
-            name: "Exclusive Purchase (€299)",
-            whatsappText: `Hola AlsxBeats, me interesa consultar los términos de la Licencia Exclusiva (€299) para el beat: "${beatTitle}"`,
-            features: [
-                { icon: "fa-solid fa-file-signature", label: "Archivos Incluidos", value: "Todos los formatos + Stems HD" },
-                { icon: "fa-solid fa-cloud-arrow-down", label: "Distribución", value: "Explotación Comercial Absoluta" },
-                { icon: "fa-solid fa-eye-slash", label: "Retirada de la Web", value: "El beat se borra de las tiendas" },
-                { icon: "fa-solid fa-signature", label: "Propiedad", value: "Contrato firmado exclusivo" },
-                { icon: "fa-solid fa-gavel", label: "Derechos", value: "Derechos Exclusivos Totales" }
-            ]
-        }
-    };
-
-    // 5. Lógica de selección interactiva
-    function selectLicense(licenseKey, element) {
-        document.querySelectorAll('.fantom-card').forEach(card => card.classList.remove('active'));
-        element.classList.add('active');
-
-        const currentData = termsData[licenseKey];
-        document.getElementById('selected-license-name').textContent = currentData.name;
+    <script>
+        // 3. Mapeo de metadatos dinámicos por Beat
+        let fecha = "10 Abr 2026";
+        let genero = "Lo-Fi, R&B, Hip Hop";
+        let bpm = "90";
+        let clave = "F Menor";
+        let audioFile = "typelofiryb1video.wav";
         
-        const whatsappBase = "https://wa.me/34664072714?text=";
-        document.getElementById('fantom-action-btn').href = whatsappBase + encodeURIComponent(currentData.whatsappText);
+        // Variables nuevas para Tags y Descripción
+        let tags = ["#lofi", "#rnb", "#vintage"];
+        let aboutText = "BUY 2 GET 1 FREE! Purchase a license to distribute to streaming platforms. For inquiries or custom structures, reach out via WhatsApp.";
 
-        const container = document.getElementById('usage-features-container');
-        container.innerHTML = "";
-        currentData.features.forEach(feat => {
-            container.innerHTML += `
-                <div class="usage-item">
-                    <i class="${feat.icon}"></i>
-                    <div class="usage-text">
-                        <span>${feat.label}</span>
-                        <strong>${feat.value}</strong>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    // Cargar la licencia básica por defecto al entrar
-    document.addEventListener("DOMContentLoaded", () => {
-        const firstCard = document.querySelector('.fantom-card');
-        if(firstCard) selectLicense('basic', firstCard);
-    });
-
-    // 6. Lógica del reproductor lateral integrado
-    function toggleSidebarPlay() {
-        const player = document.getElementById('player');
-        const playBtnIcon = document.querySelector('.fantom-play-btn i');
-        
-        if (!player.src.includes(audioFile)) {
-            player.src = audioFile;
+        if (beatTitle.includes("Dark Drill")) {
+            fecha = "12 Jun 2026"; 
+            genero = "Drill, Dark"; 
+            bpm = "142"; 
+            clave = "Sub Menor"; 
+            audioFile = "beat2.mp3";
+            tags = ["#drill", "#dark", "#centralcee"];
+            aboutText = "Hard hitting dark drill instrumental. Perfect for aggressive flows. Tracks are delivered instantly after contract processing.";
+        } else if (beatTitle.includes("R&B Type")) {
+            fecha = "05 Jun 2026"; 
+            genero = "R&B, Soul"; 
+            bpm = "95"; 
+            clave = "Do Mayor"; 
+            audioFile = "beat3.mp3";
+            tags = ["#rnb", "#soul", "#smooth"];
+            aboutText = "Smooth R&B vibe tailored for melodic singers and late night driving tracks. High quality stems available in premium options.";
         }
 
-        if (player.paused) {
-            player.play();
-            playBtnIcon.className = "fa-solid fa-pause";
-        } else {
-            player.pause();
-            playBtnIcon.className = "fa-solid fa-play";
+        // Inyectar metadatos base
+        document.getElementById('meta-fecha').textContent = fecha;
+        document.getElementById('meta-genero').textContent = genero;
+        document.getElementById('meta-bpm').textContent = bpm;
+        document.getElementById('meta-clave').textContent = clave;
+
+        // INYECTAR NUEVOS VALORES DINÁMICOS
+        const tagsContainer = document.getElementById('sidebar-tags');
+        if(tagsContainer) {
+            tagsContainer.innerHTML = tags.map(tag => `<span class="fantom-tag-pill">${tag}</span>`).join('');
         }
-    }
-</script>
+
+        const aboutContainer = document.getElementById('sidebar-about');
+        if(aboutContainer) {
+            aboutContainer.textContent = aboutText;
+        }
+    </script>
 </body>
 </html>
