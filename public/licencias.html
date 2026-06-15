@@ -16,12 +16,14 @@
         <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Volver al catálogo</a>
         
         <div class="selected-beat-header">
-            <img id="checkout-beat-img" src="alsxbeatsportada.png" alt="Portada">
-            <div class="selected-beat-info">
-                <span>Estás comprando la licencia para:</span>
-                <h1 id="checkout-beat-title">Nombre del Beat</h1>
-            </div>
-        </div>
+    <img id="checkout-beat-img" src="alsxbeatsportada.png" alt="Portada">
+    <div class="selected-beat-info">
+        <span>Estás comprando la licencia para:</span>
+        <h1 id="checkout-beat-title">Cargando título...</h1>
+        
+        <div id="wrapper-metadata"></div>
+    </div>
+</div>
 
         <div class="options-list">
             
@@ -73,60 +75,49 @@
     </div>
 
     <script>
-        // 1. Capturar los datos del beat desde la URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const beatTitle = urlParams.get('title') || "Tu Beat Seleccionado";
-        const beatImg = urlParams.get('img') || "alsxbeatsportada.png";
+    // 1. Capturar y decodificar correctamente los datos de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const beatTitle = urlParams.get('title') || "Tu Beat Seleccionado";
+    const beatImg = urlParams.get('img') || "alsxbeatsportada.png";
 
-        // 2. Pintar título e imagen principales
-        document.getElementById('checkout-beat-title').textContent = beatTitle;
-        document.getElementById('checkout-beat-img').src = beatImg;
+    // 2. Pintar título e imagen principales sin cortar nada
+    document.getElementById('checkout-beat-title').textContent = beatTitle;
+    document.getElementById('checkout-beat-img').src = beatImg;
 
-        // 3. Base de datos local para rellenar los metadatos dinámicamente según el título
-        // Aquí puedes cambiar los BPM, Claves o Fechas de tus beats cuando subas más
-        const infoBeats = {
-            "Dark Drill Beat": { fecha: "12 Jun 2026", genero: "Drill, Dark", bpm: "142", clave: "Sub Menor" },
-            "R&B Type Beat": { fecha: "05 Jun 2026", genero: "R&B, Soul", bpm: "95", clave: "Do Mayor" }
-        };
+    // 3. Base de datos para asignar los datos según el beat cliqueado
+    // Buscamos coincidencia parcial para que detecte el de Lo-Fi aunque tenga un nombre largo
+    let fecha = "10 Abr 2026";
+    let genero = "Lo-Fi, R&B, Hip Hop";
+    let bpm = "90";
+    let clave = "F Menor";
 
-        // Por defecto ponemos los datos del de Lo-Fi que vimos en la imagen
-        let fecha = "10 Abr 2026";
-        let genero = "Lo-Fi, R&B, Hip Hop";
-        let bpm = "90";
-        let clave = "F Menor";
+    if (beatTitle.includes("Dark Drill")) {
+        fecha = "12 Jun 2026"; genero = "Drill, Dark"; bpm = "142"; clave = "Sub Menor";
+    } else if (beatTitle.includes("R&B Type")) {
+        fecha = "05 Jun 2026"; genero = "R&B, Soul"; bpm = "95"; clave = "Do Mayor";
+    }
 
-        // Si el título coincide con otro beat de la lista, actualizamos los datos
-        if (infoBeats[beatTitle]) {
-            fecha = infoBeats[beatTitle].fecha;
-            genero = infoBeats[beatTitle].genero;
-            bpm = infoBeats[beatTitle].bpm;
-            clave = infoBeats[beatTitle].clave;
-        }
+    // 4. Inyectar las etiquetas de metadatos dentro de su propio contenedor exclusivo
+    const metadataContainer = document.getElementById('wrapper-metadata');
+    metadataContainer.className = 'beat-metadata';
+    metadataContainer.innerHTML = `
+        <span><i class="fa-regular fa-calendar-days"></i> <strong>Fecha de Lanzamiento:</strong> ${fecha}</span>
+        <span><i class="fa-solid fa-music"></i> <strong>Géneros:</strong> ${genero}</span>
+        <span><i class="fa-solid fa-gauge-high"></i> <strong>BPM:</strong> ${bpm}</span>
+        <span><i class="fa-solid fa-key"></i> <strong>Clave:</strong> ${clave}</span>
+        <span><i class="fa-solid fa-user"></i> <strong>Productor:</strong> AlsxBeats</span>
+    `;
 
-        // 4. Insertar los bloques de metadatos con sus iconos de FontAwesome
-        const infoContainer = document.querySelector('.selected-beat-info');
-        
-        // Creamos el contenedor de los metadatos
-        const metadataDiv = document.createElement('div');
-        metadataDiv.className = 'beat-metadata';
-        metadataDiv.innerHTML = `
-            <span><i class="fa-regular fa-calendar-days"></i> <strong>Fecha de Lanzamiento:</strong> ${fecha}</span>
-            <span><i class="fa-solid fa-music"></i> <strong>Géneros:</strong> ${genero}</span>
-            <span><i class="fa-solid fa-gauge-high"></i> <strong>BPM:</strong> ${bpm}</span>
-            <span><i class="fa-solid fa-key"></i> <strong>Clave:</strong> ${clave}</span>
-            <span><i class="fa-solid fa-user"></i> <strong>Productor:</strong> AlsxBeats</span>
-        `;
-        
-        // Lo pegamos dentro de la info del beat
-        infoContainer.appendChild(metadataDiv);
-
-        // 5. Redirigir automáticamente los botones al WhatsApp Business con el mensaje personalizado
-        const whatsappBase = "https://wa.me/34664072714?text=";
-        
+    // 5. Enlaces de tus botones hacia WhatsApp Business
+    const whatsappBase = "https://wa.me/34664072714?text=";
+    
+    // Si tienes IDs asignados en tus botones de licencias, esto los mapea automáticamente:
+    if(document.getElementById('btn-buy-basic')) {
         document.getElementById('btn-buy-basic').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, quiero adquirir la Licencia Básica (€29) para el beat: "${beatTitle}"`);
         document.getElementById('btn-buy-premium').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, quiero adquirir la Licencia Premium (€49) para el beat: "${beatTitle}"`);
         document.getElementById('btn-buy-unlimited').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, quiero adquirir la Licencia Ilimitada (€99) para el beat: "${beatTitle}"`);
         document.getElementById('btn-buy-exclusive').href = whatsappBase + encodeURIComponent(`Hola AlsxBeats, me interesa consultar los términos de la Licencia Exclusiva (€299) para el beat: "${beatTitle}"`);
-    </script>
+    }
+</script>
 </body>
 </html>
