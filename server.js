@@ -24,3 +24,4 @@ app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo con éxito.`);
     console.log(`🌍 Accede de forma local en: http://localhost:${PORT}`);
 });
+
