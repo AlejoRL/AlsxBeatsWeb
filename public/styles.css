@@ -1,0 +1,425 @@
+:root {
+    --bg-main: #0f111a;          /* Fondo oscuro profundo y limpio */
+    --bg-card: #1e2230;          /* Fondo de tarjetas ligeramente más claro */
+    --accent-celeste: #4ecdc4;   /* Celeste nítido e iluminado */
+    --accent-glow: #2980b9;      /* Azul para degradados */
+    --text-white: #ffffff;
+    --text-muted: #a0aec0;       /* Gris claro nítido para textos secundarios */
+    --font-family: 'Inter', sans-serif;
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-main);
+    color: var(--text-white);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- HEADER & NAV --- */
+header {
+    background: rgba(15, 17, 26, 0.85);
+    backdrop-filter: blur(12px); /* Efecto Glassmorphism moderno */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.logo span {
+    color: var(--accent-celeste);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 32px;
+}
+
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    transition: var(--transition-smooth);
+}
+
+.nav-links a:hover {
+    color: var(--text-white);
+    text-shadow: 0 0 10px rgba(78, 205, 196, 0.4);
+}
+
+/* --- BOTONES INTERACTIVOS --- */
+.btn {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-celeste) 0%, var(--accent-glow) 100%);
+    color: #0f111a;
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 205, 196, 0.5);
+    filter: brightness(1.1);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-white);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    margin-top: 12px;
+}
+
+.btn-secondary:hover {
+    background: var(--text-white);
+    color: var(--bg-main);
+    transform: translateY(-2px);
+}
+
+.btn-large {
+    padding: 16px 40px;
+    font-size: 16px;
+    border-radius: 12px;
+}
+
+/* --- HERO SECTION --- */
+main {
+    flex: 1;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 64px 24px;
+}
+
+.hero {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 80px auto;
+}
+
+.hero h1 {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #ffffff 40%, var(--accent-celeste) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    color: var(--text-muted);
+    font-size: 18px;
+    margin-bottom: 32px;
+    font-weight: 400;
+}
+
+/* --- CATÁLOGO DE BEATS --- */
+.catalogue {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+}
+
+.beat-card {
+    background-color: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 20px;
+    border-radius: 16px;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.beat-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(78, 205, 196, 0.3);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Contenedor de Imagen y efecto Hover de Play */
+.image-container {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    aspect-ratio: 1 / 1;
+    background: #151824; /* Fallback si la imagen no carga */
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-smooth);
+}
+
+.beat-card:hover .image-container img {
+    transform: scale(1.05);
+}
+
+.play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 17, 26, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.play-overlay span {
+    font-size: 40px;
+    color: var(--accent-celeste);
+    transform: scale(0.8);
+    transition: var(--transition-smooth);
+}
+
+.beat-card:hover .play-overlay {
+    opacity: 1;
+}
+
+.beat-card:hover .play-overlay span {
+    transform: scale(1);
+}
+
+/* Textos internos de la Tarjeta */
+.beat-card h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.price {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.divider {
+    color: rgba(255, 255, 255, 0.15);
+    margin: 0 6px;
+}
+
+/* --- FOOTER --- */
+footer {
+    background-color: #0b0d14;
+    padding: 40px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    margin-top: auto;
+}
+
+.social-links {
+    margin-bottom: 16px;
+}
+
+.social-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    margin: 0 16px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+}
+
+.social-links a:hover {
+    color: var(--accent-celeste);
+}
+
+.copy {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Idealmente harías un menú hamburguesa aquí */
+    }
+    .hero h1 {
+        font-size: 38px;
+    }
+    .hero p {
+        font-size: 16px;
+    }
+}
+
+/* --- NUEVA SECCIÓN DE CONTACTO MINIMALISTA --- */
+.contacto-section {
+    padding: 80px 24px;
+    margin-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.contacto-section h2 {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #ffffff 60%, var(--accent-celeste) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.contacto-subtitle {
+    color: var(--text-muted);
+    font-size: 16px;
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+}
+
+/* Contenedor flexible para alinear los dos botones de forma elegante */
+.contacto-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Base estética común para ambos botones */
+.btn-contacto-custom {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px; /* Espacio entre el logo y el texto */
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+
+.btn-contacto-custom i {
+    font-size: 20px; /* Tamaño del logo */
+}
+
+/* Estilo personalizado para el botón de Correo (Vibe del sitio) */
+.btn-email-custom {
+    background-color: var(--bg-card);
+    color: var(--text-white);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.btn-email-custom:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-celeste);
+    box-shadow: 0 0 15px rgba(78, 205, 196, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Estilo premium e iluminado para el botón de WhatsApp Business */
+.btn-whatsapp-custom {
+    background: linear-gradient(100deg, #25D366 0%, #128C7E 80%);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+}
+
+.btn-whatsapp-custom:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Ajuste responsive para pantallas móviles */
+@media (max-width: 600px) {
+    .contacto-buttons-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .btn-contacto-custom {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* --- ESTADO DE REPRODUCCIÓN ACTIVA (PREVIEW) --- */
+
+.beat-card {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.4s ease, 
+                border-color 0.4s ease, 
+                background-color 0.3s ease;
+    border: 2px solid transparent !important;
+}
+
+/* Tarjeta activa: Brillo de neón ultra-suave, fino y elegante */
+.beat-card.playing,
+.beat-card.playing:hover {
+    border-color: var(--accent-celeste) !important; /* Usamos tu celeste #4ecdc4 suave */
+    background-color: #141722 !important; /* Un tono sutilmente más oscuro para contraste */
+    transform: translateY(-4px) scale(1.01) !important; /* Elevación muy leve */
+    
+    /* Una sola capa de sombra ultra difuminada y transparente (Muy smooth) */
+    box-shadow: 0 8px 24px rgba(78, 205, 196, 0.15) !important;
+}
+
+/* Mantiene el overlay de reproducción visible de fondo */
+.beat-card.playing .play-overlay {
+    opacity: 1 !important;
+    background: rgba(15, 17, 26, 0.5) !important; /* Menos opaco para ver la carátula */
+}
+
+/* El icono de pausa parpadea de forma muy tenue, sin saltos bruscos */
+.beat-card.playing .play-overlay span {
+    animation: pulsoAudioSuave 2s infinite ease-in-out;
+    color: var(--text-white) !important; /* Icono blanco limpio */
+}
+
+/* Animación sutil de respiración en vez de un pulso agresivo */
+@keyframes pulsoAudioSuave {
+    0% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 0.7; transform: scale(1); }
+}

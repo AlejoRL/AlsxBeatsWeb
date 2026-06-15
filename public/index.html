@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlsxBeats</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <div class="logo">Alsx<span>Beats</span></div>
+            <ul class="nav-links">
+                <li><a href="#catalogue">Catálogo</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+            <button class="btn btn-primary nav-btn" onclick="scrollToSection('contacto')">Comprar</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Premium Trap, R&B & Urban Genres Production</h1>
+            <p>Descubre y compra beats de alta calidad con licencias flexibles.</p>
+            <button class="btn btn-primary btn-large" onclick="scrollToSection('catalogue')">Escuchar Catálogo</button>
+        </section>
+
+        <section class="catalogue" id="catalogue">
+            <div class="beat-card">
+                <div class="image-container" onclick="typebeatlofirybhiphop1.png".wav', this.closest('.beat-card'))">
+                    <img src="typelofiryb1.png" alt="R&B Lo-Fi Type Beat">
+                    <div class="play-overlay"><span>▶</span></div>
+                </div>
+                <h2>Lo-Fi Hip Hop / R&B Type Beat</h2>
+                <p class="price">$29 Lease <span class="divider">|</span> $99 Exclusive</p>
+                <button class="btn btn-secondary" onclick="scrollToSection('contacto');">Comprar</button>
+            </div>
+
+            <div class="beat-card">
+                <div class="image-container" onclick="playBeat('beat2.mp3', this.closest('.beat-card'))">
+                    <img src="alsxbeatsportada.png" alt="Dark Drill Beat">
+                    <div class="play-overlay"><span>▶</span></div>
+                </div>
+                <h2>Dark Drill Beat</h2>
+                <p class="price">$29 Lease <span class="divider">|</span> $99 Exclusive</p>
+                <button class="btn btn-secondary" onclick="scrollToSection('contacto');">Comprar</button>
+            </div>
+
+            <div class="beat-card">
+                <div class="image-container" onclick="playBeat('beat3.mp3', this.closest('.beat-card'))">
+                    <img src="parentaladvisory.png" alt="R&B Type Beat">
+                    <div class="play-overlay"><span>▶</span></div>
+                </div>
+                <h2>R&B Type Beat</h2>
+                <p class="price">$29 Lease <span class="divider">|</span> $99 Exclusive</p>
+                <button class="btn btn-secondary" onclick="scrollToSection('contacto');">Comprar</button>
+            </div>
+        </section>
+
+        <section class="contacto-section" id="contacto">
+            <h2>¿Tienes alguna duda o buscas un trabajo exclusivo?</h2>
+            <p class="contacto-subtitle">Hablemos. Estoy disponible para colaboraciones, licencias exclusivas y proyectos musicales a medida.</p>
+            
+            <div class="contacto-buttons-container">
+                <a href="mailto:alsxbeats@gmail.com" class="btn-contacto-custom btn-email-custom">
+                    <i class="fa-regular fa-envelope"></i> alsxbeats@gmail.com
+                </a>
+                
+                <a href="https://wa.me/34664072714" target="_blank" class="btn-contacto-custom btn-whatsapp-custom">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp Business
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="#">Facebook</a>
+            <a href="https://www.youtube.com/@AlsxBeatss" target="_blank">YouTube</a>
+            <a href="#">Instagram</a>
+            <a href="#">Twitter</a>
+        </div>
+        <p class="copy">&copy; 2026 AlsxBeats. Todos los derechos reservados.</p>
+    </footer>
+
+    <audio id="player" controls autoplay hidden>
+        <source src="" type="audio/mpeg">
+        Tu navegador no soporta el elemento audio.
+    </audio>
+
+   <script>
+    let temporizadorPreview;
+    let intervaloFade;
+    let tarjetaActual = null;
+
+    function playBeat(beat, cardElement) {
+        const player = document.getElementById('player');
+        const currentOverlay = cardElement.querySelector('.play-overlay span');
+
+        // Si hacemos clic en la misma que ya suena -> Pausar y apagar
+        if (tarjetaActual === cardElement) {
+            if (!player.paused) {
+                limpiarTemporizadores();
+                player.pause();
+                player.volume = 1;
+                cardElement.classList.remove('playing');
+                if (currentOverlay) currentOverlay.textContent = '▶';
+                tarjetaActual = null;
+                return;
+            }
+        }
+
+        // Limpiar cualquier otra tarjeta reproduciendo
+        limpiarTemporizadores();
+        player.pause();
+        player.volume = 1;
+
+        document.querySelectorAll('.beat-card').forEach(card => {
+            card.classList.remove('playing');
+            const overlay = card.querySelector('.play-overlay span');
+            if (overlay) overlay.textContent = '▶';
+        });
+
+        // Activar tarjeta actual
+        cardElement.classList.add('playing');
+        if (currentOverlay) currentOverlay.textContent = '⏸';
+        tarjetaActual = cardElement;
+
+        // Reproducción
+        player.src = beat;
+        player.play();
+
+        // Preview de 10 segundos con Fade Out al final
+        const tiempoPreview = 10; 
+        const tiempoFade = 2;    
+
+        temporizadorPreview = setTimeout(() => {
+            let pasosVolume = 20;
+            let intervaloTiempo = (tiempoFade * 1000) / pasosVolume;
+
+            intervaloFade = setInterval(() => {
+                if (tarjetaActual === cardElement && player.volume > 0.06) {
+                    player.volume -= 0.05;
+                } else {
+                    limpiarTemporizadores();
+                    if (tarjetaActual === cardElement) {
+                        player.pause();
+                        player.volume = 1;
+                        cardElement.classList.remove('playing');
+                        if (currentOverlay) currentOverlay.textContent = '▶';
+                        tarjetaActual = null;
+                    }
+                }
+            }, intervaloTiempo);
+
+        }, (tiempoPreview - tiempoFade) * 1000);
+    }
+
+    function limpiarTemporizadores() {
+        clearTimeout(temporizadorPreview);
+        clearInterval(intervaloFade);
+    }
+
+    function scrollToSection(id) {
+        const section = document.getElementById(id);
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
+</body>
+</html>
