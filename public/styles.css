@@ -436,7 +436,7 @@ footer {
     left:0;
 
     width:100%;
-    height:110px;
+    height:125px;
     opacity:0;
     visibility:hidden;
 
@@ -458,12 +458,12 @@ footer {
 
 .wave-row{
     display:flex;
-    height:45px;
+    height:55px;
     width:100%;
     align-items:center;
     justify-content:center;
     gap:15px;
-    padding:0 50px;
+    padding:10 50px;
     border-bottom:1px solid rgba(255,255,255,.05);
 }
 
