@@ -1032,3 +1032,86 @@ transition:.3s ease;
 .licensing-panel{
     min-height: 625px; /* ajusta hasta igualarlo */
 }
+
+/* =========================
+   MOBILE - LICENCIAS
+========================= */
+@media (max-width: 768px){
+
+    .page-wrapper{
+        flex-direction: column;
+        gap:20px;
+    }
+
+    .sidebar{
+        width:100%;
+    }
+
+    .main-col{
+        width:100%;
+        max-width:100%;
+        margin-top:0;
+        padding-bottom:160px;
+    }
+
+    .panel{
+        padding:20px;
+    }
+
+    .licensing-header{
+        flex-direction:column;
+        gap:20px;
+        align-items:flex-start;
+    }
+
+    .checkout-box{
+        width:100%;
+        text-align:left;
+    }
+
+    .checkout-actions{
+        width:100%;
+    }
+
+    .cart-btn-license,
+    .buy-btn-license{
+        flex:1;
+    }
+
+    .license-grid{
+        grid-template-columns:1fr;
+    }
+
+    .terms-grid{
+        grid-template-columns:1fr;
+        gap:12px;
+    }
+
+    .more-beats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .bottom-row{
+        flex-direction:column;
+        gap:15px;
+        padding:10px;
+    }
+
+    .player-left,
+    .player-right{
+        width:100%;
+    }
+
+    .player-right .cart-btn{
+        width:100%;
+        justify-content:center;
+    }
+
+    #waveform{
+        width:100%;
+    }
+   .main-col{
+        margin-top:0 !important;
+    }
+}
+}
