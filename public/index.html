@@ -23,69 +23,84 @@
     </header>
 
     <main>
-        <section class="hero">
-            <h1>Premium Trap, R&B & Urban Genres Production</h1>
-            <p>Descubre y compra beats de alta calidad con licencias flexibles.</p>
-            <button class="btn btn-primary btn-large" onclick="scrollToSection('catalogue')">Escuchar Catálogo</button>
-        </section>
 
-        <section class="catalogue" id="catalogue">
-            <div class="beat-card">
-                <div class="image-container" onclick="playBeat('typelofiryb1video.wav', this.closest('.beat-card'))">
-                    <img src="typelofiryb1.png" alt="R&B Lo-Fi Type Beat">
-                    <div class="play-overlay"><span>▶</span></div>
-                </div>
-                <h2>[FREE] Lo-Fi Hip Hop / R&B Type Beat - "Vintage Memories" (Prod. AlsxBeats)</h2>
-                <p class="price">€29 Lease <span class="divider">|</span> €299 Exclusive</p>
-                <a href="#" onclick="window.open('licencias.html?title=' + encodeURIComponent('[FREE] Lo-Fi Hip Hop / R&B Type Beat - \'Vintage Memories\' (Prod. AlsxBeats)') + '&img=typelofiryb1.png', '_blank'); return false;" class="btn btn-secondary btn-ver-licencias">Ver Licencias</a>
-            </div>
+<section class="hero">
+    <h1>Premium Trap, R&B & Urban Genres Production</h1>
+    <p>Descubre y compra beats de alta calidad con licencias flexibles.</p>
+    <button class="btn btn-primary btn-large"
+            onclick="scrollToSection('catalogue')">
+        Escuchar Catálogo
+    </button>
+</section>
 
+<section class="catalogue" id="catalogue">
+
+        <div class="beat-card">
+    <button class="like-btn">❤️</button> 
+<div class="image-container" onclick="playBeat('typelofiryb1video.wav', this.closest('.beat-card'))">
+        <img src="typelofiryb1.png" alt="R&B Lo-Fi Type Beat">
+        <div class="play-overlay"><span>▶</span></div>
+    </div>
+    
+<div class="card-info">
+    <h2>[FREE] Lo-Fi Hip Hop / R&B Type Beat - "Vintage Memories" (Prod. AlsxBeats)</h2>
+    <p class="price">€29 Lease <span class="divider">|</span> €299 Exclusive</p>
+    <a href="#"
+onclick="window.open(
+'licencias.html?title=' +
+encodeURIComponent('[FREE] Lo-Fi Hip Hop / R&B Type Beat - Vintage Memories') +
+'&img=typelofiryb1.png' +
+'&audio=typelofiryb1video.wav',
+'_blank'
+); return false;"
+class="btn btn-secondary btn-ver-licencias">
+Ver Licencias
+</a>
+    </div>
+</div>
             <div class="beat-card">
-                <div class="image-container" onclick="playBeat('beat2.mp3', this.closest('.beat-card'))">
+    <button class="like-btn">❤️</button> <div class="image-container" onclick="playBeat('beat2.mp3', this.closest('.beat-card'))">
                     <img src="alsxbeatsportada.png" alt="Dark Drill Beat">
                     <div class="play-overlay"><span>▶</span></div>
                 </div>
                 <h2>Dark Drill Beat</h2>
                 <p class="price">€29 Lease <span class="divider">|</span> €299 Exclusive</p>
-                <a href="#" onclick="window.open('licencias.html?title=' + encodeURIComponent('Dark Drill Beat') + '&img=alsxbeatsportada.png', '_blank'); return false;" class="btn btn-secondary btn-ver-licencias">Ver Licencias</a>
+                <a href="#" onclick="window.open('licencias.html?title=' + encodeURIComponent('Dark Drill Beat') + '&img=alsxbeatsportada.png' + '&audio=beat2.mp3', '_blank'); return false;" class="btn btn-secondary btn-ver-licencias">Ver Licencias</a>
             </div>
 
             <div class="beat-card">
-                <div class="image-container" onclick="playBeat('beat3.mp3', this.closest('.beat-card'))">
+                <button class="like-btn">❤️</button> 
+<div class="image-container" onclick="playBeat('beat3.mp3', this.closest('.beat-card'))">
                     <img src="parentaladvisory.png" alt="R&B Type Beat">
                     <div class="play-overlay"><span>▶</span></div>
                 </div>
                 <h2>R&B Type Beat</h2>
                 <p class="price">€29 Lease <span class="divider">|</span> €299 Exclusive</p>
-                <a href="#" onclick="window.open('licencias.html?title=' + encodeURIComponent('R&B Type Beat') + '&img=parentaladvisory.png', '_blank'); return false;" class="btn btn-secondary btn-ver-licencias">Ver Licencias</a>
+                <a href="#" onclick="window.open('licencias.html?title=' + encodeURIComponent('R&B Type Beat') + '&img=parentaladvisory.png' + '&audio=beat3.mp3', '_blank'); return false;" class="btn btn-secondary btn-ver-licencias">Ver Licencias</a>
             </div>
-        </section>
-
+</section>
         <section class="contacto-section" id="contacto">
             <h2>¿Tienes alguna duda o buscas un trabajo exclusivo?</h2>
             <p class="contacto-subtitle">Hablemos. Estoy disponible para colaboraciones, licencias exclusivas y proyectos musicales a medida.</p>
             
             <div class="contacto-buttons-container">
                 <a href="mailto:alsxbeats@gmail.com" class="btn-contacto-custom btn-email-custom">
-                    <i class="fa-regular fa-envelope"></i> alsxbeats@gmail.com
-                </a>
-                
+                    <i class="fa-regular fa-envelope"></i> alsxbeats@gmail.com</a>
                 <a href="https://wa.me/34664072714" target="_blank" class="btn-contacto-custom btn-whatsapp-custom">
-                    <i class="fa-brands fa-whatsapp"></i> WhatsApp Business
-                </a>
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp Business</a>
             </div>
         </section>
-    </main>
-
-   <footer>
-    <div class="social-links">
-        <a href="#">Facebook</a>
-        <a href="https://www.youtube.com/@AlsxBeatss" target="_blank">YouTube</a>
-        <a href="#">Instagram</a>
-        <a href="#">Twitter</a>
-    </div>
-    <p class="copy">&copy; 2026 AlsxBeats. Todos los derechos reservados.</p>
-</footer>
+    
+</main>
+    <footer>
+        <div class="social-links">
+            <a href="#">Facebook</a>
+            <a href="https://www.youtube.com/@AlsxBeatss" target="_blank">YouTube</a>
+            <a href="#">Instagram</a>
+            <a href="#">Twitter</a>
+        </div>
+        <p class="copy">&copy; 2026 AlsxBeats. Todos los derechos reservados.</p>
+    </footer>
 
     <audio id="player" controls autoplay hidden>
         <source src="" type="audio/mpeg">
@@ -165,6 +180,21 @@
             section.scrollIntoView({ behavior: 'smooth' });
         }
     }
+        document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            // Previene que se abra el reproductor al hacer clic en el corazón
+            e.stopPropagation(); 
+            
+            btn.classList.toggle('liked');
+            
+            // Opcional: Feedback visual extra
+            if (btn.classList.contains('liked')) {
+                btn.textContent = '❤️';
+            } else {
+                btn.textContent = '❤️'; 
+            }
+        });
+    });
 </script>
 </body>
 </html>
