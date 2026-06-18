@@ -397,10 +397,19 @@ footer {
 
 /* Estilo del texto del productor */
 .producer-text {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    color: #fff;
-    }
+    color:#a0aec0;
+    letter-spacing:.8px;
+    margin:0;
+       }
+
+.producer-label{
+    font-size:10px;
+    color:#6b7280;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+}
 
 @keyframes neonGlow {
     0% {
@@ -418,12 +427,12 @@ footer {
 }
 /* Estilo del icono verificado */
 .verified-icon {
-    color: #4ecdc4 !important; /* Tu color celeste para que resalte */
-    font-size: 14px; /* Un poco más pequeño para que no opaque al texto */
+    color:#4ecdc4 !important;
+    font-size: 12px;
 }
 .music-player{
     position:fixed;
-    bottom:-120;
+    bottom:-120px;
     left:0;
 
     width:100%;
@@ -737,12 +746,16 @@ white-space:nowrap;
     background: rgba(255, 71, 87, 0.2);
     transform: scale(1.2);
 }
+
 .licensing-header{
     display:flex;
     justify-content:space-between;
-    align-items:center;
-    margin-bottom:30px;
-    gap:30px;
+    align-items:flex-start;
+
+    margin-bottom:20px;
+    padding-bottom:20px;
+
+    border-bottom:1px solid #1c232b;
 }
 
 .checkout-box{
@@ -750,14 +763,14 @@ white-space:nowrap;
 }
 
 .total-label{
-    color:var(--text-muted);
-    font-size:14px;
+    font-size:13px;
+    color:#8b95a7;
 }
 
 .total-price{
-    font-size:32px;
+    font-size:24px;
     font-weight:800;
-    margin:5px 0 15px;
+    margin:2px 0 10px;
 }
 
 .checkout-actions{
@@ -767,16 +780,21 @@ white-space:nowrap;
 
 .cart-btn-license,
 .buy-btn-license{
-    border:none;
-    border-radius:10px;
-    padding:12px 20px;
-    font-weight:700;
-    cursor:pointer;
-}
+    height:40px;
+    padding:0 22px;
 
+    border:none;
+    border-radius:8px;
+
+    font-size:14px;
+    font-weight:600;
+
+    cursor:pointer;
+    transition:.25s ease;
+}
 .cart-btn-license{
-    background:#1c232b;
-    color:white;
+    background:#252d37;
+    color:#fff;
 }
 
 .buy-btn-license{
@@ -787,40 +805,57 @@ white-space:nowrap;
 .license-grid{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:15px;
-    margin-bottom:40px;
+    gap:14px;
+    margin:20px 0 30px;
 }
 
 .license-card{
     background:#11151a;
     border:1px solid #1c232b;
-    border-radius:12px;
-    padding:20px;
+    border-radius:10px;
+
+    padding:16px 18px;
+
+    min-height:110px;
+
     cursor:pointer;
-     transition:.25s ease;
+    transition:.25s ease;
     position:relative;
 }
 
 .license-card:hover{
-    transform:translateY(-3px);
     border-color:#4ecdc4;
+    transform:translateY(-2px);
 }
 
 .license-card.active{
-    border:2px solid #4ecdc4;
-    box-shadow:0 0 15px rgba(78,205,196,.25);
+    border:1px solid #4ecdc4;
+    box-shadow:0 0 12px rgba(78,205,196,.18);
+}
+
+.license-card h3{
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:10px;
+    text-transform:uppercase;
+}
+
+.license-card span{
+    font-size:12px;
+    color:#8b97a8;
 }
 
 .license-price{
-    font-size:24px;
+    font-size:16px;
     font-weight:800;
-    margin:10px 0;
+    margin-bottom:6px;
 }
 
 .popular-star{
     position:absolute;
     top:10px;
-    right:15px;
+    right:10px;
+    font-size:14px;
 }
 
 .usage-terms{
@@ -865,31 +900,47 @@ transition:.3s ease;
     aspect-ratio:1/1;
     object-fit:cover;
     border-radius:12px;
-    margin-bottom:12px;
+    margin-bottom:8px;
+
 }
 
 .more-beat-card h4{
-    margin-bottom:14px;
-    line-height:1.4;
+    margin-top:8px;
+    margin-bottom:8px;
+    line-height:1.2;
+    font-size:18px;
 }
+
+.more-beat-card{
+    display:flex;
+    flex-direction:column;
+    margin-top:auto;
+}
+
 
 .beat-actions{
     display:flex;
     gap:10px;
-    align-items:stretch;
+    align-items:center;
+    margin-top:8px;
 }
 
 .buy-beat-btn{
     flex:1;
-    text-align:center;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
     text-decoration:none;
-    padding:12px;
+
+    height:50px;
+
     border-radius:10px;
     border:1px solid #4ecdc4;
+
     color:#fff;
     font-weight:700;
-    transition:.25s;
-    height:50px;
 }
 
 .buy-beat-btn:hover{
@@ -948,7 +999,7 @@ transition:.3s ease;
 .producer-container{
     display:flex;
     align-items:center;
-    gap:6px;
+    gap:2px;
     margin-bottom:20px;
 }
 
@@ -977,4 +1028,7 @@ transition:.3s ease;
 .stat-item i{
     color:#4ecdc4;
     font-size:12px;
+}
+.licensing-panel{
+    min-height: 625px; /* ajusta hasta igualarlo */
 }
