@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/cart.css">
 </head>
 <body>
     <header>
@@ -16,7 +17,12 @@
             <div class="logo">Alsx<span>Beats</span></div>
             <ul class="nav-links">
                 <li><a href="#catalogue">Catálogo</a></li>
-                </ul>
+                <li>
+                    <a href="javascript:void(0)" class="nav-cart-btn" id="nav-cart-trigger">
+                        <i class="fas fa-shopping-cart"></i> Carrito <span class="cart-badge" id="cart-badge-nav" style="display: none;">0</span>
+                    </a>
+                </li>
+            </ul>
             <button class="btn btn-primary nav-btn" onclick="scrollToSection('contacto')">Contacto</button>
         </nav>
     </header>
@@ -105,5 +111,6 @@ Ver Licencias
     </audio>
 
 <script src="js/main.js"></script>
+<script src="js/cart.js"></script>
 </body>
 </html>
