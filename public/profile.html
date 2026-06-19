@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi perfil — AlsxBeats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        :root{--bg:#0b0d14;--panel:#11151a;--accent:#4ecdc4;--border:#1c232b;--muted:#94a3b8;--danger:#ef4444}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column}
+
+        /* HEADER */
+        header{padding:16px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:var(--bg)}
+        .logo{font-size:20px;font-weight:900;text-decoration:none;color:#fff}.logo span{color:var(--accent)}
+        .header-right{display:flex;align-items:center;gap:16px}
+        .back-link{font-size:13px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s}
+        .back-link:hover{color:#fff}
+
+        /* LAYOUT */
+        .page-layout{display:flex;flex:1;max-width:1280px;margin:0 auto;width:100%;padding:40px 32px;gap:32px}
+
+        /* SIDEBAR */
+        .profile-sidebar{width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;position:sticky;top:88px;align-self:flex-start}
+
+        .avatar-block{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:28px 20px;text-align:center;margin-bottom:4px}
+        .avatar-circle{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#2980b9);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#000;margin:0 auto 14px}
+        .avatar-name{font-size:16px;font-weight:700;margin-bottom:4px}
+        .avatar-email{font-size:12px;color:var(--muted);margin-bottom:10px}
+        .avatar-since{font-size:11px;color:#3a4556;background:#0b0d14;border-radius:6px;padding:4px 10px;display:inline-block}
+
+        .nav-menu{display:flex;flex-direction:column;gap:2px}
+        .nav-item{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:10px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:.15s;font-family:'Inter',sans-serif}
+        .nav-item i{width:16px;font-size:13px;text-align:center}
+        .nav-item:hover{background:rgba(255,255,255,.04);color:#fff}
+        .nav-item.active{background:rgba(78,205,196,.08);color:var(--accent);font-weight:600}
+        .nav-item.active i{color:var(--accent)}
+        .nav-divider{height:1px;background:var(--border);margin:6px 0}
+
+        /* CONTENT */
+        .profile-content{flex:1;min-width:0}
+
+        .panel{display:none}
+        .panel.active{display:block}
+
+        .panel-header{margin-bottom:28px}
+        .panel-title{font-size:22px;font-weight:800;margin-bottom:6px}
+        .panel-sub{font-size:14px;color:var(--muted)}
+
+        /* CARDS DE BEATS */
+        .beats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
+        .beat-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:.2s;cursor:pointer}
+        .beat-card:hover{border-color:rgba(78,205,196,.3);transform:translateY(-2px)}
+        .beat-card img{width:100%;aspect-ratio:1;object-fit:cover;background:#1c232b}
+        .beat-card-info{padding:12px}
+        .beat-card-title{font-size:13px;font-weight:600;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .beat-card-meta{font-size:11px;color:var(--muted)}
+
+        /* EMPTY STATE */
+        .empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+        .empty-state i{font-size:40px;margin-bottom:16px;opacity:.3}
+        .empty-state p{font-size:14px;margin-bottom:16px}
+        .empty-state a{color:var(--accent);text-decoration:none;font-weight:600}
+
+        /* FORMULARIOS */
+        .form-section{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:20px}
+        .form-section h3{font-size:16px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+        .form-section h3 i{color:var(--accent);font-size:14px}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .form-group{margin-bottom:16px}
+        .form-group label{display:block;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+        .form-group input{width:100%;background:#0b0d14;border:1.5px solid var(--border);color:#fff;font-size:14px;font-family:'Inter',sans-serif;padding:12px 14px;border-radius:10px;outline:none;transition:.2s}
+        .form-group input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(78,205,196,.1)}
+        .form-group input::placeholder{color:#3a4556}
+
+        .btn-save{background:var(--accent);color:#000;border:none;padding:11px 24px;border-radius:9px;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;gap:8px}
+        .btn-save:hover{opacity:.88}
+        .btn-save:disabled{opacity:.5;cursor:not-allowed}
+        .btn-danger{background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);padding:11px 24px;border-radius:9px;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:.2s}
+        .btn-danger:hover{background:rgba(239,68,68,.18)}
+
+        .msg{font-size:13px;padding:10px 14px;border-radius:8px;margin-top:12px;display:none}
+        .msg.ok{background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:var(--accent)}
+        .msg.err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#f87171}
+
+        /* PEDIDOS */
+        .order-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px}
+        .order-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+        .order-date{font-size:12px;color:var(--muted)}
+        .order-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(78,205,196,.1);color:var(--accent)}
+        .order-items{display:flex;flex-direction:column;gap:8px}
+        .order-item{display:flex;align-items:center;gap:12px}
+        .order-item img{width:40px;height:40px;border-radius:6px;object-fit:cover;background:#1c232b;flex-shrink:0}
+        .order-item-info{flex:1;min-width:0}
+        .order-item-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .order-item-lic{font-size:11px;color:var(--muted)}
+        .order-download{font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;padding:6px 12px;border:1px solid rgba(78,205,196,.2);border-radius:7px;white-space:nowrap;transition:.2s}
+        .order-download:hover{background:rgba(78,205,196,.08)}
+
+        /* PLAYLISTS */
+        .playlist-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;transition:.2s}
+        .playlist-card:hover{border-color:rgba(78,205,196,.2)}
+        .playlist-info{display:flex;align-items:center;gap:14px}
+        .playlist-icon{width:44px;height:44px;border-radius:10px;background:rgba(78,205,196,.1);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:16px;flex-shrink:0}
+        .playlist-name{font-size:15px;font-weight:600}
+        .playlist-count{font-size:12px;color:var(--muted);margin-top:3px}
+        .btn-icon{background:none;border:none;color:var(--muted);cursor:pointer;padding:6px;border-radius:6px;transition:.15s;font-size:14px}
+        .btn-icon:hover{color:#ef4444;background:rgba(239,68,68,.08)}
+
+        .create-playlist-form{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;display:flex;gap:12px;align-items:center}
+        .create-playlist-form input{flex:1;background:#0b0d14;border:1.5px solid var(--border);color:#fff;font-size:14px;font-family:'Inter',sans-serif;padding:11px 14px;border-radius:9px;outline:none;transition:.2s}
+        .create-playlist-form input:focus{border-color:var(--accent)}
+
+        /* SPINNER */
+        .spinner{width:14px;height:14px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo">Alsx<span>Beats</span></a>
+    <div class="header-right">
+        <a href="catalog.html" class="back-link"><i class="fas fa-music"></i> Catálogo</a>
+        <a href="index.html" class="back-link"><i class="fas fa-home"></i> Inicio</a>
+    </div>
+</header>
+
+<div class="page-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="profile-sidebar">
+        <div class="avatar-block">
+            <div class="avatar-circle" id="sb-avatar">?</div>
+            <div class="avatar-name" id="sb-name">Cargando...</div>
+            <div class="avatar-email" id="sb-email"></div>
+            <span class="avatar-since" id="sb-since"></span>
+        </div>
+
+        <nav class="nav-menu">
+            <button class="nav-item active" onclick="goPanel('perfil')"><i class="fas fa-user"></i> Mi perfil</button>
+            <button class="nav-item" onclick="goPanel('likes')"><i class="fas fa-heart"></i> Me gusta</button>
+            <button class="nav-item" onclick="goPanel('recientes')"><i class="fas fa-clock-rotate-left"></i> Últimos escuchados</button>
+            <button class="nav-item" onclick="goPanel('compras')"><i class="fas fa-download"></i> Mis compras</button>
+            <button class="nav-item" onclick="goPanel('playlist')"><i class="fas fa-list-music"></i> Mis playlists</button>
+            <div class="nav-divider"></div>
+            <button class="nav-item" onclick="goPanel('pedidos')"><i class="fas fa-receipt"></i> Pedidos</button>
+            <button class="nav-item" onclick="goPanel('settings')"><i class="fas fa-gear"></i> Configuración</button>
+            <div class="nav-divider"></div>
+            <button class="nav-item" onclick="doLogout()" style="color:#ef4444"><i class="fas fa-right-from-bracket" style="color:#ef4444"></i> Cerrar sesión</button>
+        </nav>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="profile-content">
+
+        <!-- PERFIL -->
+        <div class="panel active" id="panel-perfil">
+            <div class="panel-header">
+                <div class="panel-title">Mi perfil</div>
+                <div class="panel-sub">Tu información personal en AlsxBeats.</div>
+            </div>
+            <div class="form-section">
+                <h3><i class="fas fa-user-pen"></i> Datos personales</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nombre artístico</label>
+                        <input type="text" id="p-name" placeholder="Tu nombre">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="p-email" placeholder="tu@email.com">
+                    </div>
+                </div>
+                <button class="btn-save" onclick="saveProfile()"><i class="fas fa-check"></i> Guardar cambios</button>
+                <div class="msg" id="p-msg"></div>
+            </div>
+        </div>
+
+        <!-- ME GUSTA -->
+        <div class="panel" id="panel-likes">
+            <div class="panel-header">
+                <div class="panel-title">Me gusta</div>
+                <div class="panel-sub">Los beats que has marcado como favoritos.</div>
+            </div>
+            <div id="likes-grid" class="beats-grid"></div>
+        </div>
+
+        <!-- ÚLTIMOS ESCUCHADOS -->
+        <div class="panel" id="panel-recientes">
+            <div class="panel-header">
+                <div class="panel-title">Últimos escuchados</div>
+                <div class="panel-sub">Los últimos beats que has reproducido.</div>
+            </div>
+            <div id="recientes-grid" class="beats-grid"></div>
+        </div>
+
+        <!-- COMPRAS -->
+        <div class="panel" id="panel-compras">
+            <div class="panel-header">
+                <div class="panel-title">Mis compras</div>
+                <div class="panel-sub">Todos los beats que has adquirido.</div>
+            </div>
+            <div id="compras-list"></div>
+        </div>
+
+        <!-- PLAYLISTS -->
+        <div class="panel" id="panel-playlist">
+            <div class="panel-header">
+                <div class="panel-title">Mis playlists</div>
+                <div class="panel-sub">Organiza tus beats favoritos en colecciones.</div>
+            </div>
+            <div class="create-playlist-form">
+                <input type="text" id="new-pl-name" placeholder="Nombre de la nueva playlist...">
+                <button class="btn-save" onclick="createPlaylist()"><i class="fas fa-plus"></i> Crear</button>
+            </div>
+            <div id="playlists-list"></div>
+        </div>
+
+        <!-- PEDIDOS -->
+        <div class="panel" id="panel-pedidos">
+            <div class="panel-header">
+                <div class="panel-title">Pedidos</div>
+                <div class="panel-sub">Historial de tus transacciones.</div>
+            </div>
+            <div id="orders-list"></div>
+        </div>
+
+        <!-- CONFIGURACIÓN -->
+        <div class="panel" id="panel-settings">
+            <div class="panel-header">
+                <div class="panel-title">Configuración</div>
+                <div class="panel-sub">Gestiona tu cuenta y seguridad.</div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fas fa-lock"></i> Cambiar contraseña</h3>
+                <div class="form-group">
+                    <label>Contraseña actual</label>
+                    <input type="password" id="pw-current" placeholder="••••••••">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nueva contraseña</label>
+                        <input type="password" id="pw-new" placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmar nueva</label>
+                        <input type="password" id="pw-confirm" placeholder="Repite la contraseña">
+                    </div>
+                </div>
+                <button class="btn-save" onclick="changePassword()"><i class="fas fa-key"></i> Actualizar contraseña</button>
+                <div class="msg" id="pw-msg"></div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fas fa-triangle-exclamation" style="color:#ef4444"></i> Zona de peligro</h3>
+                <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Una vez que elimines tu cuenta no podrás recuperarla.</p>
+                <button class="btn-danger" onclick="confirmDelete()"><i class="fas fa-trash"></i> Eliminar mi cuenta</button>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+let user   = null;
+let beats  = [];
+
+// ── Init ─────────────────────────────────────────────────────
+(async () => {
+    const [meRes, beatsRes] = await Promise.all([
+        fetch('/api/auth/me'),
+        fetch('/api/beats')
+    ]);
+    const meData    = await meRes.json();
+    const beatsData = await beatsRes.json();
+
+    if (!meData.user) { window.location.href = 'login.html?next=profile.html'; return; }
+    user  = meData.user;
+    beats = beatsData;
+
+    populateSidebar();
+    populateProfileForm();
+
+    // Abrir panel según el hash de la URL
+    const hash = location.hash.replace('#', '');
+    if (hash) {
+        const btn = document.querySelector(`.nav-item[onclick="goPanel('${hash}')"]`);
+        if (btn) { document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active')); document.getElementById('panel-'+hash)?.classList.add('active'); btn.classList.add('active'); const loaders={likes:loadLikes,recientes:loadRecientes,compras:loadCompras,pedidos:loadPedidos,playlist:loadPlaylists}; if(loaders[hash]) loaders[hash](); }
+    }
+})();
+
+function populateSidebar() {
+    document.getElementById('sb-avatar').textContent = user.name.charAt(0).toUpperCase();
+    document.getElementById('sb-name').textContent   = user.name;
+    document.getElementById('sb-email').textContent  = user.email;
+    document.getElementById('sb-since').textContent  = 'Miembro desde ' + user.createdAt;
+}
+
+function populateProfileForm() {
+    document.getElementById('p-name').value  = user.name;
+    document.getElementById('p-email').value = user.email;
+}
+
+// ── Navegación ───────────────────────────────────────────────
+function goPanel(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    event.currentTarget.classList.add('active');
+
+    const loaders = {
+        likes:    loadLikes,
+        recientes:loadRecientes,
+        compras:  loadCompras,
+        pedidos:  loadPedidos,
+        playlist: loadPlaylists
+    };
+    if (loaders[id]) loaders[id]();
+}
+
+// ── Beats helpers ────────────────────────────────────────────
+function beatCard(beat) {
+    const img = beat.image ? `<img src="${beat.image}" alt="${beat.title}">` : `<div style="width:100%;aspect-ratio:1;background:#1c232b;display:flex;align-items:center;justify-content:center;color:#3a4556"><i class="fas fa-music" style="font-size:28px"></i></div>`;
+    return `
+        <div class="beat-card" onclick="window.location.href='licencias.html?id=${beat.id}'">
+            ${img}
+            <div class="beat-card-info">
+                <div class="beat-card-title">${beat.title}</div>
+                <div class="beat-card-meta">${beat.bpm ? beat.bpm + ' BPM' : ''} ${beat.key ? '· ' + beat.key : ''}</div>
+            </div>
+        </div>`;
+}
+
+function emptyState(icon, text, linkHref, linkText) {
+    return `<div class="empty-state"><i class="fas fa-${icon}"></i><p>${text}</p>${linkHref ? `<a href="${linkHref}">${linkText}</a>` : ''}</div>`;
+}
+
+// ── Me gusta ─────────────────────────────────────────────────
+async function loadLikes() {
+    const grid = document.getElementById('likes-grid');
+    grid.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0">Cargando...</div>';
+    const res  = await fetch('/api/auth/likes');
+    const data = await res.json();
+    const likedBeats = beats.filter(b => data.likes.includes(b.id));
+    grid.innerHTML = likedBeats.length
+        ? likedBeats.map(beatCard).join('')
+        : emptyState('heart', 'Aún no tienes beats favoritos.', 'catalog.html', 'Explorar catálogo');
+}
+
+// ── Recientes ────────────────────────────────────────────────
+async function loadRecientes() {
+    const grid = document.getElementById('recientes-grid');
+    grid.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0">Cargando...</div>';
+    const res  = await fetch('/api/auth/me');
+    const data = await res.json();
+    const ids  = data.user?.recentlyListened || [];
+    const recent = ids.map(id => beats.find(b => b.id == id)).filter(Boolean);
+    grid.innerHTML = recent.length
+        ? recent.map(beatCard).join('')
+        : emptyState('clock-rotate-left', 'Aún no has escuchado ningún beat.', 'catalog.html', 'Ir al catálogo');
+}
+
+// ── Compras ──────────────────────────────────────────────────
+async function loadCompras() {
+    const list = document.getElementById('compras-list');
+    list.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0">Cargando...</div>';
+    const res  = await fetch('/api/auth/orders');
+    const data = await res.json();
+
+    const allItems = data.orders.flatMap(o => o.items || []);
+    const uniqueMap = {};
+    allItems.forEach(item => { uniqueMap[item.beatId] = item; });
+    const items = Object.values(uniqueMap);
+
+    if (!items.length) { list.innerHTML = emptyState('download', 'Aún no has comprado ningún beat.', 'catalog.html', 'Ver catálogo'); return; }
+
+    list.innerHTML = items.map(item => {
+        const img = item.image ? `<img src="${item.image}" alt="${item.title}">` : `<div style="width:40px;height:40px;border-radius:6px;background:#1c232b;display:flex;align-items:center;justify-content:center"><i class="fas fa-music" style="font-size:14px;color:#3a4556"></i></div>`;
+        return `
+            <div class="order-card">
+                <div class="order-item">
+                    ${img}
+                    <div class="order-item-info">
+                        <div class="order-item-title">${item.title}</div>
+                        <div class="order-item-lic">${item.licenseLabel} · ${item.formats?.join(', ')}</div>
+                    </div>
+                    <a href="catalog.html" class="order-download"><i class="fas fa-music"></i> Ver catálogo</a>
+                </div>
+            </div>`;
+    }).join('');
+}
+
+// ── Pedidos ──────────────────────────────────────────────────
+async function loadPedidos() {
+    const list = document.getElementById('orders-list');
+    list.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0">Cargando...</div>';
+    const res  = await fetch('/api/auth/orders');
+    const data = await res.json();
+
+    if (!data.orders.length) { list.innerHTML = emptyState('receipt', 'No tienes pedidos todavía.', 'catalog.html', 'Ver catálogo'); return; }
+
+    list.innerHTML = data.orders.map(order => {
+        const date = new Date(order.createdAt).toLocaleDateString('es-ES', { day:'2-digit', month:'long', year:'numeric' });
+        const items = (order.items || []).map(item => {
+            const img = item.image ? `<img src="${item.image}" alt="${item.title}">` : `<div style="width:40px;height:40px;border-radius:6px;background:#1c232b;display:flex;align-items:center;justify-content:center"><i class="fas fa-music" style="font-size:14px;color:#3a4556"></i></div>`;
+            return `<div class="order-item">${img}<div class="order-item-info"><div class="order-item-title">${item.title}</div><div class="order-item-lic">${item.licenseLabel} · €${item.price}</div></div><a href="success.html?token=${order.token}" class="order-download"><i class="fas fa-download"></i> Descargar</a></div>`;
+        }).join('');
+        return `<div class="order-card"><div class="order-header"><span class="order-date"><i class="fas fa-calendar" style="margin-right:6px"></i>${date}</span><span class="order-badge">Completado</span></div><div class="order-items">${items}</div></div>`;
+    }).join('');
+}
+
+// ── Playlists ─────────────────────────────────────────────────
+async function loadPlaylists() {
+    const list = document.getElementById('playlists-list');
+    list.innerHTML = '';
+    const res  = await fetch('/api/auth/playlists');
+    const data = await res.json();
+
+    if (!data.playlists.length) {
+        list.innerHTML = emptyState('list-music', 'Aún no tienes playlists. Crea una arriba.', '', '');
+        return;
+    }
+
+    list.innerHTML = data.playlists.map(pl => `
+        <div class="playlist-card">
+            <div class="playlist-info">
+                <div class="playlist-icon"><i class="fas fa-list-music"></i></div>
+                <div>
+                    <div class="playlist-name">${pl.name}</div>
+                    <div class="playlist-count">${pl.beats.length} beat${pl.beats.length !== 1 ? 's' : ''} · Creada el ${pl.createdAt}</div>
+                </div>
+            </div>
+            <button class="btn-icon" onclick="deletePlaylist('${pl.id}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+        </div>`).join('');
+}
+
+async function createPlaylist() {
+    const input = document.getElementById('new-pl-name');
+    const name  = input.value.trim();
+    if (!name) return;
+    const res = await fetch('/api/auth/playlists', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name }) });
+    if (res.ok) { input.value = ''; loadPlaylists(); }
+}
+
+async function deletePlaylist(id) {
+    if (!confirm('¿Eliminar esta playlist?')) return;
+    await fetch(`/api/auth/playlists/${id}`, { method:'DELETE' });
+    loadPlaylists();
+}
+
+// ── Guardar perfil ────────────────────────────────────────────
+async function saveProfile() {
+    const msg  = document.getElementById('p-msg');
+    const body = { name: document.getElementById('p-name').value.trim(), email: document.getElementById('p-email').value.trim() };
+    const res  = await fetch('/api/auth/profile', { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    const data = await res.json();
+    showMsg('p-msg', res.ok, res.ok ? 'Perfil actualizado correctamente.' : data.error);
+    if (res.ok) { user = data.user; populateSidebar(); }
+}
+
+// ── Cambiar contraseña ────────────────────────────────────────
+async function changePassword() {
+    const newPw = document.getElementById('pw-new').value;
+    const conf  = document.getElementById('pw-confirm').value;
+    if (newPw !== conf) { showMsg('pw-msg', false, 'Las contraseñas no coinciden.'); return; }
+    const res  = await fetch('/api/auth/password', { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ current: document.getElementById('pw-current').value, newPassword: newPw }) });
+    const data = await res.json();
+    showMsg('pw-msg', res.ok, res.ok ? 'Contraseña actualizada.' : data.error);
+    if (res.ok) { document.getElementById('pw-current').value = ''; document.getElementById('pw-new').value = ''; document.getElementById('pw-confirm').value = ''; }
+}
+
+// ── Eliminar cuenta ───────────────────────────────────────────
+function confirmDelete() {
+    if (!confirm('¿Seguro que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) return;
+    alert('Función en desarrollo. Contacta con soporte para eliminar tu cuenta.');
+}
+
+// ── Logout ────────────────────────────────────────────────────
+async function doLogout() {
+    await fetch('/api/auth/logout', { method:'POST' });
+    window.location.href = 'index.html';
+}
+
+// ── Helpers ───────────────────────────────────────────────────
+function showMsg(id, ok, text) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className   = 'msg ' + (ok ? 'ok' : 'err');
+    el.style.display = 'block';
+    setTimeout(() => el.style.display = 'none', 4000);
+}
+</script>
+</body>
+</html>

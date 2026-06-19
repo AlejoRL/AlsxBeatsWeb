@@ -1,0 +1,22 @@
+[
+  {
+    "id": "alsxbeats",
+    "name": "AlsxBeats",
+    "bio": "Productor independiente especializado en Trap, R&B y géneros urbanos. Beats de alta calidad con licencias flexibles.",
+    "avatar": "assets/images/1781898926163.png",
+    "verified": true,
+    "genres": [
+      "Trap",
+      "R&B",
+      "Lo-Fi",
+      "Drill"
+    ],
+    "location": "Spain",
+    "social": {
+      "instagram": "",
+      "youtube": "https://www.youtube.com/@AlsxBeatss",
+      "soundcloud": ""
+    },
+    "publishedAt": "2026-06-16"
+  }
+]

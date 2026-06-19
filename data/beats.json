@@ -6,15 +6,47 @@
     "bpm": 140,
     "key": "Cm",
     "genre": "Lo-Fi",
-    "tags": ["Lo-Fi", "R&B", "Chill"],
+    "tags": [
+      "Lo-Fi",
+      "R&B",
+      "Chill"
+    ],
     "image": "assets/images/typelofiryb1.png",
-    "preview": "assets/audio/typelofiryb1video.wav",
+    "preview": "assets/audio/1781873812440.wav",
     "publishedAt": "2026-06-16",
     "licenses": {
-      "basic":     { "price": 29,  "label": "Basic Lease",     "formats": ["MP3"] },
-      "premium":   { "price": 59,  "label": "Premium Lease",   "formats": ["WAV", "MP3"] },
-      "unlimited": { "price": 149, "label": "Unlimited Lease", "formats": ["WAV", "STEMS", "MP3"] },
-      "exclusive": { "price": 299, "label": "Exclusive Rights","formats": ["WAV", "STEMS"] }
+      "basic": {
+        "price": 29,
+        "label": "Basic Lease",
+        "formats": [
+          "MP3"
+        ]
+      },
+      "premium": {
+        "price": 59,
+        "label": "Premium Lease",
+        "formats": [
+          "WAV",
+          "MP3"
+        ]
+      },
+      "unlimited": {
+        "price": 149,
+        "label": "Unlimited Lease",
+        "formats": [
+          "WAV",
+          "STEMS",
+          "MP3"
+        ]
+      },
+      "exclusive": {
+        "price": 299,
+        "label": "Exclusive Rights",
+        "formats": [
+          "WAV",
+          "STEMS"
+        ]
+      }
     }
   },
   {
@@ -24,15 +56,47 @@
     "bpm": 145,
     "key": "Am",
     "genre": "Drill",
-    "tags": ["Drill", "Dark", "Trap"],
+    "tags": [
+      "Drill",
+      "Dark",
+      "Trap"
+    ],
     "image": "assets/images/alsxbeatsportada.png",
     "preview": null,
     "publishedAt": "2026-06-16",
     "licenses": {
-      "basic":     { "price": 29,  "label": "Basic Lease",     "formats": ["MP3"] },
-      "premium":   { "price": 59,  "label": "Premium Lease",   "formats": ["WAV", "MP3"] },
-      "unlimited": { "price": 149, "label": "Unlimited Lease", "formats": ["WAV", "STEMS", "MP3"] },
-      "exclusive": { "price": 299, "label": "Exclusive Rights","formats": ["WAV", "STEMS"] }
+      "basic": {
+        "price": 29,
+        "label": "Basic Lease",
+        "formats": [
+          "MP3"
+        ]
+      },
+      "premium": {
+        "price": 59,
+        "label": "Premium Lease",
+        "formats": [
+          "WAV",
+          "MP3"
+        ]
+      },
+      "unlimited": {
+        "price": 149,
+        "label": "Unlimited Lease",
+        "formats": [
+          "WAV",
+          "STEMS",
+          "MP3"
+        ]
+      },
+      "exclusive": {
+        "price": 299,
+        "label": "Exclusive Rights",
+        "formats": [
+          "WAV",
+          "STEMS"
+        ]
+      }
     }
   },
   {
@@ -42,15 +106,47 @@
     "bpm": 90,
     "key": "Fm",
     "genre": "R&B",
-    "tags": ["R&B", "Smooth", "Soul"],
+    "tags": [
+      "R&B",
+      "Smooth",
+      "Soul"
+    ],
     "image": "assets/images/parentaladvisory.png",
     "preview": null,
     "publishedAt": "2026-06-16",
     "licenses": {
-      "basic":     { "price": 29,  "label": "Basic Lease",     "formats": ["MP3"] },
-      "premium":   { "price": 59,  "label": "Premium Lease",   "formats": ["WAV", "MP3"] },
-      "unlimited": { "price": 149, "label": "Unlimited Lease", "formats": ["WAV", "STEMS", "MP3"] },
-      "exclusive": { "price": 299, "label": "Exclusive Rights","formats": ["WAV", "STEMS"] }
+      "basic": {
+        "price": 29,
+        "label": "Basic Lease",
+        "formats": [
+          "MP3"
+        ]
+      },
+      "premium": {
+        "price": 59,
+        "label": "Premium Lease",
+        "formats": [
+          "WAV",
+          "MP3"
+        ]
+      },
+      "unlimited": {
+        "price": 149,
+        "label": "Unlimited Lease",
+        "formats": [
+          "WAV",
+          "STEMS",
+          "MP3"
+        ]
+      },
+      "exclusive": {
+        "price": 299,
+        "label": "Exclusive Rights",
+        "formats": [
+          "WAV",
+          "STEMS"
+        ]
+      }
     }
   }
 ]

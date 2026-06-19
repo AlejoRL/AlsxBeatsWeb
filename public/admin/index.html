@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | AlsxBeats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root{--bg:#0f111a;--panel:#11151a;--panel2:#141820;--accent:#4ecdc4;--text:#fff;--muted:#94a3b8;--border:#1c232b;--danger:#ef4444}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+        /* Header */
+        header{background:var(--panel);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+        .logo{font-size:20px;font-weight:700}.logo span{color:var(--accent)}
+        .header-right{display:flex;align-items:center;gap:16px}
+        .badge-admin{background:rgba(78,205,196,.15);color:var(--accent);font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px}
+        .btn-logout{background:transparent;border:1px solid var(--border);color:var(--muted);padding:7px 16px;border-radius:8px;cursor:pointer;font-size:13px;transition:.2s}
+        .btn-logout:hover{border-color:var(--danger);color:var(--danger)}
+
+        /* Nav tabs del admin */
+        .admin-nav{display:flex;gap:0;padding:0 32px;background:var(--panel);border-bottom:1px solid var(--border);overflow-x:auto}
+        .admin-nav::-webkit-scrollbar{display:none}
+        .admin-tab{display:flex;align-items:center;gap:8px;padding:14px 20px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:color .2s;margin-bottom:-1px}
+        .admin-tab i{font-size:13px}
+        .admin-tab:hover{color:#fff}
+        .admin-tab.active{color:#fff;border-bottom-color:var(--accent)}
+
+        /* Main */
+        main{max-width:1200px;margin:0 auto;padding:32px 24px}
+        .admin-panel{display:none}.admin-panel.active{display:block}
+        .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+        .section-header h2{font-size:20px}
+        .btn-primary{background:var(--accent);color:#000;border:none;padding:10px 22px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.2s}
+        .btn-primary:hover{opacity:.85}
+
+        /* Grids */
+        .items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+        .item-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:.2s}
+        .item-card:hover{border-color:rgba(78,205,196,.3)}
+        .card-img{width:100%;height:160px;object-fit:cover;display:block;background:#1c232b}
+        .card-img-placeholder{width:100%;height:160px;background:#1c232b;display:flex;align-items:center;justify-content:center;font-size:40px;color:var(--border)}
+        .card-body{padding:16px}
+        .card-title{font-weight:600;font-size:15px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .card-meta{color:var(--muted);font-size:12px;margin-bottom:12px}
+        .card-actions{display:flex;gap:8px}
+
+        /* Artist card avatar */
+        .artist-avatar-admin{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#2980b9);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#000;margin:24px auto 0;display:block}
+        .artist-card-body{text-align:center;padding:16px}
+
+        /* Precios */
+        .beat-card-prices{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+        .price-tag{background:#0b0d14;border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--muted)}
+        .price-tag strong{color:var(--text)}
+
+        /* Botones de tarjeta */
+        .btn-sm{flex:1;border:none;padding:8px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:5px}
+        .btn-edit{background:rgba(78,205,196,.1);color:var(--accent)}.btn-edit:hover{background:rgba(78,205,196,.2)}
+        .btn-files{background:rgba(255,255,255,.05);color:var(--muted)}.btn-files:hover{background:rgba(255,255,255,.1);color:var(--text)}
+        .btn-del{background:rgba(239,68,68,.1);color:var(--danger)}.btn-del:hover{background:rgba(239,68,68,.2)}
+
+        /* File status dots */
+        .file-dots{display:flex;gap:6px;margin-bottom:10px}
+        .dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
+        .dot.ok{background:#22c55e}
+
+        /* Modal */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+        .modal-overlay.open{display:flex}
+        .modal{background:var(--panel);border:1px solid var(--border);border-radius:20px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto}
+        .modal-header{padding:24px 28px 0;display:flex;align-items:center;justify-content:space-between}
+        .modal-header h3{font-size:18px}
+        .btn-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1}
+        .modal-body{padding:24px 28px}
+        .modal-footer{padding:0 28px 24px;display:flex;gap:10px;justify-content:flex-end}
+
+        /* Form */
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .form-group{display:flex;flex-direction:column;gap:6px}
+        .form-group.full{grid-column:1/-1}
+        label{font-size:13px;color:var(--muted);font-weight:500}
+        input,select,textarea{background:#0b0d14;border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:.2s;width:100%}
+        input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(78,205,196,.1)}
+        select option{background:#0b0d14}
+        .prices-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+        .price-input-group{display:flex;flex-direction:column;gap:4px}
+        .price-input-group label{font-size:11px}
+        .price-input-group input{text-align:center}
+
+        /* Checkboxes de beats en colecciones */
+        .beats-checklist{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:12px}
+        .beat-check-item{display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 8px;border-radius:6px;transition:.15s}
+        .beat-check-item:hover{background:rgba(255,255,255,.04)}
+        .beat-check-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);flex-shrink:0}
+        .beat-check-label{font-size:13px;color:var(--text)}
+
+        /* Tabs (modal archivos) */
+        .file-tabs{display:flex;gap:4px;margin-bottom:20px;background:#0b0d14;padding:4px;border-radius:10px}
+        .file-tab{flex:1;padding:8px;border:none;background:none;color:var(--muted);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+        .file-tab.active{background:var(--panel);color:var(--text)}
+
+        /* Upload zone */
+        .upload-zone{border:2px dashed var(--border);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:.2s;position:relative}
+        .upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(78,205,196,.04)}
+        .upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+        .upload-zone i{font-size:28px;color:var(--muted);margin-bottom:8px;display:block}
+        .upload-zone p{color:var(--muted);font-size:13px}
+        .upload-zone .file-name{color:var(--accent);font-size:13px;font-weight:600;margin-top:6px}
+        .upload-status{margin-top:12px;font-size:13px;display:flex;align-items:center;gap:6px}
+        .upload-status.ok{color:#22c55e}
+        .upload-status.error{color:var(--danger)}
+        .img-preview{width:100%;border-radius:8px;margin-top:12px;display:none}
+
+        /* Empty */
+        .empty{text-align:center;padding:60px 20px;color:var(--muted)}
+        .empty i{font-size:48px;margin-bottom:16px;display:block;opacity:.3}
+
+        /* Spinner / Toast */
+        .spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1e2230;border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:10px;font-size:14px;opacity:0;transition:.3s;z-index:999;pointer-events:none}
+        .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+        .toast.ok{border-color:#22c55e;color:#22c55e}
+        .toast.err{border-color:var(--danger);color:var(--danger)}
+
+        @media(max-width:600px){.form-grid{grid-template-columns:1fr}.prices-row{grid-template-columns:1fr 1fr}main{padding:20px 16px}.admin-nav{padding:0 16px}}
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Alsx<span>Beats</span></div>
+    <div class="header-right">
+        <span class="badge-admin"><i class="fas fa-shield-halved"></i> Admin</span>
+        <button class="btn-logout" id="btn-logout"><i class="fas fa-right-from-bracket"></i> Salir</button>
+    </div>
+</header>
+
+<nav class="admin-nav">
+    <button class="admin-tab active" data-panel="panel-beats" onclick="switchPanel('panel-beats')">
+        <i class="fas fa-music"></i> Tracks
+    </button>
+    <button class="admin-tab" data-panel="panel-artists" onclick="switchPanel('panel-artists')">
+        <i class="fas fa-user-music"></i> Artists
+    </button>
+    <button class="admin-tab" data-panel="panel-soundkits" onclick="switchPanel('panel-soundkits')">
+        <i class="fas fa-drum"></i> Sound Kits
+    </button>
+    <button class="admin-tab" data-panel="panel-collections" onclick="switchPanel('panel-collections')">
+        <i class="fas fa-layer-group"></i> Collections
+    </button>
+</nav>
+
+<main>
+
+    <!-- ══ PANEL: TRACKS ═══════════════════════════════════════ -->
+    <div class="admin-panel active" id="panel-beats">
+        <div class="section-header">
+            <h2>Catálogo de Beats</h2>
+            <button class="btn-primary" onclick="openAddBeat()">
+                <i class="fas fa-plus"></i> Añadir Beat
+            </button>
+        </div>
+        <div class="items-grid" id="beats-grid">
+            <div class="empty" style="grid-column:1/-1"><i class="fas fa-music"></i><p>Cargando...</p></div>
+        </div>
+    </div>
+
+    <!-- ══ PANEL: ARTISTS ══════════════════════════════════════ -->
+    <div class="admin-panel" id="panel-artists">
+        <div class="section-header">
+            <h2>Artistas / Productores</h2>
+            <button class="btn-primary" onclick="openAddArtist()">
+                <i class="fas fa-plus"></i> Añadir Artista
+            </button>
+        </div>
+        <div class="items-grid" id="artists-grid">
+            <div class="empty" style="grid-column:1/-1"><i class="fas fa-user-music"></i><p>Cargando...</p></div>
+        </div>
+    </div>
+
+    <!-- ══ PANEL: SOUND KITS ═══════════════════════════════════ -->
+    <div class="admin-panel" id="panel-soundkits">
+        <div class="section-header">
+            <h2>Sound Kits</h2>
+            <button class="btn-primary" onclick="openAddKit()">
+                <i class="fas fa-plus"></i> Añadir Kit
+            </button>
+        </div>
+        <div class="items-grid" id="kits-grid">
+            <div class="empty" style="grid-column:1/-1"><i class="fas fa-drum"></i><p>Cargando...</p></div>
+        </div>
+    </div>
+
+    <!-- ══ PANEL: COLLECTIONS ══════════════════════════════════ -->
+    <div class="admin-panel" id="panel-collections">
+        <div class="section-header">
+            <h2>Colecciones</h2>
+            <button class="btn-primary" onclick="openAddCollection()">
+                <i class="fas fa-plus"></i> Añadir Colección
+            </button>
+        </div>
+        <div class="items-grid" id="collections-grid">
+            <div class="empty" style="grid-column:1/-1"><i class="fas fa-layer-group"></i><p>Cargando...</p></div>
+        </div>
+    </div>
+
+</main>
+
+<!-- ══ MODAL: BEAT ════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-beat">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="beat-modal-title">Añadir Beat</h3>
+            <button class="btn-close" onclick="closeModal('modal-beat')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="edit-beat-id">
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Título del beat</label>
+                    <input type="text" id="f-title" placeholder='Dark Trap Type Beat - "Shadows"'>
+                </div>
+                <div class="form-group">
+                    <label>Género</label>
+                    <select id="f-genre">
+                        <option>Trap</option><option>R&B</option><option>Lo-Fi</option>
+                        <option>Drill</option><option>Afrobeats</option><option>Hip-Hop</option>
+                        <option>Pop</option><option>Reggaeton</option><option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>BPM</label>
+                    <input type="number" id="f-bpm" placeholder="140" min="60" max="220">
+                </div>
+                <div class="form-group">
+                    <label>Key</label>
+                    <select id="f-key">
+                        <option>Cm</option><option>C</option><option>C#m</option><option>C#</option>
+                        <option>Dm</option><option>D</option><option>D#m</option><option>D#</option>
+                        <option>Em</option><option>E</option><option>Fm</option><option>F</option>
+                        <option>F#m</option><option>F#</option><option>Gm</option><option>G</option>
+                        <option>G#m</option><option>G#</option><option>Am</option><option>A</option>
+                        <option>A#m</option><option>A#</option><option>Bm</option><option>B</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tags (separados por coma)</label>
+                    <input type="text" id="f-tags" placeholder="Trap, Dark, 808">
+                </div>
+                <div class="form-group full">
+                    <label>Precios por licencia (€)</label>
+                    <div class="prices-row">
+                        <div class="price-input-group"><label>Basic</label><input type="number" id="p-basic" value="29"></div>
+                        <div class="price-input-group"><label>Premium</label><input type="number" id="p-premium" value="59"></div>
+                        <div class="price-input-group"><label>Unlimited</label><input type="number" id="p-unlimited" value="149"></div>
+                        <div class="price-input-group"><label>Exclusive</label><input type="number" id="p-exclusive" value="299"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-sm btn-del" style="flex:0;padding:8px 18px" onclick="closeModal('modal-beat')">Cancelar</button>
+            <button class="btn-primary" id="btn-save-beat" onclick="saveBeat()">
+                <i class="fas fa-floppy-disk"></i> Guardar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MODAL: ARCHIVOS BEAT ═══════════════════════════════════ -->
+<div class="modal-overlay" id="modal-files">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="files-modal-title">Archivos</h3>
+            <button class="btn-close" onclick="closeModal('modal-files')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="file-tabs">
+                <button class="file-tab active" onclick="switchFileTab('cover')">🖼️ Portada</button>
+                <button class="file-tab" onclick="switchFileTab('preview')">🎵 Preview</button>
+                <button class="file-tab" onclick="switchFileTab('basic')">Basic</button>
+                <button class="file-tab" onclick="switchFileTab('premium')">Premium</button>
+                <button class="file-tab" onclick="switchFileTab('unlimited')">Unlimited</button>
+                <button class="file-tab" onclick="switchFileTab('exclusive')">Exclusive</button>
+            </div>
+            <div id="ftab-cover">
+                <div class="upload-zone">
+                    <input type="file" id="input-cover" accept="image/*" onchange="uploadBeatFile('cover')">
+                    <i class="fas fa-image"></i>
+                    <p>Arrastra una imagen o haz clic para seleccionar</p>
+                    <p style="font-size:11px;margin-top:4px">JPG, PNG, WEBP — máx. 10 MB</p>
+                    <div class="file-name" id="name-cover"></div>
+                </div>
+                <img id="img-preview" class="img-preview" alt="Preview">
+                <div class="upload-status" id="status-cover"></div>
+            </div>
+            <div id="ftab-preview" style="display:none">
+                <div class="upload-zone">
+                    <input type="file" id="input-preview" accept="audio/*" onchange="uploadBeatFile('preview')">
+                    <i class="fas fa-waveform-lines"></i>
+                    <p>Preview watermarked (el que escucha el cliente)</p>
+                    <p style="font-size:11px;margin-top:4px">WAV, MP3 — máx. 100 MB</p>
+                    <div class="file-name" id="name-preview"></div>
+                </div>
+                <div class="upload-status" id="status-preview"></div>
+            </div>
+            <div id="ftab-basic" style="display:none"><div id="inner-basic"></div></div>
+            <div id="ftab-premium" style="display:none"><div id="inner-premium"></div></div>
+            <div id="ftab-unlimited" style="display:none"><div id="inner-unlimited"></div></div>
+            <div id="ftab-exclusive" style="display:none"><div id="inner-exclusive"></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MODAL: ARTIST ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-artist">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="artist-modal-title">Añadir Artista</h3>
+            <button class="btn-close" onclick="closeModal('modal-artist')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="edit-artist-id">
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Nombre artístico</label>
+                    <input type="text" id="a-name" placeholder="AlsxBeats">
+                </div>
+                <div class="form-group full">
+                    <label>Bio</label>
+                    <textarea id="a-bio" rows="3" placeholder="Descripción del artista..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Localización</label>
+                    <input type="text" id="a-location" placeholder="Spain">
+                </div>
+                <div class="form-group">
+                    <label>Géneros (separados por coma)</label>
+                    <input type="text" id="a-genres" placeholder="Trap, R&B, Lo-Fi">
+                </div>
+                <div class="form-group">
+                    <label>YouTube</label>
+                    <input type="text" id="a-youtube" placeholder="https://youtube.com/@...">
+                </div>
+                <div class="form-group">
+                    <label>Instagram</label>
+                    <input type="text" id="a-instagram" placeholder="https://instagram.com/...">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-sm btn-del" style="flex:0;padding:8px 18px" onclick="closeModal('modal-artist')">Cancelar</button>
+            <button class="btn-primary" id="btn-save-artist" onclick="saveArtist()">
+                <i class="fas fa-floppy-disk"></i> Guardar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MODAL: ARCHIVOS ARTIST ═════════════════════════════════ -->
+<div class="modal-overlay" id="modal-artist-files">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Avatar del artista</h3>
+            <button class="btn-close" onclick="closeModal('modal-artist-files')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="upload-zone">
+                <input type="file" id="input-avatar" accept="image/*" onchange="uploadAvatar()">
+                <i class="fas fa-user-circle"></i>
+                <p>Sube la foto de perfil del artista</p>
+                <p style="font-size:11px;margin-top:4px">JPG, PNG — máx. 5 MB</p>
+            </div>
+            <img id="avatar-preview" class="img-preview" alt="Avatar">
+            <div class="upload-status" id="status-avatar"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MODAL: SOUND KIT ═══════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-kit">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="kit-modal-title">Añadir Sound Kit</h3>
+            <button class="btn-close" onclick="closeModal('modal-kit')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="edit-kit-id">
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Nombre del kit</label>
+                    <input type="text" id="k-title" placeholder='Dark Trap Kit Vol.1'>
+                </div>
+                <div class="form-group full">
+                    <label>Descripción</label>
+                    <textarea id="k-desc" rows="2" placeholder="Descripción del kit..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Precio (€)</label>
+                    <input type="number" id="k-price" value="19">
+                </div>
+                <div class="form-group">
+                    <label>N.º de archivos</label>
+                    <input type="number" id="k-count" placeholder="50">
+                </div>
+                <div class="form-group">
+                    <label>Formatos (separados por coma)</label>
+                    <input type="text" id="k-formats" placeholder="WAV, MP3">
+                </div>
+                <div class="form-group">
+                    <label>Tags (separados por coma)</label>
+                    <input type="text" id="k-tags" placeholder="Trap, 808, Dark">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-sm btn-del" style="flex:0;padding:8px 18px" onclick="closeModal('modal-kit')">Cancelar</button>
+            <button class="btn-primary" id="btn-save-kit" onclick="saveKit()">
+                <i class="fas fa-floppy-disk"></i> Guardar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MODAL: ARCHIVOS KIT ════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-kit-files">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="kit-files-title">Archivos del Kit</h3>
+            <button class="btn-close" onclick="closeModal('modal-kit-files')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="file-tabs" style="margin-bottom:20px">
+                <button class="file-tab active" onclick="switchKitTab('cover')">🖼️ Portada</button>
+                <button class="file-tab" onclick="switchKitTab('file')">📦 Archivo del Kit</button>
+            </div>
+            <div id="ktab-cover">
+                <div class="upload-zone">
+                    <input type="file" id="input-kit-cover" accept="image/*" onchange="uploadKitFile('image')">
+                    <i class="fas fa-image"></i>
+                    <p>Portada del kit</p>
+                    <p style="font-size:11px;margin-top:4px">JPG, PNG — máx. 10 MB</p>
+                </div>
+                <img id="kit-img-preview" class="img-preview" alt="Kit cover">
+                <div class="upload-status" id="status-kit-cover"></div>
+            </div>
+            <div id="ktab-file" style="display:none">
+                <div class="upload-zone">
+                    <input type="file" id="input-kit-file" accept=".zip,.wav,.rar" onchange="uploadKitFile('file')">
+                    <i class="fas fa-file-zipper"></i>
+                    <p>Archivo descargable del kit (ZIP, RAR, WAV)</p>
+                    <p style="font-size:11px;margin-top:4px">máx. 500 MB</p>
+                </div>
+                <div class="upload-status" id="status-kit-file"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MODAL: COLLECTION ═══════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-collection">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="col-modal-title">Añadir Colección</h3>
+            <button class="btn-close" onclick="closeModal('modal-collection')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="edit-col-id">
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Nombre de la colección</label>
+                    <input type="text" id="c-title" placeholder="Dark Vibes">
+                </div>
+                <div class="form-group full">
+                    <label>Descripción</label>
+                    <textarea id="c-desc" rows="2" placeholder="Descripción de la colección..."></textarea>
+                </div>
+                <div class="form-group full">
+                    <label>Beats incluidos</label>
+                    <div class="beats-checklist" id="beats-checklist"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-sm btn-del" style="flex:0;padding:8px 18px" onclick="closeModal('modal-collection')">Cancelar</button>
+            <button class="btn-primary" id="btn-save-col" onclick="saveCollection()">
+                <i class="fas fa-floppy-disk"></i> Guardar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MODAL: ARCHIVOS COLECCIÓN ══════════════════════════════ -->
+<div class="modal-overlay" id="modal-col-files">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Portada de la colección</h3>
+            <button class="btn-close" onclick="closeModal('modal-col-files')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="upload-zone">
+                <input type="file" id="input-col-cover" accept="image/*" onchange="uploadColCover()">
+                <i class="fas fa-image"></i>
+                <p>Imagen de portada de la colección</p>
+                <p style="font-size:11px;margin-top:4px">JPG, PNG — máx. 10 MB</p>
+            </div>
+            <img id="col-img-preview" class="img-preview" alt="Col cover">
+            <div class="upload-status" id="status-col-cover"></div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────
+let beats       = [];
+let artists     = [];
+let kits        = [];
+let collections = [];
+let currentBeatId   = null;
+let currentArtistId = null;
+let currentKitId    = null;
+let currentColId    = null;
+
+const LICENSE_INFO = {
+    basic:     { label: 'Basic Lease',      desc: 'MP3' },
+    premium:   { label: 'Premium Lease',    desc: 'WAV + MP3' },
+    unlimited: { label: 'Unlimited Lease',  desc: 'WAV + STEMS + MP3' },
+    exclusive: { label: 'Exclusive Rights', desc: 'WAV + STEMS' }
+};
+
+// ── Init ─────────────────────────────────────────────────────
+async function init() {
+    const sess = await fetch('/api/admin/session').then(r => r.json());
+    if (!sess.isAdmin) return window.location.href = '/admin/login.html';
+    await Promise.all([loadBeats(), loadArtists(), loadKits(), loadCollections()]);
+}
+
+function switchPanel(id) {
+    document.querySelectorAll('.admin-panel').forEach(p => p.classList.toggle('active', p.id === id));
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('active', t.dataset.panel === id));
+}
+
+// ══════════════════════════════════════════════════════════════
+// BEATS
+// ══════════════════════════════════════════════════════════════
+async function loadBeats() {
+    beats = await fetch('/api/admin/beats').then(r => r.json());
+    renderBeats();
+}
+
+function renderBeats() {
+    const grid = document.getElementById('beats-grid');
+    if (!beats.length) {
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><i class="fas fa-music"></i><p>Sin beats aún.</p></div>`;
+        return;
+    }
+    grid.innerHTML = beats.map(b => `
+        <div class="item-card" id="card-${b.id}">
+            ${b.image ? `<img class="card-img" src="/${b.image}" onerror="this.style.display='none'">` : `<div class="card-img-placeholder">🎵</div>`}
+            <div class="card-body">
+                <div class="card-title">${esc(b.title)}</div>
+                <div class="card-meta">${b.genre} · ${b.bpm} BPM · ${b.key}</div>
+                <div class="beat-card-prices">
+                    <span class="price-tag">B <strong>€${b.licenses.basic.price}</strong></span>
+                    <span class="price-tag">P <strong>€${b.licenses.premium.price}</strong></span>
+                    <span class="price-tag">U <strong>€${b.licenses.unlimited.price}</strong></span>
+                    <span class="price-tag">E <strong>€${b.licenses.exclusive.price}</strong></span>
+                </div>
+                <div class="card-actions">
+                    <button class="btn-sm btn-edit" onclick="openEditBeat('${b.id}')"><i class="fas fa-pen"></i> Editar</button>
+                    <button class="btn-sm btn-files" onclick="openBeatFiles('${b.id}')"><i class="fas fa-folder"></i> Archivos</button>
+                    <button class="btn-sm btn-del" onclick="deleteBeat('${b.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function openAddBeat() {
+    document.getElementById('edit-beat-id').value = '';
+    document.getElementById('beat-modal-title').textContent = 'Añadir Beat';
+    clearBeatForm();
+    openModal('modal-beat');
+}
+
+function openEditBeat(id) {
+    const b = beats.find(x => x.id === id);
+    if (!b) return;
+    document.getElementById('edit-beat-id').value = b.id;
+    document.getElementById('beat-modal-title').textContent = 'Editar Beat';
+    document.getElementById('f-title').value = b.title;
+    document.getElementById('f-genre').value = b.genre;
+    document.getElementById('f-bpm').value   = b.bpm;
+    document.getElementById('f-key').value   = b.key;
+    document.getElementById('f-tags').value  = b.tags.join(', ');
+    document.getElementById('p-basic').value     = b.licenses.basic.price;
+    document.getElementById('p-premium').value   = b.licenses.premium.price;
+    document.getElementById('p-unlimited').value = b.licenses.unlimited.price;
+    document.getElementById('p-exclusive').value = b.licenses.exclusive.price;
+    openModal('modal-beat');
+}
+
+async function saveBeat() {
+    const id = document.getElementById('edit-beat-id').value;
+    const body = {
+        title: document.getElementById('f-title').value.trim(),
+        genre: document.getElementById('f-genre').value,
+        bpm:   document.getElementById('f-bpm').value,
+        key:   document.getElementById('f-key').value,
+        tags:  document.getElementById('f-tags').value,
+        prices: {
+            basic:     document.getElementById('p-basic').value,
+            premium:   document.getElementById('p-premium').value,
+            unlimited: document.getElementById('p-unlimited').value,
+            exclusive: document.getElementById('p-exclusive').value
+        }
+    };
+    if (!body.title) return toast('El título es obligatorio', 'err');
+    const btn = document.getElementById('btn-save-beat');
+    btn.innerHTML = '<span class="spinner"></span> Guardando...'; btn.disabled = true;
+    const res  = await fetch(id ? `/api/admin/beats/${id}` : '/api/admin/beats', { method: id ? 'PUT' : 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    const data = await res.json();
+    btn.innerHTML = '<i class="fas fa-floppy-disk"></i> Guardar'; btn.disabled = false;
+    if (!res.ok) return toast(data.error || 'Error', 'err');
+    toast(id ? 'Beat actualizado ✓' : 'Beat creado ✓', 'ok');
+    closeModal('modal-beat');
+    await loadBeats();
+    if (!id) setTimeout(() => openBeatFiles(data.id), 400);
+}
+
+async function deleteBeat(id) {
+    const b = beats.find(x => x.id === id);
+    if (!confirm(`¿Eliminar "${b?.title}"?`)) return;
+    await fetch(`/api/admin/beats/${id}`, { method: 'DELETE' });
+    toast('Beat eliminado', 'ok');
+    loadBeats();
+}
+
+async function openBeatFiles(id) {
+    currentBeatId = id;
+    const b = beats.find(x => x.id === id);
+    document.getElementById('files-modal-title').textContent = `Archivos — ${b?.title || id}`;
+    switchFileTab('cover');
+    const files = await fetch(`/api/admin/beats/${id}/files`).then(r => r.json());
+    if (b?.image) {
+        const img = document.getElementById('img-preview');
+        img.src = `/${b.image}`; img.style.display = 'block';
+    }
+    ['basic','premium','unlimited','exclusive'].forEach(tier => {
+        document.getElementById(`inner-${tier}`).innerHTML = `
+            <p style="color:var(--muted);font-size:13px;margin-bottom:16px">
+                <strong style="color:var(--text)">${LICENSE_INFO[tier].label}</strong> — ${LICENSE_INFO[tier].desc}
+            </p>
+            <div class="upload-zone">
+                <input type="file" accept=".wav,.mp3,.zip" onchange="uploadBeatLicense('${tier}', this)">
+                <i class="fas fa-file-audio"></i>
+                <p>${files[tier] ? `✅ Actual: <strong>${files[tier]}</strong>` : 'Sin archivo. Sube WAV, MP3 o ZIP.'}</p>
+                <p style="font-size:11px;margin-top:4px">WAV, MP3, ZIP — máx. 500 MB</p>
+            </div>
+            <div class="upload-status" id="status-license-${tier}"></div>
+        `;
+    });
+    openModal('modal-files');
+}
+
+async function uploadBeatFile(type) {
+    const input = document.getElementById(`input-${type}`);
+    const file  = input.files[0];
+    if (!file) return;
+    document.getElementById(`name-${type}`).textContent = file.name;
+    setStatus(`status-${type}`, '⏳ Subiendo...', '');
+    const fd = new FormData();
+    fd.append(type === 'cover' ? 'image' : 'audio', file);
+    const url = type === 'cover' ? `/api/admin/beats/${currentBeatId}/image` : `/api/admin/beats/${currentBeatId}/preview`;
+    const res  = await fetch(url, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (res.ok) {
+        setStatus(`status-${type}`, '✅ Subido correctamente', 'ok');
+        if (type === 'cover') { document.getElementById('img-preview').src = `/${data.path}?t=${Date.now()}`; document.getElementById('img-preview').style.display = 'block'; }
+        await loadBeats(); toast('Archivo subido ✓', 'ok');
+    } else { setStatus(`status-${type}`, `❌ ${data.error}`, 'error'); }
+}
+
+async function uploadBeatLicense(tier, input) {
+    const file = input.files[0]; if (!file) return;
+    setStatus(`status-license-${tier}`, '⏳ Subiendo...', '');
+    const fd = new FormData(); fd.append('file', file);
+    const res  = await fetch(`/api/admin/beats/${currentBeatId}/license/${tier}`, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (res.ok) { setStatus(`status-license-${tier}`, `✅ ${file.name}`, 'ok'); toast(`${tier} subido ✓`, 'ok'); input.closest('.upload-zone').querySelector('p').innerHTML = `✅ Actual: <strong>${file.name}</strong>`; }
+    else { setStatus(`status-license-${tier}`, `❌ ${data.error}`, 'error'); }
+}
+
+function switchFileTab(name) {
+    const tabs = ['cover','preview','basic','premium','unlimited','exclusive'];
+    tabs.forEach(t => { document.getElementById(`ftab-${t}`).style.display = t === name ? 'block' : 'none'; });
+    document.querySelectorAll('#modal-files .file-tab').forEach((btn, i) => btn.classList.toggle('active', tabs[i] === name));
+}
+
+// ══════════════════════════════════════════════════════════════
+// ARTISTS
+// ══════════════════════════════════════════════════════════════
+async function loadArtists() {
+    artists = await fetch('/api/catalog/artists').then(r => r.json());
+    renderArtists();
+}
+
+function renderArtists() {
+    const grid = document.getElementById('artists-grid');
+    if (!artists.length) {
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><i class="fas fa-user-music"></i><p>Sin artistas aún.</p></div>`;
+        return;
+    }
+    grid.innerHTML = artists.map(a => {
+        const initial = a.name.charAt(0).toUpperCase();
+        return `
+        <div class="item-card">
+            ${a.avatar ? `<img class="card-img" src="/${a.avatar}" style="object-fit:cover" onerror="this.style.display='none'">` : `<div class="card-img-placeholder" style="font-size:56px;font-weight:900">${initial}</div>`}
+            <div class="card-body">
+                <div class="card-title" style="display:flex;align-items:center;gap:6px">
+                    ${esc(a.name)}
+                    ${a.verified ? '<i class="fas fa-circle-check" style="color:#3897f0;font-size:12px"></i>' : ''}
+                </div>
+                <div class="card-meta">${(a.genres || []).join(', ')} ${a.location ? '· ' + esc(a.location) : ''}</div>
+                <div class="card-actions">
+                    <button class="btn-sm btn-edit" onclick="openEditArtist('${a.id}')"><i class="fas fa-pen"></i> Editar</button>
+                    <button class="btn-sm btn-files" onclick="openArtistFiles('${a.id}')"><i class="fas fa-image"></i> Avatar</button>
+                    <button class="btn-sm btn-del" onclick="deleteArtist('${a.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function openAddArtist() {
+    document.getElementById('edit-artist-id').value = '';
+    document.getElementById('artist-modal-title').textContent = 'Añadir Artista';
+    ['a-name','a-bio','a-location','a-genres','a-youtube','a-instagram'].forEach(id => document.getElementById(id).value = '');
+    openModal('modal-artist');
+}
+
+function openEditArtist(id) {
+    const a = artists.find(x => x.id === id);
+    if (!a) return;
+    document.getElementById('edit-artist-id').value = a.id;
+    document.getElementById('artist-modal-title').textContent = 'Editar Artista';
+    document.getElementById('a-name').value      = a.name;
+    document.getElementById('a-bio').value       = a.bio || '';
+    document.getElementById('a-location').value  = a.location || '';
+    document.getElementById('a-genres').value    = (a.genres || []).join(', ');
+    document.getElementById('a-youtube').value   = a.social?.youtube || '';
+    document.getElementById('a-instagram').value = a.social?.instagram || '';
+    openModal('modal-artist');
+}
+
+async function saveArtist() {
+    const id   = document.getElementById('edit-artist-id').value;
+    const name = document.getElementById('a-name').value.trim();
+    if (!name) return toast('El nombre es obligatorio', 'err');
+    const body = {
+        name, bio: document.getElementById('a-bio').value.trim(),
+        location: document.getElementById('a-location').value.trim(),
+        genres: document.getElementById('a-genres').value,
+        social: { youtube: document.getElementById('a-youtube').value.trim(), instagram: document.getElementById('a-instagram').value.trim() }
+    };
+    const btn = document.getElementById('btn-save-artist');
+    btn.innerHTML = '<span class="spinner"></span> Guardando...'; btn.disabled = true;
+    const res  = await fetch(id ? `/api/catalog/artists/${id}` : '/api/catalog/artists', { method: id ? 'PUT' : 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    const data = await res.json();
+    btn.innerHTML = '<i class="fas fa-floppy-disk"></i> Guardar'; btn.disabled = false;
+    if (!res.ok) return toast(data.error || 'Error', 'err');
+    toast(id ? 'Artista actualizado ✓' : 'Artista creado ✓', 'ok');
+    closeModal('modal-artist');
+    await loadArtists();
+    if (!id) setTimeout(() => openArtistFiles(data.id), 400);
+}
+
+async function deleteArtist(id) {
+    const a = artists.find(x => x.id === id);
+    if (!confirm(`¿Eliminar "${a?.name}"?`)) return;
+    await fetch(`/api/catalog/artists/${id}`, { method: 'DELETE' });
+    toast('Artista eliminado', 'ok');
+    loadArtists();
+}
+
+function openArtistFiles(id) {
+    currentArtistId = id;
+    const a = artists.find(x => x.id === id);
+    if (a?.avatar) { document.getElementById('avatar-preview').src = `/${a.avatar}`; document.getElementById('avatar-preview').style.display = 'block'; }
+    else { document.getElementById('avatar-preview').style.display = 'none'; }
+    openModal('modal-artist-files');
+}
+
+async function uploadAvatar() {
+    const file = document.getElementById('input-avatar').files[0];
+    if (!file) return;
+    setStatus('status-avatar', '⏳ Subiendo...', '');
+    const fd = new FormData(); fd.append('image', file);
+    const res  = await fetch(`/api/catalog/artists/${currentArtistId}/avatar`, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (res.ok) { setStatus('status-avatar', '✅ Avatar subido', 'ok'); document.getElementById('avatar-preview').src = `/${data.path}?t=${Date.now()}`; document.getElementById('avatar-preview').style.display = 'block'; await loadArtists(); toast('Avatar subido ✓', 'ok'); }
+    else { setStatus('status-avatar', `❌ ${data.error}`, 'error'); }
+}
+
+// ══════════════════════════════════════════════════════════════
+// SOUND KITS
+// ══════════════════════════════════════════════════════════════
+async function loadKits() {
+    kits = await fetch('/api/catalog/soundkits').then(r => r.json());
+    renderKits();
+}
+
+function renderKits() {
+    const grid = document.getElementById('kits-grid');
+    if (!kits.length) {
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><i class="fas fa-drum"></i><p>Sin kits aún.</p></div>`;
+        return;
+    }
+    grid.innerHTML = kits.map(k => `
+        <div class="item-card">
+            ${k.image ? `<img class="card-img" src="/${k.image}" onerror="this.style.display='none'">` : `<div class="card-img-placeholder">🥁</div>`}
+            <div class="card-body">
+                <div class="card-title">${esc(k.title)}</div>
+                <div class="card-meta">€${k.price} · ${k.fileCount || 0} archivos · ${(k.formats||[]).join(', ')}</div>
+                <div class="card-actions">
+                    <button class="btn-sm btn-edit" onclick="openEditKit('${k.id}')"><i class="fas fa-pen"></i> Editar</button>
+                    <button class="btn-sm btn-files" onclick="openKitFiles('${k.id}')"><i class="fas fa-folder"></i> Archivos</button>
+                    <button class="btn-sm btn-del" onclick="deleteKit('${k.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function openAddKit() {
+    document.getElementById('edit-kit-id').value = '';
+    document.getElementById('kit-modal-title').textContent = 'Añadir Sound Kit';
+    ['k-title','k-desc','k-formats','k-tags'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('k-price').value = 19;
+    document.getElementById('k-count').value = '';
+    openModal('modal-kit');
+}
+
+function openEditKit(id) {
+    const k = kits.find(x => x.id === id); if (!k) return;
+    document.getElementById('edit-kit-id').value = k.id;
+    document.getElementById('kit-modal-title').textContent = 'Editar Sound Kit';
+    document.getElementById('k-title').value   = k.title;
+    document.getElementById('k-desc').value    = k.description || '';
+    document.getElementById('k-price').value   = k.price;
+    document.getElementById('k-count').value   = k.fileCount || '';
+    document.getElementById('k-formats').value = (k.formats || []).join(', ');
+    document.getElementById('k-tags').value    = (k.tags || []).join(', ');
+    openModal('modal-kit');
+}
+
+async function saveKit() {
+    const id    = document.getElementById('edit-kit-id').value;
+    const title = document.getElementById('k-title').value.trim();
+    if (!title) return toast('El nombre es obligatorio', 'err');
+    const body = { title, description: document.getElementById('k-desc').value.trim(), price: document.getElementById('k-price').value, fileCount: document.getElementById('k-count').value, formats: document.getElementById('k-formats').value, tags: document.getElementById('k-tags').value };
+    const btn = document.getElementById('btn-save-kit');
+    btn.innerHTML = '<span class="spinner"></span> Guardando...'; btn.disabled = true;
+    const res  = await fetch(id ? `/api/catalog/soundkits/${id}` : '/api/catalog/soundkits', { method: id ? 'PUT' : 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    const data = await res.json();
+    btn.innerHTML = '<i class="fas fa-floppy-disk"></i> Guardar'; btn.disabled = false;
+    if (!res.ok) return toast(data.error || 'Error', 'err');
+    toast(id ? 'Kit actualizado ✓' : 'Kit creado ✓', 'ok');
+    closeModal('modal-kit');
+    await loadKits();
+    if (!id) setTimeout(() => openKitFiles(data.id), 400);
+}
+
+async function deleteKit(id) {
+    const k = kits.find(x => x.id === id);
+    if (!confirm(`¿Eliminar "${k?.title}"?`)) return;
+    await fetch(`/api/catalog/soundkits/${id}`, { method: 'DELETE' });
+    toast('Kit eliminado', 'ok');
+    loadKits();
+}
+
+function openKitFiles(id) {
+    currentKitId = id;
+    const k = kits.find(x => x.id === id);
+    document.getElementById('kit-files-title').textContent = `Archivos — ${k?.title || id}`;
+    switchKitTab('cover');
+    if (k?.image) { document.getElementById('kit-img-preview').src = `/${k.image}`; document.getElementById('kit-img-preview').style.display = 'block'; }
+    else { document.getElementById('kit-img-preview').style.display = 'none'; }
+    openModal('modal-kit-files');
+}
+
+async function uploadKitFile(type) {
+    const inputId = type === 'image' ? 'input-kit-cover' : 'input-kit-file';
+    const statusId = type === 'image' ? 'status-kit-cover' : 'status-kit-file';
+    const file = document.getElementById(inputId).files[0]; if (!file) return;
+    setStatus(statusId, '⏳ Subiendo...', '');
+    const fd = new FormData(); fd.append(type, file);
+    const res  = await fetch(`/api/catalog/soundkits/${currentKitId}/${type}`, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (res.ok) { setStatus(statusId, `✅ ${file.name}`, 'ok'); if (type === 'image') { document.getElementById('kit-img-preview').src = `/${data.path}?t=${Date.now()}`; document.getElementById('kit-img-preview').style.display = 'block'; } await loadKits(); toast('Archivo subido ✓', 'ok'); }
+    else { setStatus(statusId, `❌ ${data.error}`, 'error'); }
+}
+
+function switchKitTab(name) {
+    ['cover','file'].forEach(t => { document.getElementById(`ktab-${t}`).style.display = t === name ? 'block' : 'none'; });
+    document.querySelectorAll('#modal-kit-files .file-tab').forEach((btn, i) => btn.classList.toggle('active', ['cover','file'][i] === name));
+}
+
+// ══════════════════════════════════════════════════════════════
+// COLLECTIONS
+// ══════════════════════════════════════════════════════════════
+async function loadCollections() {
+    collections = await fetch('/api/catalog/collections').then(r => r.json());
+    renderCollections();
+}
+
+function renderCollections() {
+    const grid = document.getElementById('collections-grid');
+    if (!collections.length) {
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><i class="fas fa-layer-group"></i><p>Sin colecciones aún.</p></div>`;
+        return;
+    }
+    grid.innerHTML = collections.map(c => `
+        <div class="item-card">
+            ${c.image ? `<img class="card-img" src="/${c.image}" onerror="this.style.display='none'">` : `<div class="card-img-placeholder">🗂️</div>`}
+            <div class="card-body">
+                <div class="card-title">${esc(c.title)}</div>
+                <div class="card-meta">${c.beatIds?.length || 0} beats${c.description ? ' · ' + esc(c.description).substring(0,40) + '...' : ''}</div>
+                <div class="card-actions">
+                    <button class="btn-sm btn-edit" onclick="openEditCol('${c.id}')"><i class="fas fa-pen"></i> Editar</button>
+                    <button class="btn-sm btn-files" onclick="openColFiles('${c.id}')"><i class="fas fa-image"></i> Portada</button>
+                    <button class="btn-sm btn-del" onclick="deleteCol('${c.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function buildBeatsChecklist(selectedIds = []) {
+    const container = document.getElementById('beats-checklist');
+    if (!beats.length) { container.innerHTML = '<p style="color:var(--muted);font-size:13px">No hay beats disponibles.</p>'; return; }
+    container.innerHTML = beats.map(b => `
+        <label class="beat-check-item">
+            <input type="checkbox" value="${b.id}" ${selectedIds.includes(b.id) ? 'checked' : ''}>
+            <span class="beat-check-label">${esc(b.title)}</span>
+        </label>
+    `).join('');
+}
+
+function openAddCollection() {
+    document.getElementById('edit-col-id').value = '';
+    document.getElementById('col-modal-title').textContent = 'Añadir Colección';
+    document.getElementById('c-title').value = '';
+    document.getElementById('c-desc').value  = '';
+    buildBeatsChecklist([]);
+    openModal('modal-collection');
+}
+
+function openEditCol(id) {
+    const c = collections.find(x => x.id === id); if (!c) return;
+    document.getElementById('edit-col-id').value = c.id;
+    document.getElementById('col-modal-title').textContent = 'Editar Colección';
+    document.getElementById('c-title').value = c.title;
+    document.getElementById('c-desc').value  = c.description || '';
+    buildBeatsChecklist(c.beatIds || []);
+    openModal('modal-collection');
+}
+
+async function saveCollection() {
+    const id    = document.getElementById('edit-col-id').value;
+    const title = document.getElementById('c-title').value.trim();
+    if (!title) return toast('El nombre es obligatorio', 'err');
+    const beatIds = [...document.querySelectorAll('#beats-checklist input:checked')].map(cb => cb.value);
+    const body    = { title, description: document.getElementById('c-desc').value.trim(), beatIds };
+    const btn     = document.getElementById('btn-save-col');
+    btn.innerHTML = '<span class="spinner"></span> Guardando...'; btn.disabled = true;
+    const res  = await fetch(id ? `/api/catalog/collections/${id}` : '/api/catalog/collections', { method: id ? 'PUT' : 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    const data = await res.json();
+    btn.innerHTML = '<i class="fas fa-floppy-disk"></i> Guardar'; btn.disabled = false;
+    if (!res.ok) return toast(data.error || 'Error', 'err');
+    toast(id ? 'Colección actualizada ✓' : 'Colección creada ✓', 'ok');
+    closeModal('modal-collection');
+    await loadCollections();
+    if (!id) setTimeout(() => openColFiles(data.id), 400);
+}
+
+async function deleteCol(id) {
+    const c = collections.find(x => x.id === id);
+    if (!confirm(`¿Eliminar "${c?.title}"?`)) return;
+    await fetch(`/api/catalog/collections/${id}`, { method: 'DELETE' });
+    toast('Colección eliminada', 'ok');
+    loadCollections();
+}
+
+function openColFiles(id) {
+    currentColId = id;
+    const c = collections.find(x => x.id === id);
+    if (c?.image) { document.getElementById('col-img-preview').src = `/${c.image}`; document.getElementById('col-img-preview').style.display = 'block'; }
+    else { document.getElementById('col-img-preview').style.display = 'none'; }
+    openModal('modal-col-files');
+}
+
+async function uploadColCover() {
+    const file = document.getElementById('input-col-cover').files[0]; if (!file) return;
+    setStatus('status-col-cover', '⏳ Subiendo...', '');
+    const fd = new FormData(); fd.append('image', file);
+    const res  = await fetch(`/api/catalog/collections/${currentColId}/image`, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (res.ok) { setStatus('status-col-cover', '✅ Portada subida', 'ok'); document.getElementById('col-img-preview').src = `/${data.path}?t=${Date.now()}`; document.getElementById('col-img-preview').style.display = 'block'; await loadCollections(); toast('Portada subida ✓', 'ok'); }
+    else { setStatus('status-col-cover', `❌ ${data.error}`, 'error'); }
+}
+
+// ── Helpers UI ────────────────────────────────────────────────
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(el => {
+    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+function clearBeatForm() {
+    ['f-title','f-tags'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-bpm').value = 140;
+    document.getElementById('f-genre').value = 'Trap';
+    document.getElementById('f-key').value   = 'Cm';
+    document.getElementById('p-basic').value     = 29;
+    document.getElementById('p-premium').value   = 59;
+    document.getElementById('p-unlimited').value = 149;
+    document.getElementById('p-exclusive').value = 299;
+}
+
+function setStatus(id, msg, cls) {
+    const el = document.getElementById(id); if (!el) return;
+    el.textContent = msg; el.className = `upload-status ${cls}`;
+}
+
+function toast(msg, type = '') {
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.className = `toast show ${type}`;
+    setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+document.getElementById('btn-logout').onclick = async () => {
+    await fetch('/api/admin/logout', { method: 'POST' });
+    window.location.href = '/admin/login.html';
+};
+
+init();
+</script>
+</body>
+</html>

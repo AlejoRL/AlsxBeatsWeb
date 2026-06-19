@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo — AlsxBeats</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/cart.css">
+    <style>
+        .catalog-hero {
+            padding: 60px 24px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .catalog-hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 6px; }
+        .catalog-hero p  { color: var(--text-muted); font-size: 15px; }
+        .catalog-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 120px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="nav-container" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;">
+        <a href="index.html" class="logo" style="text-decoration:none">Alsx<span>Beats</span></a>
+        <ul class="nav-links" style="justify-content:center;">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="index.html#contacto">Contacto</a></li>
+        </ul>
+        <div id="auth-widget" style="display:flex;align-items:center;gap:10px;position:relative;justify-content:flex-end;">
+            <a href="login.html" style="color:#94a3b8;font-size:14px;font-weight:600;text-decoration:none;padding:8px 14px;">Iniciar sesión</a>
+            <a href="register.html" style="background:#4ecdc4;color:#000;font-size:13px;font-weight:700;text-decoration:none;padding:8px 18px;border-radius:8px;">Registrarse</a>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="catalog-hero">
+        <h1>Catálogo</h1>
+        <p>Todos los beats disponibles para licenciar.</p>
+    </div>
+
+    <div class="catalog-wrap">
+        <div class="filters-bar" style="margin-bottom:20px">
+            <div class="search-wrap">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="filter-search" placeholder="Buscar beats..." autocomplete="off">
+            </div>
+            <div class="filter-selects">
+                <select id="filter-bpm">
+                    <option value="">Todos los BPM</option>
+                    <option value="slow">Lento (&lt;85)</option>
+                    <option value="mid">Medio (85–115)</option>
+                    <option value="fast">Rápido (115–145)</option>
+                    <option value="hard">Intenso (145+)</option>
+                </select>
+                <select id="filter-key">
+                    <option value="">Todas las keys</option>
+                    <option>Cm</option><option>C</option><option>C#m</option><option>C#</option>
+                    <option>Dm</option><option>D</option><option>D#m</option><option>D#</option>
+                    <option>Em</option><option>E</option><option>Fm</option><option>F</option>
+                    <option>F#m</option><option>F#</option><option>Gm</option><option>G</option>
+                    <option>G#m</option><option>G#</option><option>Am</option><option>A</option>
+                    <option>A#m</option><option>A#</option><option>Bm</option><option>B</option>
+                </select>
+                <button class="btn-clear-filters" id="btn-clear" style="display:none" onclick="clearFilters()">
+                    <i class="fas fa-xmark"></i> Limpiar
+                </button>
+            </div>
+        </div>
+        <div class="genre-pills" id="genre-pills">
+            <button class="genre-pill active" data-genre="">Todos</button>
+            <button class="genre-pill" data-genre="Trap">Trap</button>
+            <button class="genre-pill" data-genre="R&B">R&amp;B</button>
+            <button class="genre-pill" data-genre="Lo-Fi">Lo-Fi</button>
+            <button class="genre-pill" data-genre="Drill">Drill</button>
+            <button class="genre-pill" data-genre="Afrobeats">Afrobeats</button>
+            <button class="genre-pill" data-genre="Hip-Hop">Hip-Hop</button>
+            <button class="genre-pill" data-genre="Pop">Pop</button>
+            <button class="genre-pill" data-genre="Reggaeton">Reggaeton</button>
+        </div>
+        <p class="results-count" id="results-count" style="margin:16px 0"></p>
+        <div class="catalogue" id="catalogue-grid"></div>
+    </div>
+</main>
+
+<audio id="player" controls autoplay hidden><source src="" type="audio/mpeg"></audio>
+<script src="js/main.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "28cdb853-c861-4c65-9925-70a192c07992",
+    "name": "test",
+    "email": "test@test.com",
+    "password": "$2b$10$eMfvzRVzYOfHV1uz8mZGIuy/lAAvvNbhqowYDNYpKLiJEFzH3P7QC",
+    "avatar": "",
+    "createdAt": "2026-06-19"
+  },
+  {
+    "id": "4124f5a3-bea1-4096-b137-38e1783b3960",
+    "name": "AlsxBeats",
+    "email": "alsxbeats@gmail.com",
+    "password": "$2b$10$XjY6RkV.Noe2E.BJKyB2zOMrRhiVCjr0yGGi5rnwKItcdeAeF8qyy",
+    "avatar": "",
+    "createdAt": "2026-06-19"
+  }
+]
