@@ -478,10 +478,11 @@ footer {
 }
 
 #waveform{
-    width:30%;
+    width:100%;
     height:center;
     flex:1;
     max-width:1400px;
+    transition:.3s;
 
 }
 .bottom-row{
@@ -732,8 +733,8 @@ white-space:nowrap;
     background: rgba(0, 0, 0, 0.4);
     border: none;
     border-radius: 50%;
-    width: 35px;
-    height: 35px;
+    width: 42px;
+    height: 42px;
     cursor: pointer;
     backdrop-filter: blur(5px);
 }
@@ -744,7 +745,12 @@ white-space:nowrap;
 
 .like-btn.liked {
     background: rgba(255, 71, 87, 0.2);
-    transform: scale(1.2);
+    transform: scale(1.1);
+    color:#ff4d6d;
+}
+
+.icon-btn.liked i{
+    color:#ff4d6d;
 }
 
 .licensing-header{
@@ -1114,3 +1120,5 @@ transition:.3s ease;
         margin-top:0 !important;
     }
 }
+
+

@@ -1,4 +1,4 @@
-<script>
+
     let temporizadorPreview;
     let intervaloFade;
     let tarjetaActual = null;
@@ -72,19 +72,14 @@
             section.scrollIntoView({ behavior: 'smooth' });
         }
     }
-        document.querySelectorAll('.like-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            // Previene que se abra el reproductor al hacer clic en el corazón
-            e.stopPropagation(); 
-            
-            btn.classList.toggle('liked');
-            
-            // Opcional: Feedback visual extra
-            if (btn.classList.contains('liked')) {
-                btn.textContent = '❤️';
-            } else {
-                btn.textContent = '❤️'; 
-            }
-        });
+      document.querySelectorAll('.like-btn').forEach(btn => {
+
+    btn.addEventListener('click', (e) => {
+
+        e.stopPropagation();
+
+        btn.classList.toggle('liked');
+
     });
-</script>
+
+});
