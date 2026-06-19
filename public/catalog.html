@@ -27,17 +27,27 @@
 </head>
 <body>
 <header>
-    <nav class="nav-container" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;">
-        <a href="index.html" class="logo" style="text-decoration:none">Alsx<span>Beats</span></a>
-        <ul class="nav-links" style="justify-content:center;">
+    <nav class="nav-container nav-grid">
+        <a href="index.html" class="logo">Alsx<span>Beats</span></a>
+        <ul class="nav-links nav-center">
             <li><a href="index.html">Inicio</a></li>
             <li><a href="index.html#contacto">Contacto</a></li>
         </ul>
-        <div id="auth-widget" style="display:flex;align-items:center;gap:10px;position:relative;justify-content:flex-end;">
+        <div id="auth-widget" class="nav-right">
             <a href="login.html" style="color:#94a3b8;font-size:14px;font-weight:600;text-decoration:none;padding:8px 14px;">Iniciar sesión</a>
             <a href="register.html" style="background:#4ecdc4;color:#000;font-size:13px;font-weight:700;text-decoration:none;padding:8px 18px;border-radius:8px;">Registrarse</a>
         </div>
+        <button class="nav-hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menú">
+            <span></span><span></span><span></span>
+        </button>
     </nav>
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="index.html">Inicio</a>
+        <a href="index.html#contacto">Contacto</a>
+        <div class="mobile-divider"></div>
+        <a href="login.html">Iniciar sesión</a>
+        <a href="register.html" class="mobile-register">Registrarse</a>
+    </div>
 </header>
 
 <main>
@@ -95,5 +105,10 @@
 <script src="js/cart.js"></script>
 <script src="js/catalog.js"></script>
 <script src="js/auth.js"></script>
+<script>
+function toggleMobileMenu() {
+    document.getElementById('mobile-menu').classList.toggle('open');
+}
+</script>
 </body>
 </html>
