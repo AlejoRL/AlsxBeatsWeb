@@ -120,115 +120,106 @@
         @media (max-width: 768px) {
             header { padding: 14px 20px; }
 
+            /* Stack vertical: sidebar arriba, contenido abajo */
             .page-layout {
-                flex-direction: column;
-                padding: 0 0 40px;
-                gap: 0;
+                flex-direction: column !important;
+                padding: 0 0 48px !important;
+                gap: 0 !important;
+                max-width: 100% !important;
             }
 
-            /* Sidebar: ocultar bloque de avatar, convertir nav en tabs horizontales */
             .profile-sidebar {
-                width: 100%;
-                position: static;
-                flex-direction: column;
-                gap: 0;
+                width: 100% !important;
+                min-width: 0 !important;
+                position: static !important;
+                flex-direction: column !important;
+                gap: 0 !important;
             }
 
+            /* Avatar: fila horizontal compacta */
             .avatar-block {
-                border-radius: 0;
-                border-left: none;
-                border-right: none;
-                border-top: none;
-                padding: 20px 20px 16px;
-                display: flex;
-                align-items: center;
-                gap: 16px;
-                text-align: left;
+                border-radius: 0 !important;
+                border-left: none !important;
+                border-right: none !important;
+                border-top: none !important;
+                padding: 16px 20px !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 14px !important;
+                text-align: left !important;
+                margin-bottom: 0 !important;
             }
-
             .avatar-circle {
-                width: 52px; height: 52px;
-                font-size: 20px;
+                width: 48px !important;
+                height: 48px !important;
+                font-size: 18px !important;
+                margin: 0 !important;
                 flex-shrink: 0;
-                margin: 0;
             }
+            .avatar-name { font-size: 14px !important; margin-bottom: 2px !important; }
+            .avatar-email { font-size: 11px !important; margin-bottom: 0 !important; }
+            .avatar-since { display: none !important; }
 
-            .avatar-since { display: none; }
-
-            /* Nav como tabs horizontales con scroll */
+            /* Nav → tabs horizontales con scroll */
             .nav-menu {
-                flex-direction: row;
-                overflow-x: auto;
-                gap: 0;
-                border-bottom: 1px solid var(--border);
-                padding: 0 12px;
+                flex-direction: row !important;
+                overflow-x: auto !important;
+                overflow-y: visible !important;
+                gap: 0 !important;
+                border-bottom: 1px solid var(--border) !important;
+                padding: 0 8px !important;
                 scrollbar-width: none;
                 -webkit-overflow-scrolling: touch;
             }
             .nav-menu::-webkit-scrollbar { display: none; }
 
             .nav-item {
-                flex-shrink: 0;
-                padding: 12px 14px;
-                border-radius: 0;
-                font-size: 13px;
-                border-bottom: 2px solid transparent;
-                white-space: nowrap;
-                gap: 7px;
+                flex-shrink: 0 !important;
+                padding: 12px 12px !important;
+                border-radius: 0 !important;
+                font-size: 12px !important;
+                white-space: nowrap !important;
+                gap: 6px !important;
+                border-bottom: 2px solid transparent !important;
+                background: none !important;
             }
             .nav-item.active {
-                background: none;
-                border-bottom-color: var(--accent);
-                color: var(--accent);
+                background: none !important;
+                border-bottom: 2px solid var(--accent) !important;
+                color: var(--accent) !important;
             }
-            .nav-item i { width: auto; font-size: 12px; }
-            .nav-divider { display: none; }
+            .nav-item i { width: auto !important; font-size: 11px !important; }
+            .nav-divider { display: none !important; }
 
-            /* Contenido principal */
+            /* Contenido */
             .profile-content {
-                padding: 24px 20px;
+                width: 100% !important;
+                min-width: 0 !important;
+                padding: 20px 16px !important;
             }
 
-            /* Formularios: una sola columna */
-            .form-row {
-                grid-template-columns: 1fr;
-            }
+            .panel-title { font-size: 18px !important; }
 
-            .form-section {
-                padding: 20px 16px;
-            }
+            /* Formularios: 1 columna */
+            .form-row { grid-template-columns: 1fr !important; }
+            .form-section { padding: 18px 14px !important; }
 
-            .panel-title { font-size: 18px; }
-
-            /* Beats grid: 2 columnas en móvil */
-            .beats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            /* Order cards: evitar desbordamiento */
-            .order-header {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            .order-item {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-            .order-download {
-                margin-left: auto;
-            }
-
-            /* Playlist create form */
-            .create-playlist-form {
-                flex-wrap: wrap;
-            }
-            .create-playlist-form input { min-width: 0; }
-
-            /* Botones */
+            /* Botones full width */
             .btn-save, .btn-danger {
-                width: 100%;
-                justify-content: center;
+                width: 100% !important;
+                justify-content: center !important;
             }
+
+            /* Beats grid 2 cols */
+            .beats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+            /* Order cards */
+            .order-header { flex-wrap: wrap !important; gap: 6px !important; }
+            .order-download { font-size: 11px !important; }
+
+            /* Playlist form */
+            .create-playlist-form { flex-wrap: wrap !important; }
+            .create-playlist-form input { min-width: 0 !important; }
         }
     </style>
 </head>
