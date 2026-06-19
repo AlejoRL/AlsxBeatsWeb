@@ -107,9 +107,20 @@ header {
     .nav-grid {
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
     .nav-links { display: none !important; }
-    .nav-right  { display: none !important; }
+    /* Ocultar nav-right solo cuando NO hay sesión (sin avatar) */
+    .nav-right:not(.auth-has-user) { display: none !important; }
+    /* Con sesión: mostrar solo el avatar, sin nombre ni chevron */
+    .nav-right.auth-has-user { display: flex !important; }
+    .user-name-label { display: none; }
+    .dd-chevron { display: none; }
+    #user-menu-btn {
+        padding: 3px !important;
+        background: none !important;
+        border: none !important;
+    }
     .nav-hamburger { display: flex; }
 }
 

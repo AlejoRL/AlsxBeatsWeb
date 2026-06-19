@@ -40,6 +40,7 @@ function renderAuthNav(user) {
     widget.style.cssText = 'display:flex;align-items:center;gap:10px;position:relative;justify-content:flex-end;';
 
     if (user) {
+        widget.classList.add('auth-has-user');
         const initial = user.name.charAt(0).toUpperCase();
         widget.innerHTML = `
             <button id="user-menu-btn" style="
@@ -56,8 +57,8 @@ function renderAuthNav(user) {
                     display:flex;align-items:center;justify-content:center;
                     font-size:12px;font-weight:800;color:#000;flex-shrink:0;
                 ">${initial}</span>
-                ${user.name.split(' ')[0]}
-                <i id="dd-chevron" class="fas fa-chevron-down" style="font-size:10px;color:#94a3b8;transition:transform .2s"></i>
+                <span class="user-name-label">${user.name.split(' ')[0]}</span>
+                <i id="dd-chevron" class="fas fa-chevron-down dd-chevron" style="font-size:10px;color:#94a3b8;transition:transform .2s"></i>
             </button>
         `;
 
@@ -107,7 +108,18 @@ function renderAuthNav(user) {
             }
         });
 
+        // Actualizar menú móvil cuando hay sesión
+        const mobileAuth = document.getElementById('mobile-auth-links');
+        if (mobileAuth) {
+            mobileAuth.innerHTML = `
+                <a href="profile.html">Mi perfil</a>
+                <a href="profile.html#compras">Mis compras</a>
+                <a href="#" onclick="authLogout();return false;" style="color:#ef4444;">Cerrar sesión</a>
+            `;
+        }
+
     } else {
+        widget.classList.remove('auth-has-user');
         widget.innerHTML = `
             <a href="login.html" style="color:#94a3b8;font-size:14px;font-weight:600;text-decoration:none;padding:8px 14px;transition:color .2s"
                onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">
