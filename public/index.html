@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <header>
@@ -36,8 +36,8 @@
 
         <div class="beat-card">
     <button class="like-btn">❤️</button> 
-<div class="image-container" onclick="playBeat('typelofiryb1video.wav', this.closest('.beat-card'))">
-        <img src="typelofiryb1.png" alt="R&B Lo-Fi Type Beat">
+<div class="image-container" onclick="playBeat('assets/audio/typelofiryb1video.wav', this.closest('.beat-card'))">
+       <img src="assets/images/typelofiryb1.png" alt="R&B Lo-Fi Type Beat">
         <div class="play-overlay"><span>▶</span></div>
     </div>
     
@@ -52,7 +52,7 @@ Ver Licencias
 </div>
             <div class="beat-card">
     <button class="like-btn">❤️</button> <div class="image-container" onclick="playBeat('beat2.mp3', this.closest('.beat-card'))">
-                    <img src="alsxbeatsportada.png" alt="Dark Drill Beat">
+                    <img src="assets/images/alsxbeatsportada.png" alt="Dark Drill Beat">
                     <div class="play-overlay"><span>▶</span></div>
                 </div>
                 <h2>Dark Drill Beat</h2>
@@ -104,95 +104,6 @@ Ver Licencias
         <source src="" type="audio/mpeg">
     </audio>
 
-<script>
-    let temporizadorPreview;
-    let intervaloFade;
-    let tarjetaActual = null;
-
-    function playBeat(beat, cardElement) {
-        const player = document.getElementById('player');
-        const currentOverlay = cardElement.querySelector('.play-overlay span');
-
-        if (tarjetaActual === cardElement) {
-            if (!player.paused) {
-                limpiarTemporizadores();
-                player.pause();
-                player.volume = 1;
-                cardElement.classList.remove('playing');
-                if (currentOverlay) currentOverlay.textContent = '▶';
-                tarjetaActual = null;
-                return;
-            }
-        }
-
-        limpiarTemporizadores();
-        player.pause();
-        player.volume = 1;
-
-        document.querySelectorAll('.beat-card').forEach(card => {
-            card.classList.remove('playing');
-            const overlay = card.querySelector('.play-overlay span');
-            if (overlay) overlay.textContent = '▶';
-        });
-
-        cardElement.classList.add('playing');
-        if (currentOverlay) currentOverlay.textContent = '⏸';
-        tarjetaActual = cardElement;
-
-        player.src = beat;
-        player.play();
-
-        const tiempoPreview = 10; 
-        const tiempoFade = 2;    
-
-        temporizadorPreview = setTimeout(() => {
-            let pasosVolume = 20;
-            let intervaloTiempo = (tiempoFade * 1000) / pasosVolume;
-
-            intervaloFade = setInterval(() => {
-                if (tarjetaActual === cardElement && player.volume > 0.06) {
-                    player.volume -= 0.05;
-                } else {
-                    limpiarTemporizadores();
-                    if (tarjetaActual === cardElement) {
-                        player.pause();
-                        player.volume = 1;
-                        cardElement.classList.remove('playing');
-                        if (currentOverlay) currentOverlay.textContent = '▶';
-                        tarjetaActual = null;
-                    }
-                }
-            }, intervaloTiempo);
-
-        }, (tiempoPreview - tiempoFade) * 1000);
-    }
-
-    function limpiarTemporizadores() {
-        clearTimeout(temporizadorPreview);
-        clearInterval(intervaloFade);
-    }
-
-    function scrollToSection(id) {
-        const section = document.getElementById(id);
-        if (section) {
-            section.scrollIntoView({ behavior: 'smooth' });
-        }
-    }
-        document.querySelectorAll('.like-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            // Previene que se abra el reproductor al hacer clic en el corazón
-            e.stopPropagation(); 
-            
-            btn.classList.toggle('liked');
-            
-            // Opcional: Feedback visual extra
-            if (btn.classList.contains('liked')) {
-                btn.textContent = '❤️';
-            } else {
-                btn.textContent = '❤️'; 
-            }
-        });
-    });
-</script>
+<script src="js/main.js"></script>
 </body>
 </html>

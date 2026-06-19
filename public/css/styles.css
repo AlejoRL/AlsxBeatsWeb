@@ -1,0 +1,1116 @@
+:root {
+    --bg-main: #0f111a;          /* Fondo oscuro profundo y limpio */
+    --bg-card: #1e2230;          /* Fondo de tarjetas ligeramente más claro */
+    --accent-celeste: #4ecdc4;   /* Celeste nítido e iluminado */
+    --accent-glow: #2980b9;      /* Azul para degradados */
+    --text-white: #ffffff;
+    --text-muted: #a0aec0;       /* Gris claro nítido para textos secundarios */
+    --font-family: 'Inter', sans-serif;
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif; /* Tu fuente original */
+    background-color: var(--bg-main);
+    color: var(--text-white);
+    line-height: 1.6;
+    /* ... resto de tu configuración ... */
+}
+/* --- HEADER & NAV --- */
+header {
+    background: rgba(15, 17, 26, 0.85);
+    backdrop-filter: blur(12px); /* Efecto Glassmorphism moderno */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.logo span {
+    color: var(--accent-celeste);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 32px;
+}
+
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    transition: var(--transition-smooth);
+}
+
+.nav-links a:hover {
+    color: var(--text-white);
+    text-shadow: 0 0 10px rgba(78, 205, 196, 0.4);
+}
+
+/* --- BOTONES INTERACTIVOS --- */
+.btn {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-celeste) 0%, var(--accent-glow) 100%);
+    color: #0f111a;
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 205, 196, 0.5);
+    filter: brightness(1.1);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-white);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    margin-top: 12px;
+}
+
+.btn-secondary:hover {
+    background: var(--text-white);
+    color: var(--bg-main);
+    transform: translateY(-2px);
+}
+
+.btn-large {
+    padding: 16px 40px;
+    font-size: 16px;
+    border-radius: 12px;
+}
+
+/* --- HERO SECTION --- */
+main {
+    flex: 1;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 64px 24px;
+}
+
+.hero {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 80px auto;
+}
+
+.hero h1 {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #ffffff 40%, var(--accent-celeste) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    color: var(--text-muted);
+    font-size: 18px;
+    margin-bottom: 32px;
+    font-weight: 400;
+}
+
+/* --- CATÁLOGO DE BEATS --- */
+.catalogue {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+/* Arreglar la tarjeta */
+.beat-card {
+    background-color: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 16px;
+    position: relative; /* Clave para el corazón */
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Evita que el grid se expanda de más */
+}
+
+.beat-card::before{
+content:"";
+position:absolute;
+inset:0;
+
+background:
+linear-gradient(
+180deg,
+rgba(78,205,196,.03),
+transparent
+);
+
+pointer-events:none;
+}
+
+.beat-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(78, 205, 196, 0.3);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Contenedor de Imagen y efecto Hover de Play */
+.image-container {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0; /* Evita que la imagen se encoja o agrande innecesariamente */
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-smooth);
+}
+
+.beat-card:hover .image-container img {
+    transform: scale(1.05);
+}
+
+.play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 17, 26, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.play-overlay span {
+    font-size: 40px;
+    color: var(--accent-celeste);
+    transform: scale(0.8);
+    transition: var(--transition-smooth);
+}
+
+.beat-card:hover .play-overlay {
+    opacity: 1;
+}
+
+.beat-card:hover .play-overlay span {
+    transform: scale(1);
+}
+
+/* Textos internos de la Tarjeta */
+.beat-card h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.price {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.divider {
+    color: rgba(255, 255, 255, 0.15);
+    margin: 0 6px;
+}
+
+/* --- FOOTER --- */
+footer {
+    background-color: #0b0d14;
+    padding: 40px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    margin-top: auto;
+}
+
+.social-links {
+    margin-bottom: 16px;
+}
+
+.social-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    margin: 0 16px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+}
+
+.social-links a:hover {
+    color: var(--accent-celeste);
+}
+
+.copy {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .catalogue {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- NUEVA SECCIÓN DE CONTACTO MINIMALISTA --- */
+.contacto-section {
+    padding: 80px 24px;
+    margin-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.contacto-section h2 {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #ffffff 60%, var(--accent-celeste) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.contacto-subtitle {
+    color: var(--text-muted);
+    font-size: 16px;
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+}
+
+/* Contenedor flexible para alinear los dos botones de forma elegante */
+.contacto-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Base estética común para ambos botones */
+.btn-contacto-custom {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px; /* Espacio entre el logo y el texto */
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+
+.btn-contacto-custom i {
+    font-size: 20px; /* Tamaño del logo */
+}
+
+/* Estilo personalizado para el botón de Correo (Vibe del sitio) */
+.btn-email-custom {
+    background-color: var(--bg-card);
+    color: var(--text-white);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.btn-email-custom:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-celeste);
+    box-shadow: 0 0 15px rgba(78, 205, 196, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Estilo premium e iluminado para el botón de WhatsApp Business */
+.btn-whatsapp-custom {
+    background: linear-gradient(100deg, #25D366 0%, #128C7E 80%);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+}
+
+.btn-whatsapp-custom:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Ajuste responsive para pantallas móviles */
+@media (max-width: 600px) {
+    .contacto-buttons-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .btn-contacto-custom {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+
+/* --- CORRECCIÓN DE ESTILO PARA RESPLANDOR Y COLORES --- */
+
+
+/* Estilo del texto del productor */
+.producer-text {
+    font-size: 13px;
+    font-weight: 700;
+    color:#a0aec0;
+    letter-spacing:.8px;
+    margin:0;
+       }
+
+.producer-label{
+    font-size:10px;
+    color:#6b7280;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+}
+
+@keyframes neonGlow {
+    0% {
+        text-shadow:
+            0 0 5px rgba(78,205,196,.4),
+            0 0 10px rgba(78,205,196,.2);
+    }
+
+    100% {
+        text-shadow:
+            0 0 10px rgba(78,205,196,.9),
+            0 0 20px rgba(78,205,196,.8),
+            0 0 40px rgba(78,205,196,.5);
+    }
+}
+/* Estilo del icono verificado */
+.verified-icon {
+    color:#4ecdc4 !important;
+    font-size: 12px;
+}
+.music-player{
+    position:fixed;
+    bottom:-120px;
+    left:0;
+
+    width:100%;
+    height:125px;
+    opacity:0;
+    visibility:hidden;
+
+    background:#0b1016;
+    border-top:1px solid rgba(78,205,196,.15);
+    transition:all .35s ease;
+
+    display:flex;
+    flex-direction:column;
+
+    z-index:9999;
+}
+
+.music-player.active{
+    bottom:0;
+    opacity:1;
+    visibility:visible;
+}
+
+.wave-row{
+    display:flex;
+    height:55px;
+    width:100%;
+    align-items:center;
+    justify-content:center;
+    gap:15px;
+    padding:10 50px;
+    border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+
+#current-time,
+#duration-time{
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    min-width:50px;
+    text-align:center;
+}
+
+#waveform{
+    width:30%;
+    height:center;
+    flex:1;
+    max-width:1400px;
+
+}
+.bottom-row{
+    flex:1;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 20px;
+}
+
+.player-left {
+    width: 280px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.player-left img {
+    width: 55px;
+    height: 55px;
+    border-radius: 8px;
+    object-fit: cover;
+    overflow:hidden;
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+}
+
+#player-title {
+    font-weight: 700;
+    font-size: 14px;
+max-width:180px;
+white-space:nowrap;
+ overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.player-producer {
+    color:#4ecdc4;
+    font-size: 13px;
+}
+
+.player-center{
+    flex:1;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    width:100%;
+    padding:0 20px;
+}
+
+.player-progress{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.player-controls{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
+}
+
+.icon-btn{
+    background:none;
+    border:none;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.player-right{
+    width:220px;
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+}
+
+.player-btn{
+    width:44px;
+    height:44px;
+
+    background:#4ecdc4;
+    color:#000;
+
+    border-radius:50%;
+    border:none;
+
+    font-size:14px;
+}
+
+.player-btn:hover {
+    transform: scale(1.1);
+
+    box-shadow:
+        0 0 10px rgba(78,205,196,.5),
+        0 0 20px rgba(78,205,196,.3);
+}
+
+.progress-bar{
+    flex:1;
+
+    appearance:none;
+    -webkit-appearance:none;
+
+    height:3px;
+
+    background:
+    rgba(255,255,255,.12);
+
+    border-radius:999px;
+
+    cursor:pointer;
+}
+/* El círculo que se desliza (thumb) */
+.progress-bar::-webkit-slider-thumb{
+    appearance:none;
+    -webkit-appearance:none;
+
+    width:14px;
+    height:14px;
+
+    border-radius:50%;
+
+    background:#4ecdc4;
+
+    box-shadow:
+    0 0 10px rgba(78,205,196,.6);
+
+    cursor:pointer;
+}
+/* Efecto al pasar el mouse por encima del círculo */
+.progress-bar::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(78, 205, 196, 0.8);
+}
+
+.time {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 5px;
+
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.cart-btn {
+    height: 32px;
+    padding: 0 14px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: var(--accent-celeste);
+    color: #000;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    cursor: pointer;
+}
+.cart-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0 10px rgba(78,205,196,.5),
+        0 0 20px rgba(78,205,196,.3);
+}
+.popular-license {
+    position: relative;
+    /* Un pequeño borde extra para resaltar la tarjeta más importante */
+    border: 2px solid #4ecdc4 !important;
+}
+
+.popular-badge {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: #4ecdc4;
+    color: #000; /* Negro para máximo contraste */
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    /* Efecto de resplandor profesional */
+    box-shadow: 0 0 10px rgba(78, 205, 196, 0.6);
+}
+.wave {
+    display: none;
+    gap: 3px;
+    height: 14px;
+    align-items: flex-end; /* Asegura que crezcan desde abajo */
+    margin: 5px 0; /* Un poco de aire para que no pegue con el texto */
+}
+
+.wave span {
+    width: 4px;
+    background: #4ecdc4;
+    animation: wave 1s infinite ease-in-out;
+}
+
+/* Retrasos para el efecto de ola */
+.wave span:nth-child(2) { animation-delay: 0.2s; }
+.wave span:nth-child(3) { animation-delay: 0.4s; }
+.wave span:nth-child(4) { animation-delay: 0.6s; }
+
+@keyframes wave {
+    0% { height: 3px; }
+    50% { height: 14px; }
+    100% { height: 3px; }
+}
+.wave {
+    display: flex;
+    gap: 3px;
+    height: 20px;
+    align-items: flex-end;
+}
+
+.wave span {
+    width: 4px;
+    background: #4ecdc4;
+    animation: wave 1s infinite ease-in-out;
+    animation-play-state: paused; /* La onda está quieta por defecto */
+}
+/* El botón de like no debe afectar nada más */
+.like-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+}
+.like-btn:hover {
+    background: rgba(78, 205, 196, 0.2);
+    transform: scale(1.1);
+}
+
+.like-btn.liked {
+    background: rgba(255, 71, 87, 0.2);
+    transform: scale(1.2);
+}
+
+.licensing-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+
+    margin-bottom:20px;
+    padding-bottom:20px;
+
+    border-bottom:1px solid #1c232b;
+}
+
+.checkout-box{
+    text-align:right;
+}
+
+.total-label{
+    font-size:13px;
+    color:#8b95a7;
+}
+
+.total-price{
+    font-size:24px;
+    font-weight:800;
+    margin:2px 0 10px;
+}
+
+.checkout-actions{
+    display:flex;
+    gap:12px;
+}
+
+.cart-btn-license,
+.buy-btn-license{
+    height:40px;
+    padding:0 22px;
+
+    border:none;
+    border-radius:8px;
+
+    font-size:14px;
+    font-weight:600;
+
+    cursor:pointer;
+    transition:.25s ease;
+}
+.cart-btn-license{
+    background:#252d37;
+    color:#fff;
+}
+
+.buy-btn-license{
+    background:#4ecdc4;
+    color:black;
+}
+
+.license-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin:20px 0 30px;
+}
+
+.license-card{
+    background:#11151a;
+    border:1px solid #1c232b;
+    border-radius:10px;
+
+    padding:16px 18px;
+
+    min-height:110px;
+
+    cursor:pointer;
+    transition:.25s ease;
+    position:relative;
+}
+
+.license-card:hover{
+    border-color:#4ecdc4;
+    transform:translateY(-2px);
+}
+
+.license-card.active{
+    border:1px solid #4ecdc4;
+    box-shadow:0 0 12px rgba(78,205,196,.18);
+}
+
+.license-card h3{
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:10px;
+    text-transform:uppercase;
+}
+
+.license-card span{
+    font-size:12px;
+    color:#8b97a8;
+}
+
+.license-price{
+    font-size:16px;
+    font-weight:800;
+    margin-bottom:6px;
+}
+
+.popular-star{
+    position:absolute;
+    top:10px;
+    right:10px;
+    font-size:14px;
+}
+
+.usage-terms{
+    border-top:1px solid #1c232b;
+    padding-top:30px;
+}
+
+.terms-grid{
+    margin-top:20px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    color:var(--text-muted);
+transition:.3s ease;
+}
+
+.more-beats-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.see-all-link{
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.see-all-link:hover{
+    color:#4ecdc4;
+}
+
+.more-beats-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+}
+
+.more-beat-card img{
+    width:100%;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    border-radius:12px;
+    margin-bottom:8px;
+
+}
+
+.more-beat-card h4{
+    margin-top:8px;
+    margin-bottom:8px;
+    line-height:1.2;
+    font-size:18px;
+}
+
+.more-beat-card{
+    display:flex;
+    flex-direction:column;
+    margin-top:auto;
+}
+
+
+.beat-actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-top:8px;
+}
+
+.buy-beat-btn{
+    flex:1;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+
+    height:50px;
+
+    border-radius:10px;
+    border:1px solid #4ecdc4;
+
+    color:#fff;
+    font-weight:700;
+}
+
+.buy-beat-btn:hover{
+    background:#4ecdc4;
+    color:#000;
+}
+
+.download-btn{
+    width:50px;
+    height:50px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid #2a2f3a;
+    border-radius:10px;
+
+    font-size:18px;
+    color:white;
+
+    background:#0f1318;
+}
+.download-btn:hover{
+    border-color:#4ecdc4;
+    color:#4ecdc4;
+}
+.audio-waveform span:nth-child(1){height:10px;}
+.audio-waveform span:nth-child(2){height:25px;}
+.audio-waveform span:nth-child(3){height:14px;}
+.audio-waveform span:nth-child(4){height:35px;}
+.audio-waveform span:nth-child(5){height:20px;}
+.audio-waveform span:nth-child(6){height:40px;}
+.audio-waveform span:nth-child(7){height:18px;}
+.audio-waveform span:nth-child(8){height:30px;}
+.audio-waveform span:nth-child(9){height:15px;}
+.audio-waveform span:nth-child(10){height:28px;}
+
+@keyframes waveform{
+
+    0%{
+        transform:scaleY(.6);
+    }
+
+    50%{
+        transform:scaleY(1.3);
+        background:#4ecdc4;
+    }
+
+    100%{
+        transform:scaleY(.6);
+    }
+
+}
+
+.producer-container{
+    display:flex;
+    align-items:center;
+    gap:2px;
+    margin-bottom:20px;
+}
+
+.stats-row{
+    display:flex;
+    gap:20px;
+    margin-top:18px;
+    padding-top:15px;
+    border-top: 1px solid #202734;
+}
+.stat-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text-muted);
+    font-size:14px;
+    font-weight:600;
+}
+.stat-item:hover{
+    border-color:rgba(78,205,196,.4);
+    color:#fff;
+
+    transform:translateY(-2px);
+}
+
+.stat-item i{
+    color:#4ecdc4;
+    font-size:12px;
+}
+.licensing-panel{
+    min-height: 625px; /* ajusta hasta igualarlo */
+}
+
+/* =========================
+   MOBILE - LICENCIAS
+========================= */
+@media (max-width: 768px){
+
+    .page-wrapper{
+        flex-direction: column;
+        gap:20px;
+    }
+
+    .sidebar{
+        width:100%;
+    }
+
+    .main-col{
+        width:100%;
+        max-width:100%;
+        margin-top:0;
+        padding-bottom:160px;
+    }
+
+    .panel{
+        padding:20px;
+    }
+
+    .licensing-header{
+        flex-direction:column;
+        gap:20px;
+        align-items:flex-start;
+    }
+
+    .checkout-box{
+        width:100%;
+        text-align:left;
+    }
+
+    .checkout-actions{
+        width:100%;
+    }
+
+    .cart-btn-license,
+    .buy-btn-license{
+        flex:1;
+    }
+
+    .license-grid{
+        grid-template-columns:1fr;
+    }
+
+    .terms-grid{
+        grid-template-columns:1fr;
+        gap:12px;
+    }
+
+    .more-beats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .bottom-row{
+        flex-direction:column;
+        gap:15px;
+        padding:10px;
+    }
+
+    .player-left,
+    .player-right{
+        width:100%;
+    }
+
+    .player-right .cart-btn{
+        width:100%;
+        justify-content:center;
+    }
+
+    #waveform{
+        width:100%;
+    }
+   .main-col{
+        margin-top:0 !important;
+    }
+}
