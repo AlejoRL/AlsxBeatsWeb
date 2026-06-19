@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Compra completada! | AlsxBeats</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0f111a;
+            --panel: #11151a;
+            --accent: #4ecdc4;
+            --text: #fff;
+            --muted: #94a3b8;
+            --border: #1c232b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 48px 40px;
+            max-width: 580px;
+            width: 100%;
+            text-align: center;
+        }
+        .success-icon {
+            width: 72px;
+            height: 72px;
+            background: rgba(78, 205, 196, 0.15);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 30px;
+            color: var(--accent);
+        }
+        h1 { font-size: 26px; margin-bottom: 10px; }
+        .subtitle { color: var(--muted); margin-bottom: 36px; font-size: 15px; line-height: 1.6; }
+        .downloads { text-align: left; margin-bottom: 32px; }
+        .downloads h3 {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
+        .download-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            background: #0b0d14;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+        }
+        .download-item-info { flex: 1; min-width: 0; }
+        .download-item-title {
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .download-item-license { font-size: 12px; color: var(--accent); margin-top: 2px; }
+        .btn-download {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .btn-download:hover { opacity: 0.85; }
+        .expiry-notice {
+            background: rgba(78, 205, 196, 0.07);
+            border: 1px solid rgba(78, 205, 196, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 28px;
+        }
+        .expiry-notice i { color: var(--accent); margin-right: 6px; }
+        .btn-back {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-back:hover { border-color: var(--accent); color: var(--text); }
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            color: var(--muted);
+        }
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .error-state { color: #ef4444; margin-bottom: 20px; }
+        .error-state i { font-size: 40px; margin-bottom: 12px; display: block; }
+    </style>
+</head>
+<body>
+    <div class="card" id="card">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Verificando tu pago...</p>
+        </div>
+    </div>
+
+    <script>
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    const existingToken = params.get('token');
+
+    async function init() {
+        const card = document.getElementById('card');
+
+        try {
+            let token, items;
+
+            if (existingToken) {
+                // Llegamos aquí desde el email con el token directamente
+                const r = await fetch(`/api/download/info/${existingToken}`);
+                if (!r.ok) throw new Error((await r.json()).error);
+                const data = await r.json();
+                token = existingToken;
+                items = data.items;
+            } else if (sessionId) {
+                // Llegamos desde Stripe redirect — verificar y emitir token
+                const r = await fetch(`/api/checkout/complete?session_id=${sessionId}`);
+                if (!r.ok) throw new Error((await r.json()).error);
+                const data = await r.json();
+                token = data.token;
+                items = data.items;
+                // Limpiar session_id de la URL y poner el token (para que recarga funcione)
+                history.replaceState(null, '', `/success.html?token=${token}`);
+            } else {
+                throw new Error('Parámetros de sesión no encontrados.');
+            }
+
+            renderSuccess(card, token, items);
+
+        } catch (err) {
+            card.innerHTML = `
+                <div class="error-state">
+                    <i class="fas fa-circle-exclamation"></i>
+                    <h2>Algo salió mal</h2>
+                </div>
+                <p class="subtitle">${err.message || 'No se pudo verificar tu pago.'}<br>
+                Si ya realizaste el pago, escríbenos a <a href="mailto:alsxbeats@gmail.com" style="color:#4ecdc4">alsxbeats@gmail.com</a></p>
+                <a href="/" class="btn-back"><i class="fas fa-arrow-left"></i> Volver a la tienda</a>
+            `;
+        }
+    }
+
+    function renderSuccess(card, token, items) {
+        const downloadLinks = items.map(item => `
+            <div class="download-item">
+                <div class="download-item-info">
+                    <div class="download-item-title">${item.title}</div>
+                    <div class="download-item-license">${item.licenseLabel} &middot; ${item.formats.join(', ')}</div>
+                </div>
+                <a href="/api/download/file/${token}/${item.beatId}/${item.licenseType}"
+                   class="btn-download" download>
+                    <i class="fas fa-download"></i> Descargar
+                </a>
+            </div>
+        `).join('');
+
+        card.innerHTML = `
+            <div class="success-icon"><i class="fas fa-check"></i></div>
+            <h1>¡Compra completada!</h1>
+            <p class="subtitle">Gracias por tu compra en AlsxBeats.<br>Hemos enviado los enlaces también a tu correo.</p>
+
+            <div class="downloads">
+                <h3><i class="fas fa-music" style="margin-right:6px"></i>Tus archivos</h3>
+                ${downloadLinks}
+            </div>
+
+            <div class="expiry-notice">
+                <i class="fas fa-clock"></i>
+                Los enlaces de descarga son válidos <strong>48 horas</strong> desde la compra.
+                Guarda esta página o el correo que te hemos enviado.
+            </div>
+
+            <a href="/" class="btn-back"><i class="fas fa-arrow-left"></i> Volver a la tienda</a>
+        `;
+
+        // Limpiar carrito tras compra exitosa
+        localStorage.removeItem('cart');
+    }
+
+    init();
+    </script>
+</body>
+</html>

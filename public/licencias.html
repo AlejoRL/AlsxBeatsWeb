@@ -202,42 +202,29 @@ textarea:focus {
 
     <div class="license-grid">
 
-        <div class="license-card active"
-             data-price="29">
-
+        <div class="license-card active" data-price="29" data-type="basic">
             <h3>Basic Lease</h3>
             <div class="license-price">€29</div>
             <span>MP3</span>
-
         </div>
 
-        <div class="license-card"
-             data-price="59">
-
+        <div class="license-card" data-price="59" data-type="premium">
             <div class="popular-star">⭐</div>
-
             <h3>Premium Lease</h3>
             <div class="license-price">€59</div>
             <span>WAV, MP3</span>
-
         </div>
 
-        <div class="license-card"
-             data-price="149">
-
+        <div class="license-card" data-price="149" data-type="unlimited">
             <h3>Unlimited Lease</h3>
             <div class="license-price">€149</div>
             <span>WAV, STEMS, MP3</span>
-
         </div>
 
-        <div class="license-card"
-             data-price="299">
-
+        <div class="license-card" data-price="299" data-type="exclusive">
             <h3>Exclusive Rights</h3>
             <div class="license-price">€299</div>
             <span>Full Exclusive</span>
-
         </div>
 
     </div>
@@ -450,44 +437,65 @@ textarea:focus {
 <script>
 const params = new URLSearchParams(window.location.search);
 
-console.log(params.get('audio'));
+// Carga los datos del beat: primero por beatId desde la API, luego por URL params (legacy)
+async function loadBeatData() {
+    const beatId = params.get('beatId');
+    if (beatId) {
+        try {
+            const r = await fetch(`/api/beats/${beatId}`);
+            if (r.ok) {
+                const beat = await r.json();
+                return {
+                    id: beat.id,
+                    title: beat.title,
+                    img: beat.image,
+                    audio: beat.preview || '',
+                    bpm: beat.bpm,
+                    key: beat.key,
+                    genre: beat.genre
+                };
+            }
+        } catch (e) { /* fallback */ }
+    }
+    return {
+        id: null,
+        title: params.get('title') || 'Beat',
+        img: params.get('img') || '',
+        audio: params.get('audio') || '',
+        bpm: null,
+        key: null
+    };
+}
 
-document.getElementById('beat-title').textContent =
-    params.get('title');
+let currentBeatId = null;
 
-document.getElementById('beat-img').src =
-    params.get('img');
+loadBeatData().then(beat => {
+    currentBeatId = beat.id;
 
-document.getElementById('player-title').textContent =
-    params.get('title');
+    document.getElementById('beat-title').textContent = beat.title;
+    document.getElementById('beat-img').src = beat.img;
+    document.getElementById('player-title').textContent = beat.title;
+    document.getElementById('player-cover').src = beat.img;
 
-document.getElementById('player-cover').src =
-    params.get('img');
+    const audio = document.getElementById('audio-player');
+    audio.src = beat.audio;
 
-const audio =
-    document.getElementById('audio-player');
-
-audio.src =
-    params.get('audio');
+    wavesurfer.load(beat.audio);
+});
 
 const wavesurfer = WaveSurfer.create({
     container: '#waveform',
-
     waveColor: '#1b2330',
     progressColor: '#4ecdc4',
     cursorColor: '#4ecdc4',
-
     height: 55,
     normalize: true,
     responsive: true,
-
     barWidth: 3,
     barGap: 2,
     barRadius: 8,
-
     cursorWidth: 2
 });
-wavesurfer.load(params.get('audio'));
 
 const currentTime =
 document.getElementById('current-time');
@@ -714,9 +722,10 @@ const addToCartBtn = document.getElementById('add-to-cart');
 addToCartBtn.addEventListener('click', () => {
     const activeLicense = document.querySelector('.license-card.active');
     const item = {
-        title: params.get('title'),
-        image: params.get('img'),
-        audio: params.get('audio'),
+        beatId: currentBeatId || params.get('beatId') || params.get('title'),
+        licenseType: activeLicense.dataset.type || priceToLicenseType(activeLicense.dataset.price),
+        title: document.getElementById('beat-title').textContent,
+        image: document.getElementById('beat-img').src.replace(window.location.origin + '/', ''),
         license: activeLicense.querySelector('h3').textContent,
         price: activeLicense.dataset.price
     };
@@ -727,13 +736,14 @@ addToCartBtn.addEventListener('click', () => {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         cart.push(item);
         localStorage.setItem('cart', JSON.stringify(cart));
+        addToCartBtn.textContent = '✓ Added';
+        setTimeout(() => { addToCartBtn.textContent = 'Add to Cart'; }, 1500);
     }
-
-    addToCartBtn.textContent = '✓ Added';
-    setTimeout(() => {
-        addToCartBtn.textContent = 'Add to Cart';
-    }, 1500);
 });
+
+function priceToLicenseType(price) {
+    return { '29': 'basic', '59': 'premium', '149': 'unlimited', '299': 'exclusive' }[price] || 'basic';
+}
 
 cards.forEach(card => {
     card.addEventListener('click', () => {
@@ -759,15 +769,15 @@ cards.forEach(card => {
     });
 });
 
-// Bind player cart button to add the current beat to the cart
 const playerCartBtn = document.querySelector('.player-right .cart-btn');
 if (playerCartBtn) {
     playerCartBtn.addEventListener('click', () => {
         const activeLicense = document.querySelector('.license-card.active');
         const item = {
-            title: params.get('title'),
-            image: params.get('img'),
-            audio: params.get('audio'),
+            beatId: currentBeatId || params.get('beatId') || params.get('title'),
+            licenseType: activeLicense ? (activeLicense.dataset.type || priceToLicenseType(activeLicense.dataset.price)) : 'basic',
+            title: document.getElementById('beat-title').textContent,
+            image: document.getElementById('beat-img').src.replace(window.location.origin + '/', ''),
             license: activeLicense ? activeLicense.querySelector('h3').textContent : 'Basic Lease',
             price: activeLicense ? activeLicense.dataset.price : '29'
         };
@@ -782,9 +792,7 @@ if (playerCartBtn) {
 
         const originalHTML = playerCartBtn.innerHTML;
         playerCartBtn.innerHTML = '<i class="fas fa-check"></i> Añadido';
-        setTimeout(() => {
-            playerCartBtn.innerHTML = originalHTML;
-        }, 1500);
+        setTimeout(() => { playerCartBtn.innerHTML = originalHTML; }, 1500);
     });
 }
 </script>

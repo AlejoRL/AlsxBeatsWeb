@@ -1,27 +1,35 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const app = express();
 
-// Definimos el puerto (Render usa process.env.PORT, en local usamos el 3000)
+const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Servir de forma estática los archivos de la carpeta public (HTML, CSS, imágenes, música)
+// El webhook de Stripe necesita el body en raw ANTES del middleware JSON
+app.use('/api/checkout/webhook', express.raw({ type: 'application/json' }));
+
+app.use(express.json());
+
+// API
+app.use('/api/beats',    require('./routes/beats'));
+app.use('/api/checkout', require('./routes/checkout'));
+app.use('/api/download', require('./routes/download'));
+
+// Archivos estáticos públicos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta principal para servir el index.html de forma limpia
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Manejo de errores globales para evitar que el servidor se caiga
 app.use((err, req, res, next) => {
-    console.error("Error en el servidor:", err.stack);
-    res.status(500).send('Algo salió mal en el servidor backend.');
+    console.error(err.stack);
+    res.status(500).json({ error: 'Error interno del servidor' });
 });
 
-// Levantar el servidor
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo con éxito.`);
-    console.log(`🌍 Accede de forma local en: http://localhost:${PORT}`);
+    console.log(`🚀 AlsxBeats corriendo en http://localhost:${PORT}`);
+    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.startsWith('sk_test_XXXX')) {
+        console.warn('⚠️  Stripe no configurado. Copia .env.example → .env y añade tus claves.');
+    }
 });
-

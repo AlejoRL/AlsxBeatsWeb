@@ -74,6 +74,12 @@ web_modules/
 
 # dotenv environment variable files
 .env
+
+# Tokens de descarga generados en runtime (contienen datos de clientes)
+data/tokens.json
+
+# Archivos de audio privados (alta calidad, protegidos)
+private/beats/*/
 .env.development.local
 .env.test.local
 .env.production.local

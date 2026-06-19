@@ -39,49 +39,7 @@
 </section>
 
 <section class="catalogue" id="catalogue">
-
-        <div class="beat-card">
-    <button class="like-btn">❤️</button> 
-<div class="image-container" onclick="playBeat('assets/audio/typelofiryb1video.wav', this.closest('.beat-card'))">
-       <img src="assets/images/typelofiryb1.png" alt="R&B Lo-Fi Type Beat">
-        <div class="play-overlay"><span>▶</span></div>
-    </div>
-    
-<div class="card-info">
-    <h2>[FREE] Lo-Fi Hip Hop / R&B Type Beat - "Vintage Memories" (Prod. AlsxBeats)</h2>
-    <p class="price">€29 Lease <span class="divider">|</span> €299 Exclusive</p>
-    <a href="licencias.html?title=%5BFREE%5D%20Lo-Fi%20Hip%20Hop%20%2F%20R%26B%20Type%20Beat%20-%20Vintage%20Memories&img=typelofiryb1.png&audio=typelofiryb1video.wav"
-class="btn btn-secondary btn-ver-licencias">
-Ver Licencias
-</a>
-    </div>
-</div>
-            <div class="beat-card">
-    <button class="like-btn">❤️</button> <div class="image-container" onclick="playBeat('beat2.mp3', this.closest('.beat-card'))">
-                    <img src="assets/images/alsxbeatsportada.png" alt="Dark Drill Beat">
-                    <div class="play-overlay"><span>▶</span></div>
-                </div>
-                <h2>Dark Drill Beat</h2>
-                <p class="price">€29 Lease <span class="divider">|</span> €299 Exclusive</p>
-                <a href="licencias.html?title=Dark%20Drill%20Beat&img=alsxbeatsportada.png&audio=beat2.mp3"
-class="btn btn-secondary btn-ver-licencias">
-Ver Licencias
-</a>
-            </div>
-
-            <div class="beat-card">
-                <button class="like-btn">❤️</button> 
-<div class="image-container" onclick="playBeat('beat3.mp3', this.closest('.beat-card'))">
-                    <img src="parentaladvisory.png" alt="R&B Type Beat">
-                    <div class="play-overlay"><span>▶</span></div>
-                </div>
-                <h2>R&B Type Beat</h2>
-                <p class="price">€29 Lease <span class="divider">|</span> €299 Exclusive</p>
-                <a href="licencias.html?title=R%26B%20Type%20Beat&img=parentaladvisory.png&audio=beat3.mp3"
-class="btn btn-secondary btn-ver-licencias">
-Ver Licencias
-</a>
-            </div>
+    <!-- Los beats se cargan dinámicamente desde /api/beats via catalog.js -->
 </section>
         <section class="contacto-section" id="contacto">
             <h2>¿Tienes alguna duda o buscas un trabajo exclusivo?</h2>
@@ -112,5 +70,6 @@ Ver Licencias
 
 <script src="js/main.js"></script>
 <script src="js/cart.js"></script>
+<script src="js/catalog.js"></script>
 </body>
 </html>
