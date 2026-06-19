@@ -111,48 +111,6 @@ header {
     .nav-links { display: none !important; }
     .nav-right  { display: none !important; }
     .nav-hamburger { display: flex; }
-
-    /* Centra y ajusta el contenido general en móvil */
-    body { overflow-x: hidden; }
-
-    .container {
-        padding: 0 20px !important;
-        max-width: 100% !important;
-    }
-
-    .hero {
-        padding: 60px 20px 50px !important;
-    }
-
-    .stats-bar,
-    .features,
-    .how-section,
-    .licenses-section,
-    .artists-section,
-    .cta-section,
-    .contacto-section,
-    footer {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-    }
-
-    .stats-inner { padding: 0 !important; }
-
-    .features-grid,
-    .steps-grid,
-    .licenses-grid {
-        grid-template-columns: 1fr !important;
-    }
-
-    .section-title { font-size: 26px !important; letter-spacing: -1px !important; }
-    .hero h1       { font-size: clamp(28px, 9vw, 48px) !important; letter-spacing: -1.5px !important; }
-    .hero-sub      { font-size: 15px !important; }
-
-    .stat-block { padding: 16px 20px !important; border-right: none !important; border-bottom: 1px solid #1c232b; }
-    .stat-block:last-child { border-bottom: none; }
-    .stats-inner { flex-direction: column; }
-
-    .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
 }
 
 .logo {
