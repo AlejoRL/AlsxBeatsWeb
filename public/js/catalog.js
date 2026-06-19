@@ -61,7 +61,10 @@ function renderCatalog() {
 
     const filtered = filterBeats();
     const hasFilters = activeGenre || activeSearch || activeBpm || activeKey;
-    if (clearBtn) clearBtn.style.display = hasFilters ? 'inline-flex' : 'none';
+    if (clearBtn) {
+        clearBtn.style.display = '';
+        clearBtn.classList.toggle('show', !!hasFilters);
+    }
 
     if (countEl) {
         countEl.textContent = hasFilters
@@ -81,38 +84,51 @@ function renderCatalog() {
         return;
     }
 
+    // Precio mínimo de licencias
+    function minPrice(beat) {
+        if (!beat.licenses) return null;
+        const prices = Object.values(beat.licenses).map(l => l.price).filter(Boolean);
+        return prices.length ? Math.min(...prices) : null;
+    }
+
     grid.innerHTML = filtered.map(beat => {
         const hasPreview = !!beat.preview;
-        const playAction = hasPreview
-            ? `playBeat('${beat.preview}', this.closest('.beat-card'))`
-            : `window.Cart && Cart.showToast('Preview no disponible aún', true)`;
+        const cover      = beat.image || 'assets/images/alsxbeatsportada.png';
+        const price      = minPrice(beat);
+        const priceHtml  = price ? `<small>Desde</small>€${price}` : '<small>—</small>';
 
         return `
-        <div class="beat-card"
-            data-id="${beat.id}"
-            data-title="${escHtml(beat.title)}"
-            data-img="${beat.image}"
-            data-audio="${beat.preview || ''}">
-
-<div class="image-container" onclick="${playAction}">
-                <img src="${beat.image}" alt="${escHtml(beat.title)}"
-                     onerror="this.src='assets/images/alsxbeatsportada.png'">
-                <div class="play-overlay"><span>${hasPreview ? '▶' : '🔒'}</span></div>
+        <div class="beat-row" data-id="${beat.id}" data-preview="${beat.preview || ''}" data-title="${escHtml(beat.title)}" data-img="${cover}">
+            <button class="row-play" onclick="rowPlay(this)" title="${hasPreview ? 'Reproducir' : 'Sin preview'}">
+                <i class="fas fa-${hasPreview ? 'play' : 'lock'}"></i>
+            </button>
+            <img class="row-cover" src="${cover}" alt="${escHtml(beat.title)}" onerror="this.src='assets/images/alsxbeatsportada.png'">
+            <div class="row-info">
+                <div class="row-title">${escHtml(beat.title)}</div>
+                <div class="row-producer">AlsxBeats</div>
             </div>
-
-            <div class="card-info">
-                <h2>${escHtml(beat.title)}</h2>
-                <p class="beat-meta">${beat.bpm} BPM <span class="divider">|</span> ${beat.key} <span class="divider">|</span> ${beat.genre}</p>
-                <div class="card-actions">
-                    <a href="licencias.html?beatId=${beat.id}" class="btn btn-secondary btn-ver-licencias">
-                        Ver Licencias
-                    </a>
-                </div>
+            <div><span class="row-genre">${beat.genre || '—'}</span></div>
+            <div class="row-stats">
+                <span>${beat.bpm ? beat.bpm + ' BPM' : '—'}</span>
+                <span>${beat.key || '—'}</span>
+            </div>
+            <div class="row-price">${priceHtml}</div>
+            <div class="row-actions">
+                <a href="licencias.html?beatId=${beat.id}" class="btn-row-lic">Ver licencias</a>
+                <button class="btn-row-more" title="Más opciones"><i class="fas fa-ellipsis"></i></button>
             </div>
         </div>`;
     }).join('');
 
-    initLikeButtons();
+    // Evento click en filas para reproducir
+    document.querySelectorAll('.beat-row').forEach(row => {
+        row.addEventListener('click', (e) => {
+            if (e.target.closest('.row-actions') || e.target.closest('.row-play')) return;
+            const btn = row.querySelector('.row-play');
+            if (btn) btn.click();
+        });
+    });
+
 }
 
 function bindFilters() {
@@ -147,12 +163,12 @@ function bindFilters() {
         });
     }
 
-    // Género pills
-    document.querySelectorAll('.genre-pill').forEach(pill => {
-        pill.addEventListener('click', () => {
-            document.querySelectorAll('.genre-pill').forEach(p => p.classList.remove('active'));
-            pill.classList.add('active');
-            activeGenre = pill.dataset.genre;
+    // Género tabs / pills / btns
+    document.querySelectorAll('.genre-pill, .genre-tab, .genre-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.genre-pill, .genre-tab, .genre-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeGenre = btn.dataset.genre;
             renderCatalog();
         });
     });
@@ -171,9 +187,9 @@ function clearFilters() {
     if (b) b.value = '';
     if (k) k.value = '';
 
-    document.querySelectorAll('.genre-pill').forEach(p => p.classList.remove('active'));
-    const allPill = document.querySelector('.genre-pill[data-genre=""]');
-    if (allPill) allPill.classList.add('active');
+    document.querySelectorAll('.genre-pill, .genre-tab, .genre-btn').forEach(p => p.classList.remove('active'));
+    const allTab = document.querySelector('.genre-pill[data-genre=""], .genre-tab[data-genre=""], .genre-btn[data-genre=""]');
+    if (allTab) allTab.classList.add('active');
 
     renderCatalog();
 }
@@ -210,6 +226,13 @@ function escHtml(str) {
     return String(str)
         .replace(/&/g,'&amp;').replace(/</g,'&lt;')
         .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function rowPlay(btn) {
+    const row     = btn.closest('.beat-row');
+    const preview = row.dataset.preview;
+    if (!preview) { window.Cart?.showToast('Preview no disponible aún', true); return; }
+    window.bpLoad?.(preview, row.dataset.title, row.dataset.img, row);
 }
 
 document.addEventListener('DOMContentLoaded', loadCatalog);

@@ -5,27 +5,373 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo — AlsxBeats</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/cart.css">
     <style>
-        .catalog-hero {
-            padding: 60px 24px 40px;
-            max-width: 1200px;
-            margin: 0 auto;
+        *  { box-sizing: border-box; }
+        body { padding-bottom: 88px; }
+
+        /* ── SEARCH BAR ─────────────────────────────────── */
+        .cat-search-section {
+            background: #11151a;
+            border-bottom: 1px solid #1c232b;
+            padding: 28px 40px;
         }
-        .catalog-hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 6px; }
-        .catalog-hero p  { color: var(--text-muted); font-size: 15px; }
-        .catalog-wrap {
-            max-width: 1200px;
+        .cat-search-wrap {
+            max-width: 860px;
             margin: 0 auto;
-            padding: 0 24px 120px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #0b0d14;
+            border: 1.5px solid #1c232b;
+            border-radius: 14px;
+            padding: 0 20px;
+            transition: border-color .2s;
+        }
+        .cat-search-wrap:focus-within { border-color: var(--accent-celeste); }
+        .cat-search-wrap i { color: #3a4556; font-size: 15px; }
+        .cat-search-wrap input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            padding: 16px 0;
+        }
+        .cat-search-wrap input::placeholder { color: #3a4556; }
+
+        /* ── LAYOUT ─────────────────────────────────────── */
+        .cat-body {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 28px 40px 60px;
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* ── SIDEBAR ─────────────────────────────────────── */
+        .cat-sidebar {
+            background: #11151a;
+            border: 1px solid #1c232b;
+            border-radius: 16px;
+            padding: 20px;
+            position: sticky;
+            top: 80px;
+        }
+
+        .filter-block { margin-bottom: 22px; }
+        .filter-block:last-child { margin-bottom: 0; }
+
+        .filter-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: #3a4556;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .genre-tab {
+            display: block;
+            width: 100%;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: .15s;
+        }
+        .genre-tab:hover { background: rgba(255,255,255,.04); color: #fff; }
+        .genre-tab.active { background: rgba(78,205,196,.1); color: var(--accent-celeste); font-weight: 600; }
+
+        .filter-select {
+            width: 100%;
+            background: #0b0d14;
+            border: 1.5px solid #1c232b;
+            color: #94a3b8;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            padding: 9px 12px;
+            border-radius: 9px;
+            outline: none;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: border-color .2s;
+        }
+        .filter-select:focus { border-color: var(--accent-celeste); }
+        .filter-select option { background: #11151a; }
+
+        .btn-clear-filters {
+            width: 100%;
+            background: rgba(239,68,68,.07);
+            border: 1px solid rgba(239,68,68,.15);
+            color: #f87171;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: .2s;
+            display: none;
+            margin-top: 4px;
+        }
+        .btn-clear-filters:hover { background: rgba(239,68,68,.14); }
+        .btn-clear-filters.show { display: block; }
+
+        /* ── BEAT LIST ──────────────────────────────────── */
+        .cat-main { min-width: 0; }
+
+        .cat-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 8px 0;
+        }
+        .cat-count { font-size: 12px; color: #3a4556; }
+        .cat-count strong { color: #94a3b8; }
+
+        /* Beat list header */
+        .beat-list-head {
+            display: grid;
+            grid-template-columns: 40px 48px 1fr 120px 100px 90px 160px;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            border-bottom: 1px solid #1c232b;
+            margin-bottom: 4px;
+        }
+        .beat-list-head span {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: #3a4556;
+        }
+
+        /* Beat row */
+        .beat-list { display: flex; flex-direction: column; }
+
+        .beat-row {
+            display: grid;
+            grid-template-columns: 40px 48px 1fr 120px 100px 90px 160px;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background .15s;
+            border-bottom: 1px solid rgba(255,255,255,.03);
+        }
+        .beat-row:hover { background: rgba(255,255,255,.04); }
+        .beat-row.playing { background: rgba(78,205,196,.06); }
+
+        /* Play button */
+        .row-play {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.07);
+            border: none;
+            color: #fff;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .15s, transform .15s;
+            flex-shrink: 0;
+        }
+        .row-play:hover { background: var(--accent-celeste); color: #000; transform: scale(1.08); }
+        .beat-row.playing .row-play { background: var(--accent-celeste); color: #000; }
+
+        /* Cover */
+        .row-cover {
+            width: 48px; height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #1c232b;
+            flex-shrink: 0;
+        }
+
+        /* Info */
+        .row-info { min-width: 0; }
+        .row-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 3px;
+        }
+        .beat-row.playing .row-title { color: var(--accent-celeste); }
+        .row-producer { font-size: 11px; color: #94a3b8; }
+
+        /* Genre tag */
+        .row-genre {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-celeste);
+            background: rgba(78,205,196,.08);
+            border: 1px solid rgba(78,205,196,.15);
+            border-radius: 999px;
+            padding: 3px 10px;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        /* Stats */
+        .row-stats { font-size: 12px; color: #94a3b8; white-space: nowrap; }
+        .row-stats span { display: block; line-height: 1.8; }
+
+        /* Price */
+        .row-price { font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; }
+        .row-price small { font-size: 10px; font-weight: 400; color: #94a3b8; display: block; }
+
+        /* Actions */
+        .row-actions { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+        .btn-row-lic {
+            background: var(--accent-celeste);
+            color: #000;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: opacity .2s;
+        }
+        .btn-row-lic:hover { opacity: .85; }
+        .btn-row-more {
+            width: 30px; height: 30px;
+            border-radius: 7px;
+            background: none;
+            border: 1px solid #1c232b;
+            color: #94a3b8;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: .15s;
+        }
+        .btn-row-more:hover { background: #1c232b; color: #fff; }
+
+        /* No results */
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            color: #3a4556;
+        }
+        .no-results i { font-size: 40px; margin-bottom: 16px; display: block; }
+        .no-results p { font-size: 15px; margin-bottom: 16px; }
+
+        /* ── BOTTOM PLAYER ──────────────────────────────── */
+        #bottom-player {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 72px;
+            background: #11151a;
+            border-top: 1px solid #1c232b;
+            display: none;
+            align-items: center;
+            gap: 20px;
+            padding: 0 24px;
+            z-index: 500;
+        }
+        #bottom-player.visible { display: flex; }
+
+        .bp-cover {
+            width: 44px; height: 44px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #1c232b;
+            flex-shrink: 0;
+        }
+        .bp-info { min-width: 0; flex: 1; }
+        .bp-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bp-artist { font-size: 11px; color: #94a3b8; }
+
+        .bp-controls { display: flex; align-items: center; gap: 12px; }
+        .bp-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 6px;
+            transition: color .15s;
+        }
+        .bp-btn:hover { color: #fff; }
+        .bp-play {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: var(--accent-celeste);
+            border: none;
+            color: #000;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity .2s;
+        }
+        .bp-play:hover { opacity: .85; }
+
+        .bp-progress { flex: 1; display: flex; align-items: center; gap: 10px; }
+        .bp-time { font-size: 11px; color: #94a3b8; white-space: nowrap; font-variant-numeric: tabular-nums; }
+        .bp-bar {
+            flex: 1;
+            height: 3px;
+            background: #1c232b;
+            border-radius: 999px;
+            cursor: pointer;
+            position: relative;
+        }
+        .bp-fill {
+            height: 100%;
+            background: var(--accent-celeste);
+            border-radius: 999px;
+            width: 0%;
+            transition: width .1s linear;
+        }
+        .bp-bar:hover .bp-fill { background: #fff; }
+
+        .bp-vol { display: flex; align-items: center; gap: 8px; }
+        .bp-vol i { color: #94a3b8; font-size: 13px; }
+        .bp-vol input[type=range] {
+            width: 70px;
+            accent-color: var(--accent-celeste);
+            cursor: pointer;
+        }
+
+        /* ── MOBILE ────────────────────────────────────── */
+        @media (max-width: 860px) {
+            .cat-search-section { padding: 20px; }
+            .cat-body { grid-template-columns: 1fr; padding: 16px 20px 60px; gap: 16px; }
+            .cat-sidebar { position: static; }
+            .beat-list-head { display: none; }
+            .beat-row { grid-template-columns: 36px 44px 1fr auto; gap: 10px; }
+            .row-genre, .row-stats, .row-price { display: none; }
+            .row-actions { gap: 6px; }
+            .bp-vol { display: none; }
         }
     </style>
 </head>
 <body>
+
+<!-- NAV -->
 <header>
     <nav class="nav-container nav-grid">
         <a href="index.html" class="logo">Alsx<span>Beats</span></a>
@@ -50,57 +396,107 @@
     </div>
 </header>
 
-<main>
-    <div class="catalog-hero">
-        <h1>Catálogo</h1>
-        <p>Todos los beats disponibles para licenciar.</p>
+<!-- SEARCH -->
+<div class="cat-search-section">
+    <div class="cat-search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" id="filter-search" placeholder="Buscar beats por título, género o tags..." autocomplete="off">
     </div>
+</div>
 
-    <div class="catalog-wrap">
-        <div class="filters-bar" style="margin-bottom:20px">
-            <div class="search-wrap">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="filter-search" placeholder="Buscar beats..." autocomplete="off">
-            </div>
-            <div class="filter-selects">
-                <select id="filter-bpm">
-                    <option value="">Todos los BPM</option>
-                    <option value="slow">Lento (&lt;85)</option>
-                    <option value="mid">Medio (85–115)</option>
-                    <option value="fast">Rápido (115–145)</option>
-                    <option value="hard">Intenso (145+)</option>
-                </select>
-                <select id="filter-key">
-                    <option value="">Todas las keys</option>
-                    <option>Cm</option><option>C</option><option>C#m</option><option>C#</option>
-                    <option>Dm</option><option>D</option><option>D#m</option><option>D#</option>
-                    <option>Em</option><option>E</option><option>Fm</option><option>F</option>
-                    <option>F#m</option><option>F#</option><option>Gm</option><option>G</option>
-                    <option>G#m</option><option>G#</option><option>Am</option><option>A</option>
-                    <option>A#m</option><option>A#</option><option>Bm</option><option>B</option>
-                </select>
-                <button class="btn-clear-filters" id="btn-clear" style="display:none" onclick="clearFilters()">
-                    <i class="fas fa-xmark"></i> Limpiar
-                </button>
+<div class="cat-body">
+
+    <!-- SIDEBAR FILTROS -->
+    <aside class="cat-sidebar">
+        <div class="filter-block">
+            <span class="filter-label">Género</span>
+            <div id="genre-pills">
+                <button class="genre-tab active" data-genre="">Todos</button>
+                <button class="genre-tab" data-genre="Trap">Trap</button>
+                <button class="genre-tab" data-genre="R&B">R&amp;B</button>
+                <button class="genre-tab" data-genre="Lo-Fi">Lo-Fi</button>
+                <button class="genre-tab" data-genre="Drill">Drill</button>
+                <button class="genre-tab" data-genre="Afrobeats">Afrobeats</button>
+                <button class="genre-tab" data-genre="Hip-Hop">Hip-Hop</button>
+                <button class="genre-tab" data-genre="Pop">Pop</button>
+                <button class="genre-tab" data-genre="Reggaeton">Reggaeton</button>
             </div>
         </div>
-        <div class="genre-pills" id="genre-pills">
-            <button class="genre-pill active" data-genre="">Todos</button>
-            <button class="genre-pill" data-genre="Trap">Trap</button>
-            <button class="genre-pill" data-genre="R&B">R&amp;B</button>
-            <button class="genre-pill" data-genre="Lo-Fi">Lo-Fi</button>
-            <button class="genre-pill" data-genre="Drill">Drill</button>
-            <button class="genre-pill" data-genre="Afrobeats">Afrobeats</button>
-            <button class="genre-pill" data-genre="Hip-Hop">Hip-Hop</button>
-            <button class="genre-pill" data-genre="Pop">Pop</button>
-            <button class="genre-pill" data-genre="Reggaeton">Reggaeton</button>
-        </div>
-        <p class="results-count" id="results-count" style="margin:16px 0"></p>
-        <div class="catalogue" id="catalogue-grid"></div>
-    </div>
-</main>
 
-<audio id="player" controls autoplay hidden><source src="" type="audio/mpeg"></audio>
+        <div class="filter-block">
+            <span class="filter-label">BPM</span>
+            <select class="filter-select" id="filter-bpm">
+                <option value="">Todos</option>
+                <option value="slow">Lento (&lt;85)</option>
+                <option value="mid">Medio (85–115)</option>
+                <option value="fast">Rápido (115–145)</option>
+                <option value="hard">Intenso (145+)</option>
+            </select>
+        </div>
+
+        <div class="filter-block">
+            <span class="filter-label">Tonalidad</span>
+            <select class="filter-select" id="filter-key">
+                <option value="">Todas</option>
+                <option>Cm</option><option>C</option><option>C#m</option><option>C#</option>
+                <option>Dm</option><option>D</option><option>D#m</option><option>D#</option>
+                <option>Em</option><option>E</option><option>Fm</option><option>F</option>
+                <option>F#m</option><option>F#</option><option>Gm</option><option>G</option>
+                <option>G#m</option><option>G#</option><option>Am</option><option>A</option>
+                <option>A#m</option><option>A#</option><option>Bm</option><option>B</option>
+            </select>
+        </div>
+
+        <button class="btn-clear-filters" id="btn-clear" onclick="clearFilters()">
+            <i class="fas fa-xmark"></i> Limpiar filtros
+        </button>
+    </aside>
+
+    <!-- BEAT LIST -->
+    <div class="cat-main">
+        <div class="cat-topbar">
+            <p class="cat-count" id="results-count"></p>
+        </div>
+        <div class="beat-list-head">
+            <span></span><span></span>
+            <span>Título</span>
+            <span>Género</span>
+            <span>BPM / Key</span>
+            <span>Precio</span>
+            <span></span>
+        </div>
+        <div class="beat-list" id="catalogue-grid"></div>
+    </div>
+
+</div>
+
+<!-- BOTTOM PLAYER -->
+<div id="bottom-player">
+    <img class="bp-cover" id="bp-cover" src="" alt="">
+    <div class="bp-info">
+        <div class="bp-title" id="bp-title">—</div>
+        <div class="bp-artist">AlsxBeats</div>
+    </div>
+    <div class="bp-controls">
+        <button class="bp-play" id="bp-play-btn" onclick="bpTogglePlay()">
+            <i class="fas fa-play" id="bp-play-icon"></i>
+        </button>
+    </div>
+    <div class="bp-progress">
+        <span class="bp-time" id="bp-cur">0:00</span>
+        <div class="bp-bar" id="bp-bar" onclick="bpSeek(event)">
+            <div class="bp-fill" id="bp-fill"></div>
+        </div>
+        <span class="bp-time" id="bp-dur">0:00</span>
+    </div>
+    <div class="bp-vol">
+        <i class="fas fa-volume-high"></i>
+        <input type="range" id="bp-vol" min="0" max="1" step="0.05" value="1" oninput="bpSetVol(this.value)">
+    </div>
+</div>
+
+<audio id="player" preload="metadata"></audio>
+
 <script src="js/main.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/catalog.js"></script>
@@ -109,6 +505,61 @@
 function toggleMobileMenu() {
     document.getElementById('mobile-menu').classList.toggle('open');
 }
+
+// ── Bottom Player ────────────────────────────────────────
+const audio      = document.getElementById('player');
+const bpPanel    = document.getElementById('bottom-player');
+const bpPlayIcon = document.getElementById('bp-play-icon');
+const bpFill     = document.getElementById('bp-fill');
+const bpCur      = document.getElementById('bp-cur');
+const bpDur      = document.getElementById('bp-dur');
+
+let currentRow = null;
+
+function bpLoad(src, title, cover, row) {
+    if (currentRow) currentRow.classList.remove('playing');
+    currentRow = row;
+    if (row) row.classList.add('playing');
+    audio.src = src;
+    audio.play();
+    document.getElementById('bp-title').textContent = title;
+    document.getElementById('bp-cover').src = cover;
+    bpPanel.classList.add('visible');
+    bpPlayIcon.className = 'fas fa-pause';
+}
+
+function bpTogglePlay() {
+    if (audio.paused) { audio.play(); bpPlayIcon.className = 'fas fa-pause'; }
+    else              { audio.pause(); bpPlayIcon.className = 'fas fa-play'; }
+}
+
+function bpSeek(e) {
+    const bar  = document.getElementById('bp-bar');
+    const rect = bar.getBoundingClientRect();
+    const pct  = (e.clientX - rect.left) / rect.width;
+    if (audio.duration) audio.currentTime = pct * audio.duration;
+}
+
+function bpSetVol(v) { audio.volume = v; }
+
+function fmtTime(s) {
+    if (!s || isNaN(s)) return '0:00';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60).toString().padStart(2, '0');
+    return `${m}:${sec}`;
+}
+
+audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    bpFill.style.width = pct + '%';
+    bpCur.textContent  = fmtTime(audio.currentTime);
+});
+audio.addEventListener('loadedmetadata', () => { bpDur.textContent = fmtTime(audio.duration); });
+audio.addEventListener('ended', () => { bpPlayIcon.className = 'fas fa-play'; });
+
+// Exponer para catalog.js
+window.bpLoad = bpLoad;
 </script>
 </body>
 </html>
