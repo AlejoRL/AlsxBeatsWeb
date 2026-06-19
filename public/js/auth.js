@@ -40,7 +40,6 @@ function renderAuthNav(user) {
     widget.style.cssText = 'display:flex;align-items:center;gap:10px;position:relative;justify-content:flex-end;';
 
     if (user) {
-        widget.classList.add('auth-has-user');
         const initial = user.name.charAt(0).toUpperCase();
         widget.innerHTML = `
             <button id="user-menu-btn" style="
@@ -119,7 +118,6 @@ function renderAuthNav(user) {
         }
 
     } else {
-        widget.classList.remove('auth-has-user');
         widget.innerHTML = `
             <a href="login.html" style="color:#94a3b8;font-size:14px;font-weight:600;text-decoration:none;padding:8px 14px;transition:color .2s"
                onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">
