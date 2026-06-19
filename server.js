@@ -1,7 +1,14 @@
 require('dotenv').config();
-const express = require('express');
-const session = require('express-session');
-const path    = require('path');
+const express  = require('express');
+const session  = require('express-session');
+const path     = require('path');
+const mongoose = require('mongoose');
+
+// Conectar a MongoDB
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/alsxbeats';
+mongoose.connect(MONGO_URI)
+    .then(() => console.log('✅ MongoDB conectado'))
+    .catch(err => console.error('❌ MongoDB error:', err.message));
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
