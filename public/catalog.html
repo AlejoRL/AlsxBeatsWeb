@@ -302,27 +302,16 @@
         .bp-time { font-size: 11px; color: #94a3b8; white-space: nowrap; font-variant-numeric: tabular-nums; min-width: 34px; }
         .bp-bar {
             flex: 1;
-            height: 44px;
+            height: 52px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            padding: 4px 0;
+            position: relative;
             -webkit-tap-highlight-color: transparent;
         }
-        .bp-wave-bars {
-            display: flex;
-            align-items: center;
-            gap: 2px;
+        #bp-waveform {
             width: 100%;
             height: 100%;
-            pointer-events: none;
-        }
-        .bp-wave-bars span {
-            flex: 1;
-            border-radius: 2px;
-            background: #1c232b;
-            transition: background .08s;
-            min-height: 3px;
+            display: block;
+            border-radius: 4px;
         }
 
         /* Fila controles */
@@ -533,7 +522,7 @@
     <div class="bp-wave-row">
         <span class="bp-time" id="bp-cur">0:00</span>
         <div class="bp-bar" id="bp-bar" onclick="bpSeek(event)">
-            <div class="bp-wave-bars" id="bp-wave-bars"></div>
+            <canvas id="bp-waveform"></canvas>
         </div>
         <span class="bp-time" id="bp-dur">0:00</span>
     </div>
@@ -591,31 +580,89 @@ const bpDur      = document.getElementById('bp-dur');
 let currentRow    = null;
 let currentBeatId = null;
 
-// Genera barras waveform con alturas pseudo-aleatorias
-const WAVE_BARS = 80;
-let waveHeights  = [];
+// ── Waveform canvas ──────────────────────────────────────
+const waveCanvas = document.getElementById('bp-waveform');
+const waveCtx    = waveCanvas ? waveCanvas.getContext('2d') : null;
+const BAR_COUNT  = 110;
+let   waveData   = [];
+let   waveProgress = 0;
 
-function buildWaveBars() {
-    const container = document.getElementById('bp-wave-bars');
-    if (!container) return;
-    waveHeights = [];
-    container.innerHTML = '';
-    for (let i = 0; i < WAVE_BARS; i++) {
-        // Patrón tipo waveform: picos más altos en el centro
-        const center = Math.abs(i - WAVE_BARS / 2) / (WAVE_BARS / 2);
-        const h = 15 + Math.random() * 70 * (1 - center * 0.3);
-        waveHeights.push(h);
-        const span = document.createElement('span');
-        span.style.height = h + '%';
-        container.appendChild(span);
+function generateWaveData() {
+    waveData = [];
+    for (let i = 0; i < BAR_COUNT; i++) {
+        const t = i / BAR_COUNT;
+        // envelope: taper en los extremos para aspecto natural
+        const env = Math.pow(Math.sin(t * Math.PI), 0.6);
+        // varias frecuencias armónicas = aspecto de audio real
+        const h = Math.abs(
+            Math.sin(t * Math.PI * 5.3  + 1.2) * 0.38 +
+            Math.sin(t * Math.PI * 11.7 + 0.4) * 0.24 +
+            Math.sin(t * Math.PI * 19.1 + 2.8) * 0.16 +
+            Math.sin(t * Math.PI * 2.9  + 0.9) * 0.22
+        ) * env;
+        waveData.push(Math.max(0.05, Math.min(1, h)));
     }
 }
 
-function updateWaveBars(pct) {
-    const spans = document.querySelectorAll('#bp-wave-bars span');
-    spans.forEach((s, i) => {
-        s.style.background = (i / WAVE_BARS) * 100 <= pct ? 'var(--accent-celeste)' : '#1c232b';
+function drawWaveform(progress) {
+    if (!waveCtx || !waveCanvas) return;
+    const W = waveCanvas.parentElement.clientWidth;
+    const H = waveCanvas.parentElement.clientHeight;
+    if (!W || !H) return;
+    waveCanvas.width  = W;
+    waveCanvas.height = H;
+    waveCtx.clearRect(0, 0, W, H);
+
+    const gap  = 2;
+    const barW = Math.max(1.5, (W - gap * (BAR_COUNT - 1)) / BAR_COUNT);
+    const mid  = H * 0.48;
+
+    // Gradientes
+    const gradPlayed   = waveCtx.createLinearGradient(0, 0, 0, H);
+    gradPlayed.addColorStop(0,   '#4ecdc4');
+    gradPlayed.addColorStop(0.5, '#4ecdc4');
+    gradPlayed.addColorStop(0.5, 'rgba(78,205,196,0.32)');
+    gradPlayed.addColorStop(1,   'rgba(78,205,196,0.08)');
+
+    const gradUnplayed = waveCtx.createLinearGradient(0, 0, 0, H);
+    gradUnplayed.addColorStop(0,   '#253040');
+    gradUnplayed.addColorStop(0.5, '#253040');
+    gradUnplayed.addColorStop(0.5, '#1a2230');
+    gradUnplayed.addColorStop(1,   '#111820');
+
+    waveData.forEach((h, i) => {
+        const x      = i * (barW + gap);
+        const halfH  = h * mid * 0.94;
+        const played = (i / BAR_COUNT) <= (progress / 100);
+
+        waveCtx.fillStyle = played ? gradPlayed : gradUnplayed;
+
+        // Barra superior
+        waveCtx.beginPath();
+        waveCtx.roundRect(x, mid - halfH, barW, halfH, [2, 2, 0, 0]);
+        waveCtx.fill();
+
+        // Reflejo inferior (65% de altura, más tenue)
+        waveCtx.fillStyle = played
+            ? 'rgba(78,205,196,0.22)'
+            : 'rgba(30,42,60,0.6)';
+        waveCtx.beginPath();
+        waveCtx.roundRect(x, mid + 1, barW, halfH * 0.65, [0, 0, 2, 2]);
+        waveCtx.fill();
     });
+
+    // Línea separadora central
+    waveCtx.strokeStyle = 'rgba(255,255,255,0.04)';
+    waveCtx.lineWidth   = 1;
+    waveCtx.beginPath();
+    waveCtx.moveTo(0, mid);
+    waveCtx.lineTo(W, mid);
+    waveCtx.stroke();
+}
+
+function updateWaveProgress(pct) {
+    waveProgress = pct;
+    drawWaveform(pct);
 }
 
 function bpLoad(src, title, cover, row) {
@@ -629,7 +676,8 @@ function bpLoad(src, title, cover, row) {
     document.getElementById('bp-cover').src = cover;
     bpPanel.classList.add('visible');
     bpPlayIcon.className = 'fas fa-pause';
-    buildWaveBars();
+    generateWaveData();
+    requestAnimationFrame(() => drawWaveform(0));
     updateBpLike();
 }
 
@@ -689,12 +737,18 @@ audio.addEventListener('timeupdate', () => {
     if (!audio.duration) return;
     const pct = (audio.currentTime / audio.duration) * 100;
     bpCur.textContent = fmtTime(audio.currentTime);
-    updateWaveBars(pct);
+    updateWaveProgress(pct);
 });
 audio.addEventListener('loadedmetadata', () => { bpDur.textContent = fmtTime(audio.duration); });
 audio.addEventListener('ended', () => { bpPlayIcon.className = 'fas fa-play'; bpNext(); });
 
-buildWaveBars();
+// Redibujar al cambiar tamaño de ventana
+window.addEventListener('resize', () => {
+    if (bpPanel.classList.contains('visible')) drawWaveform(waveProgress);
+});
+
+generateWaveData();
+// drawWaveform se llama con rAF en bpLoad cuando el player está visible
 
 // Exponer para catalog.js
 window.bpLoad = bpLoad;
