@@ -9,14 +9,21 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ error: 'Faltan campos obligatorios.' });
     }
 
+    if (!process.env.EMAIL_PASS) {
+        return res.status(500).json({ error: 'Email no configurado en el servidor.' });
+    }
+
     const transporter = nodemailer.createTransport({
-        host:   process.env.EMAIL_HOST || 'smtp.gmail.com',
-        port:   parseInt(process.env.EMAIL_PORT || '587'),
-        secure: false,
+        host:             process.env.EMAIL_HOST || 'smtp.gmail.com',
+        port:             parseInt(process.env.EMAIL_PORT || '587'),
+        secure:           false,
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS,
         },
+        connectionTimeout: 8000,
+        greetingTimeout:   8000,
+        socketTimeout:     8000,
     });
 
     try {
