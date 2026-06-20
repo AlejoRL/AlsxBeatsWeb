@@ -33,6 +33,7 @@ app.use('/api/checkout', require('./routes/checkout'));
 app.use('/api/download', require('./routes/download'));
 app.use('/api/admin',    require('./routes/admin'));
 app.use('/api/catalog',  require('./routes/catalog'));
+app.use('/api/contact',  require('./routes/contact'));
 
 // Proteger /admin — redirige al login si no hay sesión
 app.get('/admin', (req, res) => {

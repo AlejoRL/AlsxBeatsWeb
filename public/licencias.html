@@ -433,9 +433,9 @@ textarea:focus {
             <div class="checkout-actions">
                 <button class="cart-btn-license" id="add-to-cart">Add to Cart</button>
                 <button class="buy-btn-license" id="buy-now-btn">Buy Now</button>
-                <a href="index.html#contacto" class="buy-btn-license" id="contact-btn" style="display:none;text-decoration:none;text-align:center">
-                    <i class="fas fa-envelope"></i> Contactar
-                </a>
+                <button class="buy-btn-license" id="contact-btn" style="display:none" onclick="openContactModal()">
+                    <i class="fas fa-envelope"></i> Contactar al artista
+                </button>
             </div>
         </div>
     </div>
@@ -443,7 +443,7 @@ textarea:focus {
     <div class="license-grid">
 
         <div class="license-card active" data-price="29.99" data-type="basic-mp3">
-            <h3>Basic Lease MP3</h3>
+            <h3>Basic Lease</h3>
             <div class="license-price">€29.99</div>
             <span>MP3</span>
         </div>
@@ -482,7 +482,7 @@ textarea:focus {
 
     <div class="usage-terms">
 
-    <h3 id="license-name">Basic Lease MP3 (€29.99)</h3>
+    <h3 id="license-name">Usage Terms</h3>
 
     <div class="terms-grid" id="terms-grid">
         <div class="term-item"><i class="fas fa-file-audio"></i> MP3 (320kbps)</div>
@@ -729,13 +729,7 @@ function formatTime(seconds) {
         .padStart(2, '0')}`;
 }
 
-audio.addEventListener('ended', () => {
 
-    playBtn.innerHTML =
-        '<i class="fas fa-play"></i>';
-
-    isPlaying = false;
-});
 const coverPlay =
     document.getElementById('cover-play-btn');
 
@@ -782,7 +776,7 @@ document.getElementById('terms-grid');
 
 const licenses = {
     '29.99': {
-        name: 'Basic Lease MP3 (€29.99)',
+        name: 'Basic Lease (€29.99)',
         terms: [
             ['fa-file-audio',        'MP3 (320kbps)'],
             ['fa-compact-disc',      '2.700 copias distribuidas'],
@@ -899,6 +893,10 @@ likeBtn.addEventListener('click',()=>{
 
 });
 
+const addToCartBtn  = document.getElementById('add-to-cart');
+const buyNowBtn2    = document.getElementById('buy-now-btn');
+const contactBtn    = document.getElementById('contact-btn');
+
 addToCartBtn.addEventListener('click', () => {
     const activeLicense = document.querySelector('.license-card.active');
     if (activeLicense.dataset.type === 'exclusive') return;
@@ -929,10 +927,6 @@ function priceToLicenseType(price) {
     }[price] || 'basic-mp3';
 }
 
-const addToCartBtn  = document.getElementById('add-to-cart');
-const buyNowBtn2    = document.getElementById('buy-now-btn');
-const contactBtn    = document.getElementById('contact-btn');
-
 function setExclusiveMode(isExclusive) {
     addToCartBtn.style.display  = isExclusive ? 'none' : '';
     buyNowBtn2.style.display    = isExclusive ? 'none' : '';
@@ -948,8 +942,6 @@ cards.forEach(card => {
         const isExclusive   = selectedPrice === 'exclusive';
 
         price.textContent = isExclusive ? 'Por negociación' : '€' + selectedPrice;
-
-        licenseName.textContent = licenses[selectedPrice].name;
 
         termsGrid.innerHTML = licenses[selectedPrice].terms
             .map(([icon, text]) => `<div class="term-item"><i class="fas ${icon}"></i> ${text}</div>`)
@@ -1076,5 +1068,105 @@ loadMoreBeats();
 </script>
 <script src="js/auth.js"></script>
 <script src="js/player.js"></script>
+
+<!-- MODAL CONTACTO EXCLUSIVE -->
+<div id="contact-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center">
+    <div style="background:#11151a;border:1px solid #1c232b;border-radius:20px;padding:36px 32px;width:100%;max-width:480px;margin:20px;position:relative">
+        <button onclick="closeContactModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer"><i class="fas fa-xmark"></i></button>
+
+        <h2 style="margin:0 0 4px;font-size:20px;color:#fff">Exclusive Lease</h2>
+        <p style="margin:0 0 24px;font-size:13px;color:#64748b">Habla directamente con el productor para negociar</p>
+
+        <div style="display:flex;align-items:center;gap:10px;background:#0b0d14;border:1px solid #1c232b;border-radius:10px;padding:12px 16px;margin-bottom:24px">
+            <i class="fas fa-envelope" style="color:#4ecdc4;font-size:15px"></i>
+            <div>
+                <div style="font-size:10px;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Email del productor</div>
+                <a href="mailto:torresaldasdiego2004@gmail.com" style="color:#fff;font-size:14px;font-weight:600;text-decoration:none">torresaldasdiego2004@gmail.com</a>
+            </div>
+        </div>
+
+        <form id="exclusive-contact-form" onsubmit="sendExclusiveMail(event)">
+            <div style="margin-bottom:14px">
+                <label style="display:block;font-size:11px;font-weight:700;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Tu nombre</label>
+                <input id="exc-name" type="text" required placeholder="Artista / nombre" style="width:100%;background:#0b0d14;border:1.5px solid #1c232b;border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box">
+            </div>
+            <div style="margin-bottom:14px">
+                <label style="display:block;font-size:11px;font-weight:700;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Tu email</label>
+                <input id="exc-email" type="email" required placeholder="tu@email.com" style="width:100%;background:#0b0d14;border:1.5px solid #1c232b;border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box">
+            </div>
+            <div style="margin-bottom:20px">
+                <label style="display:block;font-size:11px;font-weight:700;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Mensaje</label>
+                <textarea id="exc-msg" required rows="4" placeholder="Cuéntame para qué proyecto quieres el beat, plataformas de distribución, etc." style="width:100%;background:#0b0d14;border:1.5px solid #1c232b;border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box"></textarea>
+            </div>
+            <button type="submit" style="width:100%;background:#4ecdc4;color:#000;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer">
+                <i class="fas fa-paper-plane"></i> Enviar mensaje
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+function openContactModal() {
+    const modal = document.getElementById('contact-modal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    const beatTitle = document.getElementById('beat-title')?.textContent || '';
+    document.getElementById('exc-msg').placeholder =
+        `Hola, estoy interesado en el Exclusive Lease de "${beatTitle}". Cuéntame los detalles...`;
+}
+
+function closeContactModal() {
+    document.getElementById('contact-modal').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+async function sendExclusiveMail(e) {
+    e.preventDefault();
+    const name    = document.getElementById('exc-name').value.trim();
+    const email   = document.getElementById('exc-email').value.trim();
+    const msg     = document.getElementById('exc-msg').value.trim();
+    const beat    = document.getElementById('beat-title')?.textContent || 'beat';
+
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+    try {
+        const res  = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, message: msg, beat })
+        });
+
+        const text = await res.text();
+        let data = {};
+        try { data = JSON.parse(text); } catch {
+            console.error('Respuesta del servidor:', text.slice(0, 300));
+            throw new Error(`Error del servidor (${res.status}). Revisa la consola del servidor.`);
+        }
+
+        if (res.ok) {
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡Mensaje enviado!';
+            submitBtn.style.background = '#22c55e';
+            setTimeout(() => closeContactModal(), 2000);
+        } else {
+            throw new Error(data.error || 'Error desconocido');
+        }
+    } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar mensaje';
+        alert('Error: ' + err.message);
+    }
+}
+
+let _modalMousedownOnBackdrop = false;
+document.getElementById('contact-modal').addEventListener('mousedown', function(e) {
+    _modalMousedownOnBackdrop = e.target === this;
+});
+document.getElementById('contact-modal').addEventListener('click', function(e) {
+    if (e.target === this && _modalMousedownOnBackdrop) closeContactModal();
+    _modalMousedownOnBackdrop = false;
+});
+</script>
 </body>
 </html>
