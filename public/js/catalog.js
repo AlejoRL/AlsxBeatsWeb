@@ -11,6 +11,8 @@ async function loadCatalog() {
     try {
         const res = await fetch('/api/beats');
         allBeats = await res.json();
+        // Mapa global para el overlay de licencias
+        window._allBeatsMap = Object.fromEntries(allBeats.map(b => [b.id, b]));
         const countEl = document.getElementById('count-tracks');
         if (countEl) countEl.textContent = allBeats.length;
         renderCatalog();
@@ -114,7 +116,7 @@ function renderCatalog() {
             </div>
             <div class="row-price">${priceHtml}</div>
             <div class="row-actions">
-                <a href="licencias.html?beatId=${beat.id}" class="btn-row-lic">Ver licencias</a>
+                <button class="btn-row-lic" onclick="openLicModal('${beat.id}')">Ver licencias</button>
                 <button class="btn-row-more" title="Más opciones"><i class="fas fa-ellipsis"></i></button>
             </div>
         </div>`;
