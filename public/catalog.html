@@ -283,77 +283,132 @@
         #bottom-player {
             position: fixed;
             bottom: 0; left: 0; right: 0;
-            height: 72px;
             background: #11151a;
             border-top: 1px solid #1c232b;
             display: none;
-            align-items: center;
-            gap: 20px;
-            padding: 0 24px;
+            flex-direction: column;
             z-index: 500;
+            padding: 10px 24px 12px;
         }
         #bottom-player.visible { display: flex; }
 
+        /* Fila waveform */
+        .bp-wave-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .bp-time { font-size: 11px; color: #94a3b8; white-space: nowrap; font-variant-numeric: tabular-nums; min-width: 34px; }
+        .bp-bar {
+            flex: 1;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 4px 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .bp-wave-bars {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .bp-wave-bars span {
+            flex: 1;
+            border-radius: 2px;
+            background: #1c232b;
+            transition: background .08s;
+            min-height: 3px;
+        }
+
+        /* Fila controles */
+        .bp-ctrl-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .bp-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
         .bp-cover {
-            width: 44px; height: 44px;
-            border-radius: 8px;
+            width: 40px; height: 40px;
+            border-radius: 7px;
             object-fit: cover;
             background: #1c232b;
             flex-shrink: 0;
         }
-        .bp-info { min-width: 0; flex: 1; }
+        .bp-info { min-width: 0; }
         .bp-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .bp-artist { font-size: 11px; color: #94a3b8; }
 
-        .bp-controls { display: flex; align-items: center; gap: 12px; }
-        .bp-btn {
+        .bp-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .bp-icon {
             background: none;
             border: none;
             color: #94a3b8;
             cursor: pointer;
-            font-size: 14px;
-            padding: 6px;
-            transition: color .15s;
+            font-size: 15px;
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: color .15s, background .15s;
         }
-        .bp-btn:hover { color: #fff; }
+        .bp-icon:hover { color: #fff; background: rgba(255,255,255,.06); }
+        .bp-icon.liked { color: #ef4444; }
         .bp-play {
-            width: 38px; height: 38px;
+            width: 40px; height: 40px;
             border-radius: 50%;
             background: var(--accent-celeste);
             border: none;
             color: #000;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            transition: opacity .2s;
+            transition: opacity .2s, transform .15s;
+            flex-shrink: 0;
         }
-        .bp-play:hover { opacity: .85; }
+        .bp-play:hover { opacity: .85; transform: scale(1.06); }
 
-        .bp-progress { flex: 1; display: flex; align-items: center; gap: 10px; }
-        .bp-time { font-size: 11px; color: #94a3b8; white-space: nowrap; font-variant-numeric: tabular-nums; }
-        .bp-bar {
+        .bp-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             flex: 1;
-            height: 3px;
-            background: #1c232b;
-            border-radius: 999px;
-            cursor: pointer;
-            position: relative;
+            justify-content: flex-end;
+            min-width: 0;
         }
-        .bp-fill {
-            height: 100%;
-            background: var(--accent-celeste);
-            border-radius: 999px;
-            width: 0%;
-            transition: width .1s linear;
-        }
-        .bp-bar:hover .bp-fill { background: #fff; }
-
-        .bp-vol { display: flex; align-items: center; gap: 8px; }
-        .bp-vol i { color: #94a3b8; font-size: 13px; }
-        .bp-vol input[type=range] {
+        .bp-right i { color: #94a3b8; font-size: 13px; }
+        .bp-vol {
             width: 70px;
             accent-color: var(--accent-celeste);
             cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            #bottom-player { padding: 8px 14px 10px; }
+            .bp-right { display: none; }
+            .bp-left { flex: 0 0 auto; max-width: 40%; }
+            .bp-title { font-size: 12px; }
+        }
+
+        /* ── MEDIUM DESKTOP (pantalla achicada) ─────────── */
+        @media (max-width: 1100px) and (min-width: 861px) {
+            .beat-row { grid-template-columns: 40px 48px 1fr 90px 140px; gap: 10px; }
+            .row-genre-cell, .row-stats { display: none; }
         }
 
         /* ── MOBILE ────────────────────────────────────── */
@@ -474,26 +529,44 @@
 
 <!-- BOTTOM PLAYER -->
 <div id="bottom-player">
-    <img class="bp-cover" id="bp-cover" src="" alt="">
-    <div class="bp-info">
-        <div class="bp-title" id="bp-title">—</div>
-        <div class="bp-artist">AlsxBeats</div>
-    </div>
-    <div class="bp-controls">
-        <button class="bp-play" id="bp-play-btn" onclick="bpTogglePlay()">
-            <i class="fas fa-play" id="bp-play-icon"></i>
-        </button>
-    </div>
-    <div class="bp-progress">
+    <!-- Fila waveform -->
+    <div class="bp-wave-row">
         <span class="bp-time" id="bp-cur">0:00</span>
         <div class="bp-bar" id="bp-bar" onclick="bpSeek(event)">
-            <div class="bp-fill" id="bp-fill"></div>
+            <div class="bp-wave-bars" id="bp-wave-bars"></div>
         </div>
         <span class="bp-time" id="bp-dur">0:00</span>
     </div>
-    <div class="bp-vol">
-        <i class="fas fa-volume-high"></i>
-        <input type="range" id="bp-vol" min="0" max="1" step="0.05" value="1" oninput="bpSetVol(this.value)">
+    <!-- Fila controles -->
+    <div class="bp-ctrl-row">
+        <div class="bp-left">
+            <img class="bp-cover" id="bp-cover" src="" alt="">
+            <div class="bp-info">
+                <div class="bp-title" id="bp-title">—</div>
+                <div class="bp-artist">AlsxBeats</div>
+            </div>
+        </div>
+        <div class="bp-controls">
+            <button class="bp-icon" id="bp-like-btn" title="Me gusta" onclick="bpToggleLike()">
+                <i class="far fa-heart"></i>
+            </button>
+            <button class="bp-icon" title="Anterior" onclick="bpPrev()">
+                <i class="fas fa-backward-step"></i>
+            </button>
+            <button class="bp-play" id="bp-play-btn" onclick="bpTogglePlay()">
+                <i class="fas fa-play" id="bp-play-icon"></i>
+            </button>
+            <button class="bp-icon" title="Siguiente" onclick="bpNext()">
+                <i class="fas fa-forward-step"></i>
+            </button>
+            <button class="bp-icon" title="Playlist">
+                <i class="fas fa-list"></i>
+            </button>
+        </div>
+        <div class="bp-right">
+            <i class="fas fa-volume-high"></i>
+            <input type="range" class="bp-vol" id="bp-vol" min="0" max="1" step="0.05" value="1" oninput="bpSetVol(this.value)">
+        </div>
     </div>
 </div>
 
@@ -512,15 +585,43 @@ function toggleMobileMenu() {
 const audio      = document.getElementById('player');
 const bpPanel    = document.getElementById('bottom-player');
 const bpPlayIcon = document.getElementById('bp-play-icon');
-const bpFill     = document.getElementById('bp-fill');
 const bpCur      = document.getElementById('bp-cur');
 const bpDur      = document.getElementById('bp-dur');
 
-let currentRow = null;
+let currentRow    = null;
+let currentBeatId = null;
+
+// Genera barras waveform con alturas pseudo-aleatorias
+const WAVE_BARS = 80;
+let waveHeights  = [];
+
+function buildWaveBars() {
+    const container = document.getElementById('bp-wave-bars');
+    if (!container) return;
+    waveHeights = [];
+    container.innerHTML = '';
+    for (let i = 0; i < WAVE_BARS; i++) {
+        // Patrón tipo waveform: picos más altos en el centro
+        const center = Math.abs(i - WAVE_BARS / 2) / (WAVE_BARS / 2);
+        const h = 15 + Math.random() * 70 * (1 - center * 0.3);
+        waveHeights.push(h);
+        const span = document.createElement('span');
+        span.style.height = h + '%';
+        container.appendChild(span);
+    }
+}
+
+function updateWaveBars(pct) {
+    const spans = document.querySelectorAll('#bp-wave-bars span');
+    spans.forEach((s, i) => {
+        s.style.background = (i / WAVE_BARS) * 100 <= pct ? 'var(--accent-celeste)' : '#1c232b';
+    });
+}
 
 function bpLoad(src, title, cover, row) {
     if (currentRow) currentRow.classList.remove('playing');
-    currentRow = row;
+    currentRow    = row;
+    currentBeatId = row ? row.dataset.id : null;
     if (row) row.classList.add('playing');
     audio.src = src;
     audio.play();
@@ -528,6 +629,8 @@ function bpLoad(src, title, cover, row) {
     document.getElementById('bp-cover').src = cover;
     bpPanel.classList.add('visible');
     bpPlayIcon.className = 'fas fa-pause';
+    buildWaveBars();
+    updateBpLike();
 }
 
 function bpTogglePlay() {
@@ -538,27 +641,60 @@ function bpTogglePlay() {
 function bpSeek(e) {
     const bar  = document.getElementById('bp-bar');
     const rect = bar.getBoundingClientRect();
-    const pct  = (e.clientX - rect.left) / rect.width;
-    if (audio.duration) audio.currentTime = pct * audio.duration;
+    const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    if (audio.duration) { audio.currentTime = pct * audio.duration; }
 }
 
 function bpSetVol(v) { audio.volume = v; }
 
 function fmtTime(s) {
     if (!s || isNaN(s)) return '0:00';
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60).toString().padStart(2, '0');
-    return `${m}:${sec}`;
+    return `${Math.floor(s / 60)}:${Math.floor(s % 60).toString().padStart(2, '0')}`;
+}
+
+function bpPrev() {
+    const rows = Array.from(document.querySelectorAll('.beat-row'));
+    const idx  = rows.indexOf(currentRow);
+    if (idx > 0) rows[idx - 1].querySelector('.row-play')?.click();
+}
+
+function bpNext() {
+    const rows = Array.from(document.querySelectorAll('.beat-row'));
+    const idx  = rows.indexOf(currentRow);
+    if (idx !== -1 && idx < rows.length - 1) rows[idx + 1].querySelector('.row-play')?.click();
+}
+
+function updateBpLike() {
+    const btn = document.getElementById('bp-like-btn');
+    if (!btn || !currentBeatId) return;
+    const liked = JSON.parse(localStorage.getItem('likedBeats') || '{}');
+    if (liked[currentBeatId]) {
+        btn.innerHTML = '<i class="fas fa-heart"></i>';
+        btn.classList.add('liked');
+    } else {
+        btn.innerHTML = '<i class="far fa-heart"></i>';
+        btn.classList.remove('liked');
+    }
+}
+
+function bpToggleLike() {
+    if (!currentBeatId) return;
+    const liked = JSON.parse(localStorage.getItem('likedBeats') || '{}');
+    liked[currentBeatId] = !liked[currentBeatId];
+    localStorage.setItem('likedBeats', JSON.stringify(liked));
+    updateBpLike();
 }
 
 audio.addEventListener('timeupdate', () => {
     if (!audio.duration) return;
     const pct = (audio.currentTime / audio.duration) * 100;
-    bpFill.style.width = pct + '%';
-    bpCur.textContent  = fmtTime(audio.currentTime);
+    bpCur.textContent = fmtTime(audio.currentTime);
+    updateWaveBars(pct);
 });
 audio.addEventListener('loadedmetadata', () => { bpDur.textContent = fmtTime(audio.duration); });
-audio.addEventListener('ended', () => { bpPlayIcon.className = 'fas fa-play'; });
+audio.addEventListener('ended', () => { bpPlayIcon.className = 'fas fa-play'; bpNext(); });
+
+buildWaveBars();
 
 // Exponer para catalog.js
 window.bpLoad = bpLoad;

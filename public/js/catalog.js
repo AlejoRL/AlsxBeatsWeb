@@ -99,8 +99,8 @@ function renderCatalog() {
 
         return `
         <div class="beat-row" data-id="${beat.id}" data-preview="${beat.preview || ''}" data-title="${escHtml(beat.title)}" data-img="${cover}">
-            <button class="row-play" onclick="rowPlay(this)" title="${hasPreview ? 'Reproducir' : 'Sin preview'}">
-                <i class="fas fa-${hasPreview ? 'play' : 'lock'}"></i>
+            <button class="row-play" onclick="rowPlay(this)" title="Reproducir">
+                <i class="fas fa-play"></i>
             </button>
             <img class="row-cover" src="${cover}" alt="${escHtml(beat.title)}" onerror="this.src='assets/images/alsxbeatsportada.png'">
             <div class="row-info">
@@ -231,7 +231,10 @@ function escHtml(str) {
 function rowPlay(btn) {
     const row     = btn.closest('.beat-row');
     const preview = row.dataset.preview;
-    if (!preview) { window.Cart?.showToast('Preview no disponible aún', true); return; }
+    if (!preview) {
+        window.location.href = `licencias.html?beatId=${row.dataset.id}`;
+        return;
+    }
     window.bpLoad?.(preview, row.dataset.title, row.dataset.img, row);
 }
 

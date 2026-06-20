@@ -312,6 +312,36 @@ textarea:focus {
         0 0 10px rgba(78,205,196,.2),
         0 0 20px rgba(78,205,196,.1);
 }
+
+@media (max-width: 768px) {
+    body { padding: 20px 0; }
+    .page-top { padding: 0 16px; }
+    .page-wrapper {
+        flex-direction: column !important;
+        padding: 0 16px !important;
+        gap: 20px !important;
+    }
+    .sidebar {
+        width: 100% !important;
+        position: static !important;
+        border-radius: 12px !important;
+    }
+    .cover-wrapper img { max-height: 260px; object-fit: cover; }
+    .main-col {
+        margin-top: 0 !important;
+        padding-bottom: 180px !important;
+    }
+    .panel { padding: 20px 16px; }
+    .license-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .price-license { font-size: 22px; }
+    .license-info h3 { font-size: 18px; }
+    .checkout-actions { flex-direction: column; gap: 10px; }
+    .checkout-actions button { width: 100%; }
+}
     </style>
 </head>
 <body>
