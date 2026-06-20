@@ -1395,7 +1395,7 @@ transition:.3s ease;
     display: none;
     flex-direction: column;
     z-index: 500;
-    padding: 10px 24px 12px;
+    padding: 8px 24px 10px;
 }
 #bottom-player.visible { display: flex; }
 
@@ -1403,7 +1403,7 @@ transition:.3s ease;
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 .bp-time {
     font-size: 11px;

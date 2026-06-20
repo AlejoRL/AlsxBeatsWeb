@@ -64,7 +64,7 @@
         waveColor: '#1b2330',
         progressColor: '#4ecdc4',
         cursorColor: '#4ecdc4',
-        height: 55,
+        height: 44,
         normalize: true,
         barWidth: 3,
         barGap: 2,
