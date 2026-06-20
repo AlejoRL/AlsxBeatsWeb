@@ -694,6 +694,7 @@ let isPlaying = false;
 
 playBtn.addEventListener('click', () => {
 
+    window.bpPause?.();
     wavesurfer.playPause();
 
     const playerBar =
@@ -733,6 +734,7 @@ const coverPlay =
 
 coverPlay.addEventListener('click', () => {
 
+    window.bpPause?.();
     wavesurfer.playPause();
 
     const playerBar =
@@ -1055,6 +1057,7 @@ async function loadMoreBeats() {
 loadMoreBeats();
 </script>
 <script src="js/auth.js"></script>
+<script>window._bpNoAutoPlay = true;</script>
 <script src="js/player.js"></script>
 
 <!-- MODAL CONTACTO EXCLUSIVE -->

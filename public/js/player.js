@@ -78,8 +78,10 @@
         if (savedTime > 0 && ws.getDuration() > 0) {
             ws.seekTo(savedTime / ws.getDuration());
         }
-        ws.play();
-        bpPlayIcon.className = 'fas fa-pause';
+        if (!window._bpNoAutoPlay) {
+            ws.play();
+            bpPlayIcon.className = 'fas fa-pause';
+        }
     });
 
     ws.on('audioprocess', () => {
@@ -151,6 +153,11 @@
         e => ws.setVolume(parseFloat(e.target.value)));
 
     // ── API pública para catalog.js ─────────────────────────
+    window.bpPause = function () {
+        if (ws.isPlaying()) ws.pause();
+        bpPlayIcon.className = 'fas fa-play';
+    };
+
     window.bpLoad = function (src, title, cover, row) {
         if (currentRow) currentRow.classList.remove('playing');
         currentRow    = row;
