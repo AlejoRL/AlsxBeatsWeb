@@ -107,7 +107,7 @@ function renderCatalog() {
                 <div class="row-title">${escHtml(beat.title)}</div>
                 <div class="row-producer">AlsxBeats</div>
             </div>
-            <div><span class="row-genre">${beat.genre || '—'}</span></div>
+            <div class="row-genre-cell"><span class="row-genre">${beat.genre || '—'}</span></div>
             <div class="row-stats">
                 <span>${beat.bpm ? beat.bpm + ' BPM' : '—'}</span>
                 <span>${beat.key || '—'}</span>
