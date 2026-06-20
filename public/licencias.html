@@ -485,12 +485,15 @@ textarea:focus {
     <h3 id="license-name">Basic Lease MP3 (€29.99)</h3>
 
     <div class="terms-grid" id="terms-grid">
-        <div class="term-item"><i class="fas fa-file-audio"></i> MP3 File</div>
-        <div class="term-item"><i class="fas fa-compact-disc"></i> 2.700 Copies</div>
-        <div class="term-item"><i class="fas fa-signal"></i> 150.000 Streams</div>
-        <div class="term-item"><i class="fas fa-video"></i> 1 Music Video</div>
-        <div class="term-item"><i class="fas fa-microphone"></i> Live Performances</div>
-        <div class="term-item"><i class="fas fa-radio"></i> Radio Broadcasting</div>
+        <div class="term-item"><i class="fas fa-file-audio"></i> MP3 (320kbps)</div>
+        <div class="term-item"><i class="fas fa-compact-disc"></i> 2.700 copias distribuidas</div>
+        <div class="term-item"><i class="fas fa-signal"></i> 150.000 audio streams</div>
+        <div class="term-item"><i class="fas fa-video"></i> 1 videoclip musical</div>
+        <div class="term-item"><i class="fas fa-radio"></i> 2 emisoras de radio</div>
+        <div class="term-item"><i class="fas fa-microphone"></i> 5 actuaciones en directo</div>
+        <div class="term-item"><i class="fas fa-percent"></i> 50% regalías de publicación</div>
+        <div class="term-item"><i class="fas fa-id-card"></i> Crédito: "Prod. by AlsxBeats"</div>
+        <div class="term-item"><i class="fas fa-lock-open"></i> Licencia no exclusiva</div>
     </div>
 
 </div>
@@ -781,56 +784,70 @@ const licenses = {
     '29.99': {
         name: 'Basic Lease MP3 (€29.99)',
         terms: [
-            ['fa-file-audio',   'MP3 File'],
-            ['fa-compact-disc', '2.700 Copies'],
-            ['fa-signal',       '150.000 Streams'],
-            ['fa-video',        '1 Music Video'],
-            ['fa-microphone',   'Live Performances'],
-            ['fa-radio',        'Radio Broadcasting']
+            ['fa-file-audio',        'MP3 (320kbps)'],
+            ['fa-compact-disc',      '2.700 copias distribuidas'],
+            ['fa-signal',            '150.000 audio streams'],
+            ['fa-video',             '1 videoclip musical'],
+            ['fa-radio',             '2 emisoras de radio'],
+            ['fa-microphone',        '5 actuaciones en directo'],
+            ['fa-percent',           '50% regalías de publicación'],
+            ['fa-id-card',           'Crédito: "Prod. by AlsxBeats"'],
+            ['fa-lock-open',         'Licencia no exclusiva']
         ]
     },
     '38.99': {
         name: 'Basic Lease WAV (€38.99)',
         terms: [
-            ['fa-file-audio',   'WAV + MP3 File'],
-            ['fa-compact-disc', '2.700 Copies'],
-            ['fa-signal',       '150.000 Streams'],
-            ['fa-video',        '1 Music Video'],
-            ['fa-microphone',   'Live Performances'],
-            ['fa-radio',        'Radio Broadcasting']
+            ['fa-file-audio',        'WAV + MP3 (320kbps)'],
+            ['fa-compact-disc',      '2.700 copias distribuidas'],
+            ['fa-signal',            '150.000 audio streams'],
+            ['fa-video',             '1 videoclip musical'],
+            ['fa-radio',             '3 emisoras de radio'],
+            ['fa-microphone',        '5 actuaciones en directo'],
+            ['fa-percent',           '50% regalías de publicación'],
+            ['fa-id-card',           'Crédito: "Prod. by AlsxBeats"'],
+            ['fa-lock-open',         'Licencia no exclusiva']
         ]
     },
     '75.99': {
         name: 'Premium Lease (€75.99)',
         terms: [
-            ['fa-file-audio',   'MP3, WAV + Stems'],
-            ['fa-compact-disc', '3.200 Copies'],
-            ['fa-signal',       '500.000 Streams'],
-            ['fa-video',        '2 Music Videos'],
-            ['fa-microphone',   'Live Performances'],
-            ['fa-radio',        'Radio Broadcasting']
+            ['fa-file-audio',        'MP3, WAV + Stems'],
+            ['fa-compact-disc',      '3.200 copias distribuidas'],
+            ['fa-signal',            '500.000 audio streams'],
+            ['fa-video',             '2 videoclips musicales'],
+            ['fa-radio',             '5 emisoras de radio'],
+            ['fa-microphone',        'Actuaciones en directo ilimitadas'],
+            ['fa-percent',           '50% regalías de publicación'],
+            ['fa-id-card',           'Crédito: "Prod. by AlsxBeats"'],
+            ['fa-lock-open',         'Licencia no exclusiva']
         ]
     },
     '145.99': {
         name: 'Unlimited Lease (€145.99)',
         terms: [
-            ['fa-file-audio',   'MP3, WAV + Stems'],
-            ['fa-infinity',     'Unlimited Copies'],
-            ['fa-infinity',     'Unlimited Online Audio Streams'],
-            ['fa-infinity',     'Unlimited Music Video'],
-            ['fa-infinity',     'Unlimited Radio Broadcasting'],
-            ['fa-ban',          'Non-Exclusive']
+            ['fa-file-audio',        'MP3, WAV + Stems'],
+            ['fa-infinity',          'Copias distribuidas ilimitadas'],
+            ['fa-infinity',          'Audio streams ilimitados'],
+            ['fa-infinity',          'Videoclips ilimitados'],
+            ['fa-infinity',          'Radio broadcasting ilimitado'],
+            ['fa-infinity',          'Actuaciones en directo ilimitadas'],
+            ['fa-percent',           '50% regalías de publicación'],
+            ['fa-id-card',           'Crédito: "Prod. by AlsxBeats"'],
+            ['fa-lock-open',         'Licencia no exclusiva']
         ]
     },
     'exclusive': {
         name: 'Exclusive Lease',
         terms: [
-            ['fa-crown',        'Propiedad exclusiva completa'],
-            ['fa-file-audio',   'MP3, WAV + Stems'],
-            ['fa-infinity',     'Uso ilimitado en todo'],
-            ['fa-store-slash',  'Beat retirado de la tienda'],
-            ['fa-handshake',    'Negociación directa'],
-            ['fa-envelope',     'Contacto requerido']
+            ['fa-file-audio',        'MP3, WAV + Stems'],
+            ['fa-crown',             'Propiedad exclusiva completa'],
+            ['fa-infinity',          'Uso ilimitado en todo'],
+            ['fa-percent',           '100% derechos de publicación'],
+            ['fa-id-card',           'Sin obligación de crédito'],
+            ['fa-store-slash',       'Beat retirado de la tienda'],
+            ['fa-handshake',         'Negociación directa con el productor'],
+            ['fa-envelope',          'Contacto obligatorio para adquirir']
         ]
     }
 };
