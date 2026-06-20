@@ -428,64 +428,69 @@ textarea:focus {
 
         <div class="checkout-box">
             <div class="total-label">Total</div>
-            <div class="total-price" id="selected-price">€29</div>
+            <div class="total-price" id="selected-price">€29.99</div>
 
             <div class="checkout-actions">
-               <button class="cart-btn-license" id="add-to-cart">
-    Add to Cart
-</button>
-
-                <button class="buy-btn-license" id="buy-now-btn">
-                    Buy Now
-                </button>
+                <button class="cart-btn-license" id="add-to-cart">Add to Cart</button>
+                <button class="buy-btn-license" id="buy-now-btn">Buy Now</button>
+                <a href="index.html#contacto" class="buy-btn-license" id="contact-btn" style="display:none;text-decoration:none;text-align:center">
+                    <i class="fas fa-envelope"></i> Contactar
+                </a>
             </div>
         </div>
     </div>
 
     <div class="license-grid">
 
-        <div class="license-card active" data-price="29" data-type="basic">
-            <h3>Basic Lease</h3>
-            <div class="license-price">€29</div>
+        <div class="license-card active" data-price="29.99" data-type="basic-mp3">
+            <h3>Basic Lease MP3</h3>
+            <div class="license-price">€29.99</div>
             <span>MP3</span>
         </div>
 
-        <div class="license-card" data-price="59" data-type="premium">
+        <div class="license-card" data-price="38.99" data-type="basic-wav">
+            <h3>Basic Lease WAV</h3>
+            <div class="license-price">€38.99</div>
+            <span>WAV + MP3</span>
+        </div>
+
+        <div class="license-card" data-price="75.99" data-type="premium">
             <div class="popular-star">⭐</div>
             <h3>Premium Lease</h3>
-            <div class="license-price">€59</div>
-            <span>WAV, MP3</span>
+            <div class="license-price">€75.99</div>
+            <span>MP3, WAV, Stems</span>
         </div>
 
-        <div class="license-card" data-price="149" data-type="unlimited">
+        <div class="license-card" data-price="145.99" data-type="unlimited">
             <h3>Unlimited Lease</h3>
-            <div class="license-price">€149</div>
-            <span>WAV, STEMS, MP3</span>
+            <div class="license-price">€145.99</div>
+            <span>MP3, WAV, Stems</span>
         </div>
 
-        <div class="license-card" data-price="299" data-type="exclusive">
-            <h3>Exclusive Rights</h3>
-            <div class="license-price">€299</div>
-            <span>Full Exclusive</span>
+        <div class="license-card exclusive-card" data-price="exclusive" data-type="exclusive">
+            <div>
+                <h3>Exclusive Lease</h3>
+                <span style="font-size:13px;color:#94a3b8">Propiedad completa · Beat retirado de la tienda</span>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+                <div class="license-price" style="font-size:20px;color:#94a3b8">Por negociación</div>
+                <span style="font-size:12px;color:#64748b">Contacto directo con el productor</span>
+            </div>
         </div>
 
     </div>
 
     <div class="usage-terms">
 
-    <h3 id="license-name">
-        Basic Lease (€29)
-    </h3>
+    <h3 id="license-name">Basic Lease MP3 (€29.99)</h3>
 
     <div class="terms-grid" id="terms-grid">
-
         <div class="term-item"><i class="fas fa-file-audio"></i> MP3 File</div>
-        <div class="term-item"><i class="fas fa-signal"></i> 5.000 Streams</div>
+        <div class="term-item"><i class="fas fa-compact-disc"></i> 2.700 Copies</div>
+        <div class="term-item"><i class="fas fa-signal"></i> 150.000 Streams</div>
         <div class="term-item"><i class="fas fa-video"></i> 1 Music Video</div>
         <div class="term-item"><i class="fas fa-microphone"></i> Live Performances</div>
-        <div class="term-item"><i class="fas fa-compact-disc"></i> 500 Copies</div>
-        <div class="term-item"><i class="fas fa-radio"></i> Radio Rights</div>
-
+        <div class="term-item"><i class="fas fa-radio"></i> Radio Broadcasting</div>
     </div>
 
 </div>
@@ -773,52 +778,59 @@ const termsGrid =
 document.getElementById('terms-grid');
 
 const licenses = {
-
-    29: {
-        name: 'Basic Lease (€29)',
+    '29.99': {
+        name: 'Basic Lease MP3 (€29.99)',
         terms: [
-            ['fa-file-audio',    'MP3 File'],
-            ['fa-signal',        '5.000 Streams'],
-            ['fa-video',         '1 Music Video'],
-            ['fa-microphone',    'Live Performances'],
-            ['fa-compact-disc',  '500 Copies'],
-            ['fa-radio',         'Radio Rights']
+            ['fa-file-audio',   'MP3 File'],
+            ['fa-compact-disc', '2.700 Copies'],
+            ['fa-signal',       '150.000 Streams'],
+            ['fa-video',        '1 Music Video'],
+            ['fa-microphone',   'Live Performances'],
+            ['fa-radio',        'Radio Broadcasting']
         ]
     },
-
-    59: {
-        name: 'Premium Lease (€59)',
+    '38.99': {
+        name: 'Basic Lease WAV (€38.99)',
         terms: [
-            ['fa-file-audio',    'WAV + MP3'],
-            ['fa-signal',        '50.000 Streams'],
-            ['fa-video',         '2 Music Videos'],
-            ['fa-microphone',    'Live Performances'],
-            ['fa-compact-disc',  '5.000 Copies'],
-            ['fa-radio',         'Radio Rights']
+            ['fa-file-audio',   'WAV + MP3 File'],
+            ['fa-compact-disc', '2.700 Copies'],
+            ['fa-signal',       '150.000 Streams'],
+            ['fa-video',        '1 Music Video'],
+            ['fa-microphone',   'Live Performances'],
+            ['fa-radio',        'Radio Broadcasting']
         ]
     },
-
-    149: {
-        name: 'Unlimited Lease (€149)',
+    '75.99': {
+        name: 'Premium Lease (€75.99)',
         terms: [
-            ['fa-file-audio',    'WAV + STEMS + MP3'],
-            ['fa-signal',        'Unlimited Streams'],
-            ['fa-video',         'Unlimited Videos'],
-            ['fa-microphone',    'Unlimited Shows'],
-            ['fa-compact-disc',  'Unlimited Copies'],
-            ['fa-radio',         'Radio Rights']
+            ['fa-file-audio',   'MP3, WAV + Stems'],
+            ['fa-compact-disc', '3.200 Copies'],
+            ['fa-signal',       '500.000 Streams'],
+            ['fa-video',        '2 Music Videos'],
+            ['fa-microphone',   'Live Performances'],
+            ['fa-radio',        'Radio Broadcasting']
         ]
     },
-
-    299: {
-        name: 'Exclusive Rights (€299)',
+    '145.99': {
+        name: 'Unlimited Lease (€145.99)',
         terms: [
-            ['fa-crown',         'Exclusive Ownership'],
-            ['fa-file-audio',    'WAV + STEMS'],
-            ['fa-signal',        'Unlimited Streams'],
-            ['fa-video',         'Unlimited Videos'],
-            ['fa-microphone',    'Unlimited Shows'],
-            ['fa-ban',           'Beat Removed From Store']
+            ['fa-file-audio',   'MP3, WAV + Stems'],
+            ['fa-infinity',     'Unlimited Copies'],
+            ['fa-infinity',     'Unlimited Online Audio Streams'],
+            ['fa-infinity',     'Unlimited Music Video'],
+            ['fa-infinity',     'Unlimited Radio Broadcasting'],
+            ['fa-ban',          'Non-Exclusive']
+        ]
+    },
+    'exclusive': {
+        name: 'Exclusive Lease',
+        terms: [
+            ['fa-crown',        'Propiedad exclusiva completa'],
+            ['fa-file-audio',   'MP3, WAV + Stems'],
+            ['fa-infinity',     'Uso ilimitado en todo'],
+            ['fa-store-slash',  'Beat retirado de la tienda'],
+            ['fa-handshake',    'Negociación directa'],
+            ['fa-envelope',     'Contacto requerido']
         ]
     }
 };
@@ -870,10 +882,9 @@ likeBtn.addEventListener('click',()=>{
 
 });
 
-const addToCartBtn = document.getElementById('add-to-cart');
-
 addToCartBtn.addEventListener('click', () => {
     const activeLicense = document.querySelector('.license-card.active');
+    if (activeLicense.dataset.type === 'exclusive') return;
     const item = {
         beatId: currentBeatId || params.get('beatId') || params.get('title'),
         licenseType: activeLicense.dataset.type || priceToLicenseType(activeLicense.dataset.price),
@@ -895,30 +906,39 @@ addToCartBtn.addEventListener('click', () => {
 });
 
 function priceToLicenseType(price) {
-    return { '29': 'basic', '59': 'premium', '149': 'unlimited', '299': 'exclusive' }[price] || 'basic';
+    return {
+        '29.99': 'basic-mp3', '38.99': 'basic-wav',
+        '75.99': 'premium', '145.99': 'unlimited', 'exclusive': 'exclusive'
+    }[price] || 'basic-mp3';
+}
+
+const addToCartBtn  = document.getElementById('add-to-cart');
+const buyNowBtn2    = document.getElementById('buy-now-btn');
+const contactBtn    = document.getElementById('contact-btn');
+
+function setExclusiveMode(isExclusive) {
+    addToCartBtn.style.display  = isExclusive ? 'none' : '';
+    buyNowBtn2.style.display    = isExclusive ? 'none' : '';
+    contactBtn.style.display    = isExclusive ? ''     : 'none';
 }
 
 cards.forEach(card => {
     card.addEventListener('click', () => {
-        cards.forEach(c =>
-            c.classList.remove('active')
-        );
-
+        cards.forEach(c => c.classList.remove('active'));
         card.classList.add('active');
 
-        const selectedPrice =
-            card.dataset.price;
+        const selectedPrice = card.dataset.price;
+        const isExclusive   = selectedPrice === 'exclusive';
 
-        price.textContent =
-            '€' + selectedPrice;
+        price.textContent = isExclusive ? 'Por negociación' : '€' + selectedPrice;
 
-        licenseName.textContent =
-            licenses[selectedPrice].name;
+        licenseName.textContent = licenses[selectedPrice].name;
 
-        termsGrid.innerHTML =
-            licenses[selectedPrice].terms
+        termsGrid.innerHTML = licenses[selectedPrice].terms
             .map(([icon, text]) => `<div class="term-item"><i class="fas ${icon}"></i> ${text}</div>`)
             .join('');
+
+        setExclusiveMode(isExclusive);
     });
 });
 

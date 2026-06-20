@@ -1070,6 +1070,13 @@ white-space:nowrap;
     gap:14px;
     margin:20px 0 30px;
 }
+.license-card.exclusive-card{
+    grid-column: 1 / -1;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
 
 .license-card{
     background:#11151a;
