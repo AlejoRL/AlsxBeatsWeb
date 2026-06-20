@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
             },
             body: JSON.stringify({
                 from:     'AlsxBeats <onboarding@resend.dev>',
-                to:       process.env.EMAIL_USER || 'torresaldasdiego2004@gmail.com',
+                to:       'alsxbeats@gmail.com',
                 reply_to: `${name} <${email}>`,
                 subject:  `Exclusive Lease — ${beat || 'beat'}`,
                 html: `
@@ -42,6 +42,7 @@ router.post('/', async (req, res) => {
 
         if (!response.ok) {
             const err = await response.json().catch(() => ({}));
+            console.error('Resend response:', response.status, JSON.stringify(err));
             throw new Error(err.message || `Resend error ${response.status}`);
         }
 
