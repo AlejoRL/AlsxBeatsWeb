@@ -93,6 +93,7 @@ function renderAuthNav(user) {
             <div style="height:1px;background:#1c232b;margin:4px 0"></div>
             <a href="profile.html#settings" class="dd-item"><i class="fas fa-gear"></i> Configuración</a>
             <div style="height:1px;background:#1c232b;margin:4px 0"></div>
+            ${user.isAdmin ? `<a href="/admin" class="dd-item" style="color:#f59e0b"><i class="fas fa-shield-halved" style="color:#f59e0b"></i> Panel admin</a><div style="height:1px;background:#1c232b;margin:4px 0"></div>` : ''}
             <button onclick="authLogout()" class="dd-item dd-danger"><i class="fas fa-right-from-bracket"></i> Cerrar sesión</button>
         `;
         document.body.appendChild(dd);

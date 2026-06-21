@@ -6,9 +6,12 @@ const fs      = require('fs');
 const path    = require('path');
 const User    = require('../models/User');
 
+const ADMIN_EMAIL = 'alsxbeats@gmail.com';
+
 function sanitize(user) {
     const obj = user.toObject ? user.toObject() : { ...user };
     const { password, _id, ...safe } = obj;
+    safe.isAdmin = obj.email === ADMIN_EMAIL;
     return safe;
 }
 
