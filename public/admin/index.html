@@ -350,6 +350,10 @@
                     <label>Instagram</label>
                     <input type="text" id="a-instagram" placeholder="https://instagram.com/...">
                 </div>
+                <div class="form-group full" style="display:flex;align-items:center;gap:10px;padding-top:4px">
+                    <input type="checkbox" id="a-verified" style="width:16px;height:16px;accent-color:#3897f0;cursor:pointer">
+                    <label for="a-verified" style="margin:0;cursor:pointer;color:#fff;font-size:13px"><i class="fas fa-circle-check" style="color:#3897f0"></i> Artista verificado</label>
+                </div>
             </div>
         </div>
         <div class="modal-footer">
@@ -742,6 +746,7 @@ function openAddArtist() {
     document.getElementById('edit-artist-id').value = '';
     document.getElementById('artist-modal-title').textContent = 'Añadir Artista';
     ['a-name','a-bio','a-location','a-genres','a-youtube','a-instagram'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('a-verified').checked = false;
     openModal('modal-artist');
 }
 
@@ -756,6 +761,7 @@ function openEditArtist(id) {
     document.getElementById('a-genres').value    = (a.genres || []).join(', ');
     document.getElementById('a-youtube').value   = a.social?.youtube || '';
     document.getElementById('a-instagram').value = a.social?.instagram || '';
+    document.getElementById('a-verified').checked = !!a.verified;
     openModal('modal-artist');
 }
 
@@ -767,7 +773,8 @@ async function saveArtist() {
         name, bio: document.getElementById('a-bio').value.trim(),
         location: document.getElementById('a-location').value.trim(),
         genres: document.getElementById('a-genres').value,
-        social: { youtube: document.getElementById('a-youtube').value.trim(), instagram: document.getElementById('a-instagram').value.trim() }
+        social: { youtube: document.getElementById('a-youtube').value.trim(), instagram: document.getElementById('a-instagram').value.trim() },
+        verified: document.getElementById('a-verified').checked
     };
     const btn = document.getElementById('btn-save-artist');
     btn.innerHTML = '<span class="spinner"></span> Guardando...'; btn.disabled = true;
