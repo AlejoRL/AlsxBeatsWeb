@@ -208,6 +208,15 @@ router.get('/beats/:beatId/files', (req, res) => {
     res.json(result);
 });
 
+// GET /api/admin/users
+router.get('/users', requireAdmin, async (req, res) => {
+    const User = require('../models/User');
+    const users = await User.find({})
+        .select('id name email plan verified createdAt')
+        .sort({ createdAt: -1 });
+    res.json(users);
+});
+
 // POST /api/admin/reset-verified — testing
 router.post('/reset-verified', requireAdmin, async (req, res) => {
     const User = require('../models/User');

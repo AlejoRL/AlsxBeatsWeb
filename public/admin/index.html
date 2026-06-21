@@ -152,8 +152,8 @@
     <button class="admin-tab" data-panel="panel-collections" onclick="switchPanel('panel-collections')">
         <i class="fas fa-layer-group"></i> Collections
     </button>
-    <button class="admin-tab" data-panel="panel-verifications" onclick="switchPanel('panel-verifications');loadVerifications()">
-        <i class="fas fa-shield-halved"></i> Verificaciones <span id="verif-badge" style="display:none;background:#ef4444;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;margin-left:4px"></span>
+    <button class="admin-tab" data-panel="panel-users" onclick="switchPanel('panel-users');loadUsers()">
+        <i class="fas fa-users"></i> Usuarios
     </button>
 </nav>
 
@@ -212,32 +212,32 @@
     </div>
 
     <!-- ══ PANEL: VERIFICACIONES ══════════════════════════════════ -->
-    <div class="admin-panel" id="panel-verifications" style="display:none">
-        <div class="section-header"><h2>Solicitudes de verificación</h2></div>
-        <div id="verif-list" style="display:flex;flex-direction:column;gap:16px">
-            <div class="empty"><i class="fas fa-shield-halved"></i><p>Cargando...</p></div>
+    <div class="admin-panel" id="panel-users" style="display:none">
+        <div class="section-header">
+            <h2>Usuarios registrados</h2>
+            <span id="users-count" style="font-size:13px;color:#94a3b8"></span>
+        </div>
+        <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:13px">
+                <thead>
+                    <tr style="border-bottom:1px solid #1c232b;color:#64748b;text-align:left">
+                        <th style="padding:10px 14px;font-weight:600">Usuario</th>
+                        <th style="padding:10px 14px;font-weight:600">Email</th>
+                        <th style="padding:10px 14px;font-weight:600">Plan</th>
+                        <th style="padding:10px 14px;font-weight:600">Verificado</th>
+                        <th style="padding:10px 14px;font-weight:600">Registro</th>
+                    </tr>
+                </thead>
+                <tbody id="users-tbody">
+                    <tr><td colspan="5" style="padding:32px;text-align:center;color:#64748b"><i class="fas fa-spinner fa-spin"></i></td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
 </main>
 
 <!-- ══ MODAL: REJECT REASON ══════════════════════════════════ -->
-<div class="modal-overlay" id="modal-reject">
-    <div class="modal" style="max-width:400px">
-        <div class="modal-header"><h3>Motivo de rechazo</h3><button class="btn-close" onclick="closeModal('modal-reject')">&times;</button></div>
-        <div class="modal-body">
-            <input type="hidden" id="reject-user-id">
-            <div class="form-group">
-                <label>Explica al usuario por qué se rechaza su solicitud</label>
-                <textarea id="reject-reason" rows="4" placeholder="Ej: El documento no es legible, la foto del selfie no muestra claramente el documento..."></textarea>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn-sm btn-del" style="flex:0;padding:8px 18px" onclick="closeModal('modal-reject')">Cancelar</button>
-            <button class="btn-primary" onclick="confirmReject()" style="background:#ef4444"><i class="fas fa-xmark"></i> Rechazar</button>
-        </div>
-    </div>
-</div>
 
 <!-- ══ MODAL: BEAT ════════════════════════════════════════════ -->
 <div class="modal-overlay" id="modal-beat">
@@ -572,11 +572,6 @@ async function init() {
     const sess = await fetch('/api/admin/session').then(r => r.json());
     if (!sess.isAdmin) return window.location.href = '/admin/login.html';
     await Promise.all([loadBeats(), loadArtists(), loadKits(), loadCollections()]);
-    fetch('/api/admin/verifications').then(r => r.json()).then(users => {
-        const n = users.filter(u => u.verificationStatus === 'pending').length;
-        const b = document.getElementById('verif-badge');
-        if (b && n) { b.textContent = n; b.style.display = 'inline'; }
-    }).catch(() => {});
 }
 
 function switchPanel(id) {
@@ -1096,86 +1091,38 @@ document.getElementById('btn-logout').onclick = async () => {
     window.location.href = '/admin/login.html';
 };
 
-// ══ VERIFICACIONES ══════════════════════════════════════════
-async function loadVerifications() {
-    const list = document.getElementById('verif-list');
-    list.innerHTML = '<div class="empty"><i class="fas fa-spinner fa-spin"></i><p>Cargando...</p></div>';
-    const users = await fetch('/api/admin/verifications').then(r => r.json());
-
-    const pending = users.filter(u => u.verificationStatus === 'pending');
-    document.getElementById('verif-badge').textContent = pending.length;
-    document.getElementById('verif-badge').style.display = pending.length ? 'inline' : 'none';
-
+// ══ USUARIOS ═══════════════════════════════════════════════
+async function loadUsers() {
+    const tbody = document.getElementById('users-tbody');
+    tbody.innerHTML = '<tr><td colspan="5" style="padding:32px;text-align:center;color:#64748b"><i class="fas fa-spinner fa-spin"></i></td></tr>';
+    const users = await fetch('/api/admin/users').then(r => r.json()).catch(() => []);
+    document.getElementById('users-count').textContent = `${users.length} usuario${users.length !== 1 ? 's' : ''}`;
     if (!users.length) {
-        list.innerHTML = '<div class="empty"><i class="fas fa-shield-halved"></i><p>No hay solicitudes.</p></div>';
+        tbody.innerHTML = '<tr><td colspan="5" style="padding:32px;text-align:center;color:#64748b">No hay usuarios registrados.</td></tr>';
         return;
     }
-
-    const statusLabel = { pending:'En revisión', approved:'Aprobada', rejected:'Rechazada' };
-    const statusColor = { pending:'#f59e0b', approved:'#22c55e', rejected:'#ef4444' };
-
-    list.innerHTML = users.map(u => {
-        const d = u.verificationData || {};
-        const submitted = d.submittedAt ? new Date(d.submittedAt).toLocaleDateString('es-ES') : '—';
-        const reviewed  = d.reviewedAt  ? new Date(d.reviewedAt).toLocaleDateString('es-ES')  : '—';
-        return `
-        <div style="background:#11151a;border:1px solid #1c232b;border-radius:14px;padding:20px 24px">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:16px">
-                <div>
-                    <div style="font-size:15px;font-weight:700;color:#fff">${esc(u.name)} <span style="font-size:12px;color:#94a3b8">${esc(u.email)}</span></div>
-                    <div style="font-size:11px;color:#64748b;margin-top:2px">Enviado: ${submitted} · Revisado: ${reviewed}</div>
+    const planBadge = p => p === 'pro'
+        ? `<span style="background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3);font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px">⚡ Pro</span>`
+        : p === 'elite'
+        ? `<span style="background:rgba(167,139,250,.15);color:#a78bfa;border:1px solid rgba(167,139,250,.3);font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px">👑 Elite</span>`
+        : `<span style="color:#64748b;font-size:11px">Starter</span>`;
+    tbody.innerHTML = users.map((u, i) => `
+        <tr style="border-bottom:1px solid #1c232b;transition:.15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='none'">
+            <td style="padding:12px 14px;color:#fff;font-weight:600">
+                <div style="display:flex;align-items:center;gap:8px">
+                    <span style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#2980b9);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#000;flex-shrink:0">${esc(u.name.charAt(0).toUpperCase())}</span>
+                    ${esc(u.name)}
                 </div>
-                <span style="background:rgba(0,0,0,.3);border:1px solid ${statusColor[u.verificationStatus]};color:${statusColor[u.verificationStatus]};font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px">${statusLabel[u.verificationStatus]}</span>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px">
-                <div style="background:#0b0d14;border-radius:8px;padding:10px">
-                    <div style="font-size:10px;color:#64748b;margin-bottom:3px">NOMBRE LEGAL</div>
-                    <div style="font-size:13px;color:#fff;font-weight:600">${esc(d.fullName || '—')}</div>
-                </div>
-                <div style="background:#0b0d14;border-radius:8px;padding:10px">
-                    <div style="font-size:10px;color:#64748b;margin-bottom:3px">DOCUMENTO</div>
-                    <div style="font-size:13px;color:#fff;font-weight:600">${esc(d.documentType || '—')} · ${esc(d.documentNumber || '—')}</div>
-                </div>
-                <div style="background:#0b0d14;border-radius:8px;padding:10px">
-                    <div style="font-size:10px;color:#64748b;margin-bottom:3px">PAÍS / NACIMIENTO</div>
-                    <div style="font-size:13px;color:#fff;font-weight:600">${esc(d.country || '—')} · ${esc(d.birthDate || '—')}</div>
-                </div>
-            </div>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:${d.rejectionReason ? '12px' : '0'}">
-                ${d.documentUrl ? `<a href="${esc(d.documentUrl)}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);color:#3b82f6;font-size:12px;font-weight:600;padding:6px 12px;border-radius:8px;text-decoration:none"><i class="fas fa-id-card"></i> Ver documento</a>` : ''}
-                ${d.selfieUrl  ? `<a href="${esc(d.selfieUrl)}"  target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:#818cf8;font-size:12px;font-weight:600;padding:6px 12px;border-radius:8px;text-decoration:none"><i class="fas fa-camera"></i> Ver selfie</a>` : ''}
-            </div>
-            ${d.rejectionReason ? `<div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:8px 12px;font-size:12px;color:#fca5a5;margin-bottom:12px"><strong>Motivo de rechazo:</strong> ${esc(d.rejectionReason)}</div>` : ''}
-            ${u.verificationStatus === 'pending' ? `
-            <div style="display:flex;gap:8px;margin-top:16px">
-                <button onclick="approveVerif('${u.id}')" style="flex:1;background:#22c55e;color:#000;border:none;padding:9px;border-radius:8px;font-weight:700;font-size:13px;font-family:Inter,sans-serif;cursor:pointer"><i class="fas fa-check"></i> Aprobar</button>
-                <button onclick="openReject('${u.id}')" style="flex:1;background:#ef4444;color:#fff;border:none;padding:9px;border-radius:8px;font-weight:700;font-size:13px;font-family:Inter,sans-serif;cursor:pointer"><i class="fas fa-xmark"></i> Rechazar</button>
-            </div>` : ''}
-        </div>`;
-    }).join('');
-}
-
-async function approveVerif(userId) {
-    if (!confirm('¿Aprobar la verificación de este usuario?')) return;
-    await fetch(`/api/admin/verifications/${userId}/approve`, { method: 'POST' });
-    toast('Usuario verificado ✓', 'ok');
-    loadVerifications();
-}
-
-function openReject(userId) {
-    document.getElementById('reject-user-id').value = userId;
-    document.getElementById('reject-reason').value = '';
-    openModal('modal-reject');
-}
-
-async function confirmReject() {
-    const userId = document.getElementById('reject-user-id').value;
-    const reason = document.getElementById('reject-reason').value.trim();
-    if (!reason) return toast('Escribe el motivo de rechazo', 'err');
-    await fetch(`/api/admin/verifications/${userId}/reject`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ reason }) });
-    closeModal('modal-reject');
-    toast('Solicitud rechazada', 'err');
-    loadVerifications();
+            </td>
+            <td style="padding:12px 14px;color:#94a3b8">${esc(u.email)}</td>
+            <td style="padding:12px 14px">${planBadge(u.plan)}</td>
+            <td style="padding:12px 14px">
+                ${u.verified
+                    ? `<span style="color:#3b82f6;font-size:13px"><i class="fas fa-circle-check"></i> Verificado</span>`
+                    : `<span style="color:#64748b;font-size:12px">No verificado</span>`}
+            </td>
+            <td style="padding:12px 14px;color:#64748b;font-size:12px">${u.createdAt || '—'}</td>
+        </tr>`).join('');
 }
 
 init();
