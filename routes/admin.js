@@ -69,11 +69,14 @@ const privateUpload = multer({
 
 // ── Auth routes (públicas) ───────────────────────────────────────────────────
 router.post('/login', (req, res) => {
-    if (req.body.password === process.env.ADMIN_PASSWORD) {
+    const { email, password } = req.body;
+    const validEmail = (email || '').toLowerCase().trim() === 'alsxbeats@gmail.com';
+    const validPass  = password === process.env.ADMIN_PASSWORD;
+    if (validEmail && validPass) {
         req.session.isAdmin = true;
         res.json({ ok: true });
     } else {
-        res.status(401).json({ error: 'Contraseña incorrecta' });
+        res.status(401).json({ error: 'Credenciales incorrectas' });
     }
 });
 
