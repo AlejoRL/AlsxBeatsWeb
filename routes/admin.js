@@ -205,4 +205,11 @@ router.get('/beats/:beatId/files', (req, res) => {
     res.json(result);
 });
 
+// POST /api/admin/reset-verified — temporal para testing
+router.post('/reset-verified', requireAdmin, async (req, res) => {
+    const User = require('../models/User');
+    const result = await User.updateMany({}, { verified: false, verificationToken: null });
+    res.json({ ok: true, modified: result.modifiedCount });
+});
+
 module.exports = router;
