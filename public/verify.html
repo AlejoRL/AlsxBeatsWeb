@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación — AlsxBeats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #0b0d14; color: #fff; font-family: Inter, sans-serif;
+               display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .card { background: #11151a; border: 1px solid #1c232b; border-radius: 20px;
+                padding: 48px 40px; max-width: 420px; width: 100%; text-align: center; }
+        .icon { font-size: 56px; margin-bottom: 20px; }
+        .icon.ok    { color: #3b82f6; }
+        .icon.error { color: #ef4444; }
+        h1 { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
+        p  { color: #94a3b8; font-size: 14px; margin-bottom: 28px; line-height: 1.6; }
+        a.btn { display: inline-block; background: #4ecdc4; color: #000; font-weight: 700;
+                padding: 12px 28px; border-radius: 10px; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="icon" id="icon"><i class="fas fa-spinner fa-spin"></i></div>
+    <h1 id="title">Verificando...</h1>
+    <p id="desc">Por favor espera un momento.</p>
+    <div id="btn-wrap"></div>
+</div>
+<script>
+(async () => {
+    const token = new URLSearchParams(location.search).get('token');
+    if (!token) return showError('Token no encontrado.');
+
+    try {
+        const res  = await fetch(`/api/auth/verify/${token}`);
+        const data = await res.json();
+        if (res.ok) {
+            document.getElementById('icon').className  = 'icon ok';
+            document.getElementById('icon').innerHTML  = '<i class="fas fa-circle-check"></i>';
+            document.getElementById('title').textContent = '¡Cuenta verificada!';
+            document.getElementById('desc').textContent  = `Tu cuenta ya tiene el badge de verificado, ${data.name}.`;
+            document.getElementById('btn-wrap').innerHTML = '<a href="catalog.html" class="btn"><i class="fas fa-music"></i> Ir al catálogo</a>';
+        } else {
+            showError(data.error || 'Token no válido.');
+        }
+    } catch {
+        showError('Error de conexión.');
+    }
+
+    function showError(msg) {
+        document.getElementById('icon').className  = 'icon error';
+        document.getElementById('icon').innerHTML  = '<i class="fas fa-circle-xmark"></i>';
+        document.getElementById('title').textContent = 'Error de verificación';
+        document.getElementById('desc').textContent  = msg;
+        document.getElementById('btn-wrap').innerHTML = '<a href="index.html" class="btn">Volver al inicio</a>';
+    }
+})();
+</script>
+</body>
+</html>

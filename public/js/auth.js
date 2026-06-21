@@ -41,6 +41,9 @@ function renderAuthNav(user) {
 
     if (user) {
         const initial   = user.name.charAt(0).toUpperCase();
+        const verifiedBadge = user.verified
+            ? `<i class="fas fa-circle-check" title="Cuenta verificada" style="color:#3b82f6;font-size:14px;flex-shrink:0"></i>`
+            : '';
         const planBadge = user.plan === 'pro'
             ? `<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3);border-radius:999px;font-size:10px;font-weight:700;padding:2px 8px;"><i class="fas fa-bolt" style="font-size:9px"></i> Pro</span>`
             : user.plan === 'elite'
@@ -62,6 +65,7 @@ function renderAuthNav(user) {
                     font-size:12px;font-weight:800;color:#000;flex-shrink:0;
                 ">${initial}</span>
                 <span class="user-name-label">${user.name.split(' ')[0]}</span>
+                ${verifiedBadge}
                 ${planBadge}
                 <i id="dd-chevron" class="fas fa-chevron-down dd-chevron" style="font-size:10px;color:#94a3b8;transition:transform .2s"></i>
             </button>
@@ -76,9 +80,10 @@ function renderAuthNav(user) {
         dd.innerHTML = `
             <div style="padding:12px 14px 10px;border-bottom:1px solid #1c232b;margin-bottom:4px">
                 <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#fff">
-                    ${user.name} ${planBadge}
+                    ${user.name} ${verifiedBadge} ${planBadge}
                 </div>
                 <div style="font-size:11px;color:#94a3b8;margin-top:2px">${user.email}</div>
+                ${!user.verified ? `<button onclick="resendVerification()" style="margin-top:6px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#3b82f6;font-size:11px;font-weight:600;font-family:Inter,sans-serif;padding:4px 10px;border-radius:6px;cursor:pointer"><i class="fas fa-envelope"></i> Verificar cuenta</button>` : ''}
             </div>
             <a href="profile.html#perfil"   class="dd-item"><i class="fas fa-user"></i> Mi perfil</a>
             <a href="profile.html#compras"  class="dd-item"><i class="fas fa-download"></i> Mis compras</a>
@@ -142,4 +147,18 @@ function renderAuthNav(user) {
 async function authLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
     window.location.href = '/';
+}
+
+async function resendVerification() {
+    const btn = event.target.closest('button');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    const res = await fetch('/api/auth/resend-verification', { method: 'POST' }).catch(() => null);
+    if (res?.ok) {
+        btn.textContent = '✓ Email enviado';
+        btn.style.color = '#22c55e';
+    } else {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-envelope"></i> Verificar cuenta';
+    }
 }

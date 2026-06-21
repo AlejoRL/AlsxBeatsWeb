@@ -36,12 +36,16 @@ router.post('/register', async (req, res) => {
     if (exists) return res.status(400).json({ error: 'Ya existe una cuenta con ese email.' });
 
     const hashed = await bcrypt.hash(password, 10);
+    const verificationToken = crypto.randomBytes(32).toString('hex');
     const user = await User.create({
-        id:       crypto.randomUUID(),
-        name:     name.trim(),
-        email:    email.toLowerCase().trim(),
-        password: hashed
+        id:                crypto.randomUUID(),
+        name:              name.trim(),
+        email:             email.toLowerCase().trim(),
+        password:          hashed,
+        verificationToken
     });
+
+    sendVerificationEmail(user.email, user.name, verificationToken).catch(console.error);
 
     req.session.userId = user.id;
     res.json({ user: sanitize(user) });
@@ -73,6 +77,53 @@ function requireUser(req, res, next) {
     if (!req.session?.userId) return res.status(401).json({ error: 'No autenticado.' });
     next();
 }
+
+async function sendVerificationEmail(to, name, token) {
+    if (!process.env.RESEND_API_KEY) return;
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+    const link    = `${baseUrl}/verify.html?token=${token}`;
+    await fetch('https://api.resend.com/emails', {
+        method:  'POST',
+        headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            from:    'AlsxBeats <onboarding@resend.dev>',
+            to,
+            subject: 'Verifica tu cuenta en AlsxBeats',
+            html: `
+                <div style="font-family:sans-serif;max-width:520px;margin:0 auto">
+                    <h2 style="color:#4ecdc4">¡Hola, ${name}!</h2>
+                    <p>Pulsa el botón para verificar tu cuenta y obtener el badge de verificado.</p>
+                    <a href="${link}" style="display:inline-block;margin:20px 0;background:#4ecdc4;color:#000;font-weight:700;padding:12px 28px;border-radius:10px;text-decoration:none">
+                        Verificar mi cuenta
+                    </a>
+                    <p style="color:#94a3b8;font-size:13px">Si no creaste una cuenta, ignora este email.</p>
+                </div>
+            `
+        })
+    });
+}
+
+// GET /api/auth/verify/:token
+router.get('/verify/:token', async (req, res) => {
+    const user = await User.findOne({ verificationToken: req.params.token });
+    if (!user) return res.status(404).json({ error: 'Token no válido o ya usado.' });
+    user.verified = true;
+    user.verificationToken = null;
+    await user.save();
+    res.json({ ok: true, name: user.name });
+});
+
+// POST /api/auth/resend-verification
+router.post('/resend-verification', requireUser, async (req, res) => {
+    const user = await User.findOne({ id: req.session.userId });
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
+    if (user.verified) return res.json({ ok: true, already: true });
+    const token = crypto.randomBytes(32).toString('hex');
+    user.verificationToken = token;
+    await user.save();
+    await sendVerificationEmail(user.email, user.name, token).catch(console.error);
+    res.json({ ok: true });
+});
 
 // PUT /api/auth/profile
 router.put('/profile', requireUser, async (req, res) => {

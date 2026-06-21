@@ -14,7 +14,9 @@ const userSchema = new mongoose.Schema({
     password:         { type: String, required: true },
     avatar:           { type: String, default: '' },
     createdAt:        { type: String, default: () => new Date().toISOString().split('T')[0] },
-    plan:             { type: String, default: 'starter', enum: ['starter', 'pro', 'elite'] },
+    plan:              { type: String, default: 'starter', enum: ['starter', 'pro', 'elite'] },
+    verified:          { type: Boolean, default: false },
+    verificationToken: { type: String, default: null },
     likes:            { type: [String], default: [] },
     recentlyListened: { type: [String], default: [] },
     playlists:        { type: [playlistSchema], default: [] }
