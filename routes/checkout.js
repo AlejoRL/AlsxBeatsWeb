@@ -71,6 +71,68 @@ async function sendDownloadEmail(to, token, items) {
     });
 }
 
+// POST /api/checkout/create-plan-session
+router.post('/create-plan-session', async (req, res) => {
+    try {
+        if (!process.env.STRIPE_SECRET_KEY) return res.status(503).json({ error: 'Stripe no configurado.' });
+        if (!req.session?.userId) return res.status(401).json({ error: 'Debes iniciar sesión.' });
+
+        const { plan } = req.body;
+        const plans = {
+            pro:   { name: 'Plan Pro',   price: 900  },
+            elite: { name: 'Plan Elite', price: 1900 }
+        };
+        if (!plans[plan]) return res.status(400).json({ error: 'Plan no válido.' });
+
+        const stripe  = require('stripe')(process.env.STRIPE_SECRET_KEY);
+        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: [{
+                price_data: {
+                    currency: 'eur',
+                    product_data: { name: plans[plan].name },
+                    unit_amount: plans[plan].price
+                },
+                quantity: 1
+            }],
+            mode: 'payment',
+            success_url: `${baseUrl}/plan-success.html?session_id={CHECKOUT_SESSION_ID}&plan=${plan}&userId=${req.session.userId}`,
+            cancel_url:  `${baseUrl}/`,
+            metadata: { plan, userId: req.session.userId }
+        });
+
+        res.json({ url: session.url });
+    } catch (err) {
+        console.error('create-plan-session error:', err.message);
+        res.status(500).json({ error: 'Error al crear la sesión de pago.' });
+    }
+});
+
+// POST /api/checkout/activate-plan
+router.post('/activate-plan', async (req, res) => {
+    try {
+        if (!process.env.STRIPE_SECRET_KEY) return res.status(503).json({ error: 'Stripe no configurado.' });
+
+        const { session_id, plan, userId } = req.body;
+        if (!session_id || !plan || !userId) return res.status(400).json({ error: 'Faltan datos.' });
+
+        const stripe  = require('stripe')(process.env.STRIPE_SECRET_KEY);
+        const session = await stripe.checkout.sessions.retrieve(session_id);
+        if (session.payment_status !== 'paid') return res.status(402).json({ error: 'Pago no completado.' });
+        if (session.metadata?.userId !== userId) return res.status(403).json({ error: 'No autorizado.' });
+
+        const User = require('../models/User');
+        await User.findOneAndUpdate({ id: userId }, { plan });
+
+        res.json({ ok: true, plan });
+    } catch (err) {
+        console.error('activate-plan error:', err.message);
+        res.status(500).json({ error: 'Error al activar el plan.' });
+    }
+});
+
 // POST /api/checkout/create-session
 router.post('/create-session', async (req, res) => {
     try {

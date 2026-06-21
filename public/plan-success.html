@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan activado — AlsxBeats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #0b0d14; color: #fff; font-family: Inter, sans-serif;
+               display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .card { background: #11151a; border: 1px solid #1c232b; border-radius: 20px;
+                padding: 48px 40px; max-width: 440px; width: 100%; text-align: center; }
+        .icon { font-size: 52px; margin-bottom: 20px; }
+        .icon.pro   { color: #f59e0b; }
+        .icon.elite { color: #a78bfa; }
+        h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+        p  { color: #94a3b8; font-size: 14px; margin-bottom: 28px; line-height: 1.6; }
+        .badge { display: inline-flex; align-items: center; gap: 6px;
+                 padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; margin-bottom: 28px; }
+        .badge.pro   { background: rgba(245,158,11,.15); color: #f59e0b; border: 1px solid rgba(245,158,11,.3); }
+        .badge.elite { background: rgba(167,139,250,.15); color: #a78bfa; border: 1px solid rgba(167,139,250,.3); }
+        a.btn { display: inline-block; background: #4ecdc4; color: #000; font-weight: 700;
+                padding: 12px 28px; border-radius: 10px; text-decoration: none; font-size: 14px; }
+        a.btn:hover { opacity: .85; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="icon" id="plan-icon"></div>
+    <h1 id="plan-title">¡Plan activado!</h1>
+    <p id="plan-desc"></p>
+    <div class="badge" id="plan-badge"></div>
+    <br>
+    <a href="catalog.html" class="btn"><i class="fas fa-music"></i> Ir al catálogo</a>
+</div>
+
+<script>
+(async () => {
+    const params    = new URLSearchParams(location.search);
+    const sessionId = params.get('session_id');
+    const plan      = params.get('plan');
+    const userId    = params.get('userId');
+
+    const isPro   = plan === 'pro';
+    const isElite = plan === 'elite';
+
+    document.getElementById('plan-icon').className  = `icon ${plan}`;
+    document.getElementById('plan-icon').innerHTML  = isPro ? '<i class="fas fa-bolt"></i>' : '<i class="fas fa-crown"></i>';
+    document.getElementById('plan-badge').className = `badge ${plan}`;
+    document.getElementById('plan-badge').innerHTML = isPro
+        ? '<i class="fas fa-bolt"></i> Pro'
+        : '<i class="fas fa-crown"></i> Elite';
+    document.getElementById('plan-desc').textContent = isPro
+        ? 'Ya tienes acceso a todas las ventajas del plan Pro. Tu badge aparecerá junto a tu nombre.'
+        : 'Ya tienes acceso a todas las ventajas del plan Elite. Tu badge exclusivo aparecerá junto a tu nombre.';
+
+    if (sessionId && plan && userId) {
+        await fetch('/api/checkout/activate-plan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: sessionId, plan, userId })
+        }).catch(() => {});
+    }
+})();
+</script>
+</body>
+</html>

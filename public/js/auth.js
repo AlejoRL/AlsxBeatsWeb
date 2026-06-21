@@ -40,7 +40,12 @@ function renderAuthNav(user) {
     widget.style.cssText = 'display:flex;align-items:center;gap:10px;position:relative;justify-content:flex-end;';
 
     if (user) {
-        const initial = user.name.charAt(0).toUpperCase();
+        const initial   = user.name.charAt(0).toUpperCase();
+        const planBadge = user.plan === 'pro'
+            ? `<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3);border-radius:999px;font-size:10px;font-weight:700;padding:2px 8px;"><i class="fas fa-bolt" style="font-size:9px"></i> Pro</span>`
+            : user.plan === 'elite'
+            ? `<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(167,139,250,.15);color:#a78bfa;border:1px solid rgba(167,139,250,.3);border-radius:999px;font-size:10px;font-weight:700;padding:2px 8px;"><i class="fas fa-crown" style="font-size:9px"></i> Elite</span>`
+            : '';
         widget.innerHTML = `
             <button id="user-menu-btn" style="
                 display:flex;align-items:center;gap:9px;
@@ -57,6 +62,7 @@ function renderAuthNav(user) {
                     font-size:12px;font-weight:800;color:#000;flex-shrink:0;
                 ">${initial}</span>
                 <span class="user-name-label">${user.name.split(' ')[0]}</span>
+                ${planBadge}
                 <i id="dd-chevron" class="fas fa-chevron-down dd-chevron" style="font-size:10px;color:#94a3b8;transition:transform .2s"></i>
             </button>
         `;
@@ -69,7 +75,9 @@ function renderAuthNav(user) {
         dd.style.cssText = 'position:fixed;background:#11151a;border:1px solid #1c232b;border-radius:14px;min-width:210px;box-shadow:0 16px 40px rgba(0,0,0,.7);padding:6px;display:none;z-index:99999;animation:ddFadeIn .15s ease;';
         dd.innerHTML = `
             <div style="padding:12px 14px 10px;border-bottom:1px solid #1c232b;margin-bottom:4px">
-                <div style="font-size:13px;font-weight:700;color:#fff">${user.name}</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#fff">
+                    ${user.name} ${planBadge}
+                </div>
                 <div style="font-size:11px;color:#94a3b8;margin-top:2px">${user.email}</div>
             </div>
             <a href="profile.html#perfil"   class="dd-item"><i class="fas fa-user"></i> Mi perfil</a>

@@ -1314,7 +1314,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
                     <li><i class="fas fa-check"></i> Badge verificado</li>
                     <li class="no"><i class="fas fa-xmark"></i> 10% comisión por venta</li>
                 </ul>
-                <a href="register.html" class="btn-plan btn-plan-accent" onclick="closePlans()">Empezar Pro</a>
+                <button class="btn-plan btn-plan-accent" onclick="buyPlan('pro')">Empezar Pro</button>
             </div>
 
             <!-- ELITE -->
@@ -1333,7 +1333,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
                     <li><i class="fas fa-check"></i> Soporte VIP 24/7</li>
                     <li><i class="fas fa-check"></i> Badge Elite exclusivo</li>
                 </ul>
-                <a href="register.html" class="btn-plan btn-plan-ghost" onclick="closePlans()">Empezar Elite</a>
+                <button class="btn-plan btn-plan-ghost" onclick="buyPlan('elite')">Empezar Elite</button>
             </div>
 
         </div>
@@ -1345,6 +1345,17 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 <script>
 function openPlans()  { document.getElementById('plans-modal').classList.add('open'); document.body.style.overflow='hidden'; }
 function closePlans() { document.getElementById('plans-modal').classList.remove('open'); document.body.style.overflow=''; }
+async function buyPlan(plan) {
+    if (!window.__authUser) { window.location.href = 'login.html'; return; }
+    const res  = await fetch('/api/checkout/create-plan-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan })
+    });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+    else alert(data.error || 'Error al procesar el pago.');
+}
 document.getElementById('plans-modal').addEventListener('click', function(e){ if(e.target===this) closePlans(); });
 
 function toggleBilling() {
