@@ -208,48 +208,11 @@ router.get('/beats/:beatId/files', (req, res) => {
     res.json(result);
 });
 
-// POST /api/admin/reset-verified — temporal para testing
+// POST /api/admin/reset-verified — testing
 router.post('/reset-verified', requireAdmin, async (req, res) => {
     const User = require('../models/User');
-    const result = await User.updateMany({}, { verified: false, verificationToken: null, verificationStatus: 'none' });
+    const result = await User.updateMany({}, { verified: false, otpCode: null, otpExpiry: null });
     res.json({ ok: true, modified: result.modifiedCount });
-});
-
-// GET /api/admin/verifications
-router.get('/verifications', requireAdmin, async (req, res) => {
-    const User = require('../models/User');
-    const users = await User.find({ verificationStatus: { $in: ['pending', 'rejected', 'approved'] } })
-        .select('id name email verificationStatus verificationData plan createdAt')
-        .sort({ 'verificationData.submittedAt': -1 });
-    res.json(users);
-});
-
-// POST /api/admin/verifications/:userId/approve
-router.post('/verifications/:userId/approve', requireAdmin, async (req, res) => {
-    const User = require('../models/User');
-    const user = await User.findOne({ id: req.params.userId });
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
-    user.verified = true;
-    user.verificationStatus = 'approved';
-    user.verificationData.reviewedAt = new Date();
-    user.verificationData.rejectionReason = '';
-    await user.save();
-    res.json({ ok: true });
-});
-
-// POST /api/admin/verifications/:userId/reject
-router.post('/verifications/:userId/reject', requireAdmin, async (req, res) => {
-    const User = require('../models/User');
-    const { reason } = req.body;
-    if (!reason?.trim()) return res.status(400).json({ error: 'El motivo de rechazo es obligatorio.' });
-    const user = await User.findOne({ id: req.params.userId });
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
-    user.verified = false;
-    user.verificationStatus = 'rejected';
-    user.verificationData.reviewedAt = new Date();
-    user.verificationData.rejectionReason = reason.trim();
-    await user.save();
-    res.json({ ok: true });
 });
 
 module.exports = router;

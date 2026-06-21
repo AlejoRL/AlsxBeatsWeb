@@ -39,16 +39,12 @@ router.post('/register', async (req, res) => {
     if (exists) return res.status(400).json({ error: 'Ya existe una cuenta con ese email.' });
 
     const hashed = await bcrypt.hash(password, 10);
-    const verificationToken = crypto.randomBytes(32).toString('hex');
     const user = await User.create({
-        id:                crypto.randomUUID(),
-        name:              name.trim(),
-        email:             email.toLowerCase().trim(),
-        password:          hashed,
-        verificationToken
+        id:       crypto.randomUUID(),
+        name:     name.trim(),
+        email:    email.toLowerCase().trim(),
+        password: hashed
     });
-
-    sendVerificationEmail(user.email, user.name, verificationToken).catch(console.error);
 
     req.session.userId = user.id;
     res.json({ user: sanitize(user) });
@@ -81,80 +77,54 @@ function requireUser(req, res, next) {
     next();
 }
 
-async function sendVerificationEmail(to, name, token) {
+async function sendOtpEmail(to, name, code) {
     if (!process.env.RESEND_API_KEY) return;
-    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-    const link    = `${baseUrl}/verify.html?token=${token}`;
     await fetch('https://api.resend.com/emails', {
         method:  'POST',
         headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
             from:    'AlsxBeats <onboarding@resend.dev>',
             to,
-            subject: 'Verifica tu cuenta en AlsxBeats',
+            subject: `${code} es tu código de verificación de AlsxBeats`,
             html: `
-                <div style="font-family:sans-serif;max-width:520px;margin:0 auto">
-                    <h2 style="color:#4ecdc4">¡Hola, ${name}!</h2>
-                    <p>Pulsa el botón para verificar tu cuenta y obtener el badge de verificado.</p>
-                    <a href="${link}" style="display:inline-block;margin:20px 0;background:#4ecdc4;color:#000;font-weight:700;padding:12px 28px;border-radius:10px;text-decoration:none">
-                        Verificar mi cuenta
-                    </a>
-                    <p style="color:#94a3b8;font-size:13px">Si no creaste una cuenta, ignora este email.</p>
+                <div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#0b0d14;border-radius:16px;padding:32px">
+                    <h2 style="color:#4ecdc4;margin-bottom:4px">AlsxBeats</h2>
+                    <p style="color:#94a3b8;margin-bottom:24px">Hola ${name}, introduce este código para verificar tu cuenta.</p>
+                    <div style="background:#11151a;border:2px solid #1c232b;border-radius:12px;padding:24px;text-align:center;margin-bottom:20px">
+                        <span style="font-size:40px;font-weight:900;letter-spacing:14px;color:#fff;font-family:monospace">${code}</span>
+                    </div>
+                    <p style="color:#64748b;font-size:12px">Expira en 10 minutos. Si no solicitaste esto, ignora este email.</p>
                 </div>
             `
         })
     });
 }
 
-// GET /api/auth/verify/:token
-router.get('/verify/:token', async (req, res) => {
-    const user = await User.findOne({ verificationToken: req.params.token });
-    if (!user) return res.status(404).json({ error: 'Token no válido o ya usado.' });
-    user.verified = true;
-    user.verificationToken = null;
-    await user.save();
-    res.json({ ok: true, name: user.name });
-});
-
-// POST /api/auth/resend-verification (legacy — kept for compatibility)
-router.post('/resend-verification', requireUser, async (req, res) => {
-    res.json({ ok: false, error: 'Usa el formulario de solicitud de verificación.' });
-});
-
-// GET /api/auth/verification-status
-router.get('/verification-status', requireUser, async (req, res) => {
-    const user = await User.findOne({ id: req.session.userId });
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
-    res.json({
-        status: user.verificationStatus,
-        rejectionReason: user.verificationData?.rejectionReason || ''
-    });
-});
-
-// POST /api/auth/verification-request
-router.post('/verification-request', requireUser, async (req, res) => {
+// POST /api/auth/send-otp
+router.post('/send-otp', requireUser, async (req, res) => {
     const user = await User.findOne({ id: req.session.userId });
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
     if (user.verified) return res.json({ ok: true, already: true });
-    if (user.verificationStatus === 'pending') return res.status(400).json({ error: 'Ya tienes una solicitud en revisión.' });
+    const code   = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otpCode   = code;
+    user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+    await user.save();
+    await sendOtpEmail(user.email, user.name, code).catch(console.error);
+    res.json({ ok: true, email: user.email });
+});
 
-    const { fullName, documentType, documentNumber, country, birthDate, documentUrl, selfieUrl } = req.body;
-    if (!fullName || !documentType || !documentNumber || !country || !birthDate || !documentUrl || !selfieUrl)
-        return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
-
-    user.verificationStatus = 'pending';
-    user.verificationData = {
-        fullName: fullName.trim(),
-        documentType,
-        documentNumber: documentNumber.trim(),
-        country: country.trim(),
-        birthDate,
-        documentUrl: documentUrl.trim(),
-        selfieUrl: selfieUrl.trim(),
-        submittedAt: new Date(),
-        reviewedAt: null,
-        rejectionReason: ''
-    };
+// POST /api/auth/verify-otp
+router.post('/verify-otp', requireUser, async (req, res) => {
+    const { code } = req.body;
+    const user = await User.findOne({ id: req.session.userId });
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
+    if (user.verified) return res.json({ ok: true, already: true });
+    if (!user.otpCode || !user.otpExpiry) return res.status(400).json({ error: 'Solicita un código primero.' });
+    if (new Date() > user.otpExpiry) return res.status(400).json({ error: 'El código ha expirado. Solicita uno nuevo.' });
+    if (user.otpCode !== String(code).trim()) return res.status(400).json({ error: 'Código incorrecto.' });
+    user.verified  = true;
+    user.otpCode   = null;
+    user.otpExpiry = null;
     await user.save();
     res.json({ ok: true });
 });
