@@ -1032,22 +1032,25 @@ async function loadMoreBeats() {
             <line x1="12" y1="15" x2="12" y2="3"/>
         </svg>`;
 
-        grid.innerHTML = others.map(b => `
+        grid.innerHTML = others.map(b => {
+            const prices = Object.values(b.licenses || {}).map(l => l.price).filter(Boolean);
+            const minP   = prices.length ? Math.min(...prices) : null;
+            return `
             <div class="more-beat-card">
                 <img src="${b.image}" alt="${b.title}"
                      onerror="this.src='assets/images/alsxbeatsportada.png'">
                 <h4>${b.title}</h4>
                 <div class="beat-actions">
-                    <a href="licencias.html?beatId=${b.id}" class="buy-beat-btn">
-                        Ver Licencias
+                    <a href="licencias.html?beatId=${b.id}" class="buy-beat-btn" title="Ver licencias">
+                        <i class="fas fa-bag-shopping"></i> ${minP ? '€' + minP : '—'}
                     </a>
                     ${b.preview
                         ? `<a href="${b.preview}" download class="download-btn">${svgIcon}</a>`
                         : `<button class="download-btn" disabled style="opacity:.3;cursor:default">${svgIcon}</button>`
                     }
                 </div>
-            </div>
-        `).join('');
+            </div>`;
+        }).join('');
 
     } catch (e) {
         console.error('Error cargando more beats:', e);

@@ -41,6 +41,10 @@
                     </button>
                 </div>
                 <div class="bp-right">
+                    <a class="bp-buy-btn" id="bp-buy-btn" href="#" title="Ver licencias">
+                        <i class="fas fa-bag-shopping"></i>
+                        <span id="bp-price"></span>
+                    </a>
                     <i class="fas fa-volume-high"></i>
                     <input type="range" class="bp-vol" id="bp-vol"
                            min="0" max="1" step="0.05" value="1">
@@ -158,7 +162,7 @@
         bpPlayIcon.className = 'fas fa-play';
     };
 
-    window.bpLoad = function (src, title, cover, row) {
+    window.bpLoad = function (src, title, cover, row, price) {
         if (currentRow) currentRow.classList.remove('playing');
         currentRow    = row;
         currentBeatId = row ? row.dataset.id : null;
@@ -169,8 +173,13 @@
         bpPanel.classList.add('visible');
         bpPlayIcon.className = 'fas fa-pause';
 
+        const buyBtn   = document.getElementById('bp-buy-btn');
+        const priceEl  = document.getElementById('bp-price');
+        if (buyBtn) buyBtn.href = currentBeatId ? `licencias.html?beatId=${currentBeatId}` : '#';
+        if (priceEl) priceEl.textContent = price ? `€${price}` : '';
+
         sessionStorage.setItem('bp_state', JSON.stringify({
-            src, title, cover, beatId: currentBeatId
+            src, title, cover, beatId: currentBeatId, price: price || null
         }));
         sessionStorage.setItem('bp_time', '0');
         lastSavedSec = -1;
@@ -186,6 +195,10 @@
         document.getElementById('bp-cover').src         = saved.cover;
         currentBeatId = saved.beatId;
         bpPanel.classList.add('visible');
+        const buyBtn  = document.getElementById('bp-buy-btn');
+        const priceEl = document.getElementById('bp-price');
+        if (buyBtn) buyBtn.href = saved.beatId ? `licencias.html?beatId=${saved.beatId}` : '#';
+        if (priceEl) priceEl.textContent = saved.price ? `€${saved.price}` : '';
         updateLike();
         ws.load(saved.src);
     }

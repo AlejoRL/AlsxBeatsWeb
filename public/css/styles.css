@@ -1488,6 +1488,23 @@ transition:.3s ease;
     min-width: 0;
 }
 .bp-right i { color: #94a3b8; font-size: 13px; }
+.bp-buy-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--accent-celeste);
+    color: #000;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    padding: 5px 10px;
+    border-radius: 7px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity .2s;
+}
+.bp-buy-btn:hover { opacity: .85; }
+.bp-buy-btn i { color: #000; font-size: 12px; }
 .bp-vol {
     width: 70px;
     accent-color: #4ecdc4;

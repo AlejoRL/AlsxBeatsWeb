@@ -97,8 +97,12 @@ function renderCatalog() {
         const price      = minPrice(beat);
         const priceHtml  = price ? `<small>Desde</small>€${price}` : '<small>—</small>';
 
+        const downloadBtn = beat.preview
+            ? `<a href="${beat.preview}" download="${escHtml(beat.title)}.mp3" class="btn-row-more" title="Descarga gratuita MP3"><i class="fas fa-download"></i></a>`
+            : `<button class="btn-row-more" disabled style="opacity:.3;cursor:default" title="Sin descarga gratuita"><i class="fas fa-download"></i></button>`;
+
         return `
-        <div class="beat-row" data-id="${beat.id}" data-preview="${beat.preview || ''}" data-title="${escHtml(beat.title)}" data-img="${cover}">
+        <div class="beat-row" data-id="${beat.id}" data-preview="${beat.preview || ''}" data-title="${escHtml(beat.title)}" data-img="${cover}" data-price="${price || ''}">
             <button class="row-play" onclick="rowPlay(this)" title="Reproducir">
                 <i class="fas fa-play"></i>
             </button>
@@ -114,8 +118,10 @@ function renderCatalog() {
             </div>
             <div class="row-price">${priceHtml}</div>
             <div class="row-actions">
-                <a href="licencias.html?beatId=${beat.id}" class="btn-row-lic">Ver licencias</a>
-                <button class="btn-row-more" title="Más opciones"><i class="fas fa-ellipsis"></i></button>
+                <a href="licencias.html?beatId=${beat.id}" class="btn-row-lic" title="Ver licencias">
+                    <i class="fas fa-bag-shopping"></i> €${price || '—'}
+                </a>
+                ${downloadBtn}
             </div>
         </div>`;
     }).join('');
@@ -235,7 +241,7 @@ function rowPlay(btn) {
         window.location.href = `licencias.html?beatId=${row.dataset.id}`;
         return;
     }
-    window.bpLoad?.(preview, row.dataset.title, row.dataset.img, row);
+    window.bpLoad?.(preview, row.dataset.title, row.dataset.img, row, row.dataset.price);
 }
 
 document.addEventListener('DOMContentLoaded', loadCatalog);
