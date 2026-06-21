@@ -159,108 +159,217 @@ function renderVerifBadgeDropdown(user) {
     return `<button onclick="openKycModal()" style="margin-top:6px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#3b82f6;font-size:11px;font-weight:600;font-family:Inter,sans-serif;padding:4px 10px;border-radius:6px;cursor:pointer"><i class="fas fa-shield-halved"></i> Solicitar verificación</button>`;
 }
 
+const kycData = {};
+let kycStep = 1;
+
 function openKycModal() {
+    kycStep = 1;
     let m = document.getElementById('kyc-modal-overlay');
-    if (!m) {
-        m = document.createElement('div');
-        m.id = 'kyc-modal-overlay';
-        m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)';
-        m.innerHTML = `
-        <div style="background:#11151a;border:1px solid #1c232b;border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:32px;position:relative">
-            <button onclick="document.getElementById('kyc-modal-overlay').style.display='none'" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer">&times;</button>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-                <i class="fas fa-shield-halved" style="color:#3b82f6;font-size:22px"></i>
-                <h2 style="font-size:18px;font-weight:800;color:#fff">Solicitud de verificación</h2>
+    if (m) m.remove();
+    m = document.createElement('div');
+    m.id = 'kyc-modal-overlay';
+    m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:999999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)';
+    m.innerHTML = `
+    <div style="background:#11151a;border:1px solid #1c232b;border-radius:20px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;padding:32px;position:relative">
+        <button onclick="document.getElementById('kyc-modal-overlay').remove()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#94a3b8;font-size:22px;cursor:pointer;line-height:1">&times;</button>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <i class="fas fa-shield-halved" style="color:#3b82f6;font-size:20px"></i>
+            <h2 style="font-size:17px;font-weight:800;color:#fff">Verificación de identidad</h2>
+        </div>
+        <div id="kyc-steps-bar" style="display:flex;gap:6px;margin:16px 0 24px"></div>
+        <div id="kyc-step-content"></div>
+    </div>`;
+    document.body.appendChild(m);
+    m.addEventListener('click', e => { if (e.target === m) m.remove(); });
+    renderKycStep();
+}
+
+function renderKycStep() {
+    const bar = document.getElementById('kyc-steps-bar');
+    const content = document.getElementById('kyc-step-content');
+    const totalSteps = 4;
+    const labels = ['Datos personales', 'Documento', 'Selfie', 'Declaración'];
+    bar.innerHTML = labels.map((l, i) => {
+        const n = i + 1;
+        const active = n === kycStep;
+        const done = n < kycStep;
+        return `<div style="flex:1;text-align:center">
+            <div style="width:28px;height:28px;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+                background:${done ? '#22c55e' : active ? '#3b82f6' : '#1c232b'};
+                color:${done || active ? '#fff' : '#64748b'};
+                border:2px solid ${done ? '#22c55e' : active ? '#3b82f6' : '#1c232b'}">
+                ${done ? '<i class="fas fa-check" style="font-size:10px"></i>' : n}
             </div>
-            <p style="font-size:12px;color:#94a3b8;margin-bottom:24px;line-height:1.6;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.15);border-radius:8px;padding:10px 12px">
-                <i class="fas fa-lock" style="color:#3b82f6"></i> Tus datos se tratarán de forma <strong style="color:#fff">estrictamente confidencial</strong> y únicamente para verificar tu identidad. Al enviar, declaras que la información es verídica y aceptas responsabilidad legal por datos falsos.
-            </p>
-            <div id="kyc-form-wrap">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-                <div style="grid-column:1/-1">
-                    <label style="display:block;font-size:12px;color:#94a3b8;margin-bottom:5px">Nombre legal completo <span style="color:#ef4444">*</span></label>
-                    <input id="kyc-fullname" type="text" placeholder="Tal como aparece en tu documento" style="width:100%;background:#0b0d14;border:1px solid #1c232b;color:#fff;padding:10px 12px;border-radius:8px;font-size:13px;font-family:Inter,sans-serif;outline:none">
-                </div>
-                <div>
-                    <label style="display:block;font-size:12px;color:#94a3b8;margin-bottom:5px">Tipo de documento <span style="color:#ef4444">*</span></label>
-                    <select id="kyc-doctype" style="width:100%;background:#0b0d14;border:1px solid #1c232b;color:#fff;padding:10px 12px;border-radius:8px;font-size:13px;font-family:Inter,sans-serif;outline:none">
-                        <option value="">Seleccionar...</option>
-                        <option value="DNI">DNI</option>
-                        <option value="NIE">NIE</option>
-                        <option value="Pasaporte">Pasaporte</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                </div>
-                <div>
-                    <label style="display:block;font-size:12px;color:#94a3b8;margin-bottom:5px">Número de documento <span style="color:#ef4444">*</span></label>
-                    <input id="kyc-docnum" type="text" placeholder="Ej: 12345678A" style="width:100%;background:#0b0d14;border:1px solid #1c232b;color:#fff;padding:10px 12px;border-radius:8px;font-size:13px;font-family:Inter,sans-serif;outline:none">
-                </div>
-                <div>
-                    <label style="display:block;font-size:12px;color:#94a3b8;margin-bottom:5px">País de residencia <span style="color:#ef4444">*</span></label>
-                    <input id="kyc-country" type="text" placeholder="Ej: España" style="width:100%;background:#0b0d14;border:1px solid #1c232b;color:#fff;padding:10px 12px;border-radius:8px;font-size:13px;font-family:Inter,sans-serif;outline:none">
-                </div>
-                <div>
-                    <label style="display:block;font-size:12px;color:#94a3b8;margin-bottom:5px">Fecha de nacimiento <span style="color:#ef4444">*</span></label>
-                    <input id="kyc-birth" type="date" style="width:100%;background:#0b0d14;border:1px solid #1c232b;color:#fff;padding:10px 12px;border-radius:8px;font-size:13px;font-family:Inter,sans-serif;outline:none;color-scheme:dark">
-                </div>
-                <div style="grid-column:1/-1">
-                    <label style="display:block;font-size:12px;color:#94a3b8;margin-bottom:5px">Enlace a foto del documento — frente y reverso <span style="color:#ef4444">*</span></label>
-                    <input id="kyc-docurl" type="url" placeholder="Google Drive / Dropbox (acceso con enlace)" style="width:100%;background:#0b0d14;border:1px solid #1c232b;color:#fff;padding:10px 12px;border-radius:8px;font-size:13px;font-family:Inter,sans-serif;outline:none">
-                    <p style="font-size:11px;color:#64748b;margin-top:4px">Sube ambas caras en un mismo archivo o carpeta compartida</p>
-                </div>
-                <div style="grid-column:1/-1">
-                    <label style="display:block;font-size:12px;color:#94a3b8;margin-bottom:5px">Enlace a selfie sosteniendo el documento <span style="color:#ef4444">*</span></label>
-                    <input id="kyc-selfieurl" type="url" placeholder="Google Drive / Dropbox (acceso con enlace)" style="width:100%;background:#0b0d14;border:1px solid #1c232b;color:#fff;padding:10px 12px;border-radius:8px;font-size:13px;font-family:Inter,sans-serif;outline:none">
-                    <p style="font-size:11px;color:#64748b;margin-top:4px">Tu cara y el documento deben ser claramente visibles</p>
-                </div>
-                <div style="grid-column:1/-1;display:flex;align-items:flex-start;gap:10px;background:rgba(255,255,255,.03);border:1px solid #1c232b;border-radius:8px;padding:12px">
-                    <input type="checkbox" id="kyc-declare" style="width:16px;height:16px;flex-shrink:0;margin-top:1px;accent-color:#3b82f6;cursor:pointer">
-                    <label for="kyc-declare" style="font-size:11px;color:#94a3b8;line-height:1.6;cursor:pointer">Declaro bajo mi responsabilidad que todos los datos facilitados son verídicos y que el documento presentado me pertenece. Soy consciente de que proporcionar información falsa puede tener consecuencias legales.</label>
-                </div>
-            </div>
-            <div id="kyc-error" style="display:none;margin-top:12px;color:#ef4444;font-size:12px;font-weight:600"></div>
-            <button onclick="submitKyc()" style="margin-top:20px;width:100%;background:#3b82f6;color:#fff;border:none;padding:13px;border-radius:10px;font-weight:700;font-size:14px;font-family:Inter,sans-serif;cursor:pointer;transition:.2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
-                <i class="fas fa-paper-plane"></i> Enviar solicitud
-            </button>
-            </div>
+            <div style="font-size:10px;color:${active ? '#fff' : '#64748b'};font-weight:${active ? '600' : '400'}">${l}</div>
         </div>`;
-        document.body.appendChild(m);
-        m.addEventListener('click', e => { if (e.target === m) m.style.display = 'none'; });
+    }).join('<div style="flex:0;width:1px;background:#1c232b;margin:14px 0 0"></div>');
+
+    const inp = (id, type, ph, extra='') =>
+        `<input id="${id}" type="${type}" placeholder="${ph}" ${extra} style="width:100%;background:#0b0d14;border:1px solid #1c232b;color:#fff;padding:11px 13px;border-radius:8px;font-size:13px;font-family:Inter,sans-serif;outline:none;margin-top:5px;box-sizing:border-box">`;
+    const lbl = t => `<label style="font-size:12px;color:#94a3b8;font-weight:500">${t} <span style="color:#ef4444">*</span></label>`;
+    const err = `<div id="kyc-error" style="display:none;margin-top:10px;color:#ef4444;font-size:12px;font-weight:600;padding:8px 12px;background:rgba(239,68,68,.08);border-radius:6px"></div>`;
+
+    if (kycStep === 1) {
+        content.innerHTML = `
+            <p style="font-size:12px;color:#94a3b8;margin-bottom:20px;line-height:1.6;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.15);border-radius:8px;padding:10px 12px">
+                <i class="fas fa-lock" style="color:#3b82f6"></i> Tus datos son <strong style="color:#fff">estrictamente confidenciales</strong> y se usan exclusivamente para verificar tu identidad.
+            </p>
+            <div style="display:flex;flex-direction:column;gap:14px">
+                <div>${lbl('Nombre legal completo')}${inp('kyc-fullname','text','Tal como aparece en tu documento')}</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                    <div>${lbl('Tipo de documento')}
+                        <select id="kyc-doctype" style="width:100%;background:#0b0d14;border:1px solid #1c232b;color:#fff;padding:11px 13px;border-radius:8px;font-size:13px;font-family:Inter,sans-serif;outline:none;margin-top:5px">
+                            <option value="">Seleccionar...</option>
+                            <option value="DNI">DNI</option><option value="NIE">NIE</option>
+                            <option value="Pasaporte">Pasaporte</option><option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div>${lbl('Número de documento')}${inp('kyc-docnum','text','Ej: 12345678A')}</div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                    <div>${lbl('País de residencia')}${inp('kyc-country','text','Ej: España')}</div>
+                    <div>${lbl('Fecha de nacimiento')}${inp('kyc-birth','date','','style="color-scheme:dark"')}</div>
+                </div>
+            </div>
+            ${err}
+            <button onclick="kycNext1()" style="margin-top:20px;width:100%;background:#3b82f6;color:#fff;border:none;padding:13px;border-radius:10px;font-weight:700;font-size:14px;font-family:Inter,sans-serif;cursor:pointer">
+                Continuar <i class="fas fa-arrow-right"></i>
+            </button>`;
+        if (kycData.fullName) document.getElementById('kyc-fullname').value = kycData.fullName;
+        if (kycData.documentType) document.getElementById('kyc-doctype').value = kycData.documentType;
+        if (kycData.documentNumber) document.getElementById('kyc-docnum').value = kycData.documentNumber;
+        if (kycData.country) document.getElementById('kyc-country').value = kycData.country;
+        if (kycData.birthDate) document.getElementById('kyc-birth').value = kycData.birthDate;
     }
-    m.style.display = 'flex';
+
+    else if (kycStep === 2) {
+        content.innerHTML = `
+            <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.15);border-radius:10px;padding:16px;margin-bottom:20px">
+                <p style="font-size:13px;color:#fff;font-weight:600;margin-bottom:6px"><i class="fas fa-id-card" style="color:#3b82f6"></i> Foto del documento — frente y reverso</p>
+                <p style="font-size:12px;color:#94a3b8;line-height:1.6">Sube una imagen que muestre claramente <strong style="color:#fff">ambas caras</strong> de tu documento en Google Drive. Asegúrate de que el enlace sea accesible para cualquier persona con el link.</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+                <a href="https://drive.google.com/drive/my-drive" target="_blank" id="kyc-drive-doc-btn"
+                   style="display:flex;align-items:center;justify-content:center;gap:10px;background:#1c232b;border:1px solid #2d3748;color:#fff;padding:13px;border-radius:10px;font-weight:600;font-size:14px;font-family:Inter,sans-serif;text-decoration:none;transition:.2s"
+                   onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#2d3748'">
+                    <img src="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" style="width:20px;height:20px"> Abrir Google Drive
+                </a>
+                <div style="display:flex;align-items:center;gap:8px;color:#64748b;font-size:11px">
+                    <div style="flex:1;height:1px;background:#1c232b"></div> después de subir, copia el enlace y pégalo aquí <div style="flex:1;height:1px;background:#1c232b"></div>
+                </div>
+                <div>${lbl('Enlace al documento (acceso público con enlace)')}${inp('kyc-docurl','url','https://drive.google.com/...')}</div>
+            </div>
+            ${err}
+            <div style="display:flex;gap:10px;margin-top:20px">
+                <button onclick="kycStep=1;renderKycStep()" style="flex:0;background:#1c232b;border:none;color:#94a3b8;padding:13px 20px;border-radius:10px;font-family:Inter,sans-serif;cursor:pointer;font-size:13px">
+                    <i class="fas fa-arrow-left"></i> Atrás
+                </button>
+                <button onclick="kycNext2()" style="flex:1;background:#3b82f6;color:#fff;border:none;padding:13px;border-radius:10px;font-weight:700;font-size:14px;font-family:Inter,sans-serif;cursor:pointer">
+                    Continuar <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>`;
+        if (kycData.documentUrl) document.getElementById('kyc-docurl').value = kycData.documentUrl;
+    }
+
+    else if (kycStep === 3) {
+        content.innerHTML = `
+            <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.15);border-radius:10px;padding:16px;margin-bottom:20px">
+                <p style="font-size:13px;color:#fff;font-weight:600;margin-bottom:6px"><i class="fas fa-camera" style="color:#3b82f6"></i> Selfie sosteniendo tu documento</p>
+                <p style="font-size:12px;color:#94a3b8;line-height:1.6">Tómate una foto <strong style="color:#fff">sujetando tu documento abierto</strong> junto a tu cara. Ambos deben ser claramente visibles. Sube la imagen a Google Drive y comparte el enlace.</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+                <a href="https://drive.google.com/drive/my-drive" target="_blank"
+                   style="display:flex;align-items:center;justify-content:center;gap:10px;background:#1c232b;border:1px solid #2d3748;color:#fff;padding:13px;border-radius:10px;font-weight:600;font-size:14px;font-family:Inter,sans-serif;text-decoration:none;transition:.2s"
+                   onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#2d3748'">
+                    <img src="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" style="width:20px;height:20px"> Abrir Google Drive
+                </a>
+                <div style="display:flex;align-items:center;gap:8px;color:#64748b;font-size:11px">
+                    <div style="flex:1;height:1px;background:#1c232b"></div> después de subir, copia el enlace y pégalo aquí <div style="flex:1;height:1px;background:#1c232b"></div>
+                </div>
+                <div>${lbl('Enlace a la selfie (acceso público con enlace)')}${inp('kyc-selfieurl','url','https://drive.google.com/...')}</div>
+            </div>
+            ${err}
+            <div style="display:flex;gap:10px;margin-top:20px">
+                <button onclick="kycStep=2;renderKycStep()" style="flex:0;background:#1c232b;border:none;color:#94a3b8;padding:13px 20px;border-radius:10px;font-family:Inter,sans-serif;cursor:pointer;font-size:13px">
+                    <i class="fas fa-arrow-left"></i> Atrás
+                </button>
+                <button onclick="kycNext3()" style="flex:1;background:#3b82f6;color:#fff;border:none;padding:13px;border-radius:10px;font-weight:700;font-size:14px;font-family:Inter,sans-serif;cursor:pointer">
+                    Continuar <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>`;
+        if (kycData.selfieUrl) document.getElementById('kyc-selfieurl').value = kycData.selfieUrl;
+    }
+
+    else if (kycStep === 4) {
+        content.innerHTML = `
+            <div style="background:rgba(255,255,255,.03);border:1px solid #1c232b;border-radius:10px;padding:14px;margin-bottom:20px;font-size:12px;color:#94a3b8;line-height:1.8">
+                <div><span style="color:#64748b">Nombre legal:</span> <strong style="color:#fff">${kycData.fullName}</strong></div>
+                <div><span style="color:#64748b">Documento:</span> <strong style="color:#fff">${kycData.documentType} · ${kycData.documentNumber}</strong></div>
+                <div><span style="color:#64748b">País:</span> <strong style="color:#fff">${kycData.country}</strong></div>
+                <div><span style="color:#64748b">Nacimiento:</span> <strong style="color:#fff">${kycData.birthDate}</strong></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.15);border-radius:8px;padding:14px;margin-bottom:6px">
+                <input type="checkbox" id="kyc-declare" style="width:17px;height:17px;flex-shrink:0;margin-top:1px;accent-color:#3b82f6;cursor:pointer">
+                <label for="kyc-declare" style="font-size:11px;color:#94a3b8;line-height:1.7;cursor:pointer">
+                    Declaro bajo mi responsabilidad que <strong style="color:#fff">todos los datos facilitados son verídicos</strong>, que el documento presentado me pertenece y que las imágenes enviadas son auténticas. Soy consciente de que proporcionar información falsa o documentación fraudulenta puede tener <strong style="color:#fff">consecuencias legales</strong>.
+                </label>
+            </div>
+            ${err}
+            <div style="display:flex;gap:10px;margin-top:16px">
+                <button onclick="kycStep=3;renderKycStep()" style="flex:0;background:#1c232b;border:none;color:#94a3b8;padding:13px 20px;border-radius:10px;font-family:Inter,sans-serif;cursor:pointer;font-size:13px">
+                    <i class="fas fa-arrow-left"></i> Atrás
+                </button>
+                <button id="kyc-submit-btn" onclick="submitKyc()" style="flex:1;background:#3b82f6;color:#fff;border:none;padding:13px;border-radius:10px;font-weight:700;font-size:14px;font-family:Inter,sans-serif;cursor:pointer">
+                    <i class="fas fa-paper-plane"></i> Enviar solicitud
+                </button>
+            </div>`;
+    }
+}
+
+function kycNext1() {
+    const fullName = document.getElementById('kyc-fullname').value.trim();
+    const documentType = document.getElementById('kyc-doctype').value;
+    const documentNumber = document.getElementById('kyc-docnum').value.trim();
+    const country = document.getElementById('kyc-country').value.trim();
+    const birthDate = document.getElementById('kyc-birth').value;
+    if (!fullName || !documentType || !documentNumber || !country || !birthDate)
+        return showKycError('Completa todos los campos antes de continuar.');
+    Object.assign(kycData, { fullName, documentType, documentNumber, country, birthDate });
+    kycStep = 2; renderKycStep();
+}
+
+function kycNext2() {
+    const documentUrl = document.getElementById('kyc-docurl').value.trim();
+    if (!documentUrl) return showKycError('Pega el enlace del documento antes de continuar.');
+    if (!documentUrl.startsWith('http')) return showKycError('El enlace no es válido.');
+    kycData.documentUrl = documentUrl;
+    kycStep = 3; renderKycStep();
+}
+
+function kycNext3() {
+    const selfieUrl = document.getElementById('kyc-selfieurl').value.trim();
+    if (!selfieUrl) return showKycError('Pega el enlace de la selfie antes de continuar.');
+    if (!selfieUrl.startsWith('http')) return showKycError('El enlace no es válido.');
+    kycData.selfieUrl = selfieUrl;
+    kycStep = 4; renderKycStep();
 }
 
 async function submitKyc() {
-    const err = document.getElementById('kyc-error');
-    err.style.display = 'none';
-    const fields = {
-        fullName:      document.getElementById('kyc-fullname').value.trim(),
-        documentType:  document.getElementById('kyc-doctype').value,
-        documentNumber:document.getElementById('kyc-docnum').value.trim(),
-        country:       document.getElementById('kyc-country').value.trim(),
-        birthDate:     document.getElementById('kyc-birth').value,
-        documentUrl:   document.getElementById('kyc-docurl').value.trim(),
-        selfieUrl:     document.getElementById('kyc-selfieurl').value.trim()
-    };
     if (!document.getElementById('kyc-declare').checked)
-        return showKycError('Debes aceptar la declaración de veracidad.');
-    if (Object.values(fields).some(v => !v))
-        return showKycError('Todos los campos son obligatorios.');
-
-    const btn = document.querySelector('#kyc-modal-overlay button[onclick="submitKyc()"]');
+        return showKycError('Debes aceptar la declaración de veracidad para continuar.');
+    const btn = document.getElementById('kyc-submit-btn');
     btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-
-    const res  = await fetch('/api/auth/verification-request', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(fields) }).catch(() => null);
+    const res  = await fetch('/api/auth/verification-request', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(kycData) }).catch(() => null);
     const data = res ? await res.json() : null;
-
     if (res?.ok) {
-        document.getElementById('kyc-form-wrap').innerHTML = `
-            <div style="text-align:center;padding:20px 0">
-                <i class="fas fa-circle-check" style="font-size:48px;color:#22c55e;margin-bottom:16px;display:block"></i>
+        document.getElementById('kyc-step-content').innerHTML = `
+            <div style="text-align:center;padding:24px 0">
+                <i class="fas fa-circle-check" style="font-size:52px;color:#22c55e;margin-bottom:16px;display:block"></i>
                 <h3 style="color:#fff;margin-bottom:8px">Solicitud enviada</h3>
-                <p style="color:#94a3b8;font-size:13px">Revisaremos tu documentación en un plazo de 1–3 días hábiles. Te notificaremos el resultado.</p>
-                <button onclick="document.getElementById('kyc-modal-overlay').style.display='none'" style="margin-top:20px;background:#1c232b;border:none;color:#fff;padding:10px 24px;border-radius:8px;font-family:Inter,sans-serif;cursor:pointer">Cerrar</button>
+                <p style="color:#94a3b8;font-size:13px;line-height:1.6">Revisaremos tu documentación en un plazo de <strong style="color:#fff">1–3 días hábiles</strong>.<br>Te notificaremos el resultado por email.</p>
+                <button onclick="document.getElementById('kyc-modal-overlay').remove()" style="margin-top:24px;background:#1c232b;border:none;color:#fff;padding:11px 28px;border-radius:8px;font-family:Inter,sans-serif;cursor:pointer;font-size:14px">Cerrar</button>
             </div>`;
+        document.getElementById('kyc-steps-bar').innerHTML = '';
     } else {
         btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar solicitud';
         showKycError(data?.error || 'Error al enviar la solicitud.');
@@ -269,6 +378,7 @@ async function submitKyc() {
 
 function showKycError(msg) {
     const err = document.getElementById('kyc-error');
+    if (!err) return;
     err.textContent = msg;
     err.style.display = 'block';
 }
