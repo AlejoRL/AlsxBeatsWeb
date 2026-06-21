@@ -116,15 +116,46 @@ router.get('/verify/:token', async (req, res) => {
     res.json({ ok: true, name: user.name });
 });
 
-// POST /api/auth/resend-verification
+// POST /api/auth/resend-verification (legacy — kept for compatibility)
 router.post('/resend-verification', requireUser, async (req, res) => {
+    res.json({ ok: false, error: 'Usa el formulario de solicitud de verificación.' });
+});
+
+// GET /api/auth/verification-status
+router.get('/verification-status', requireUser, async (req, res) => {
+    const user = await User.findOne({ id: req.session.userId });
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
+    res.json({
+        status: user.verificationStatus,
+        rejectionReason: user.verificationData?.rejectionReason || ''
+    });
+});
+
+// POST /api/auth/verification-request
+router.post('/verification-request', requireUser, async (req, res) => {
     const user = await User.findOne({ id: req.session.userId });
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
     if (user.verified) return res.json({ ok: true, already: true });
-    const token = crypto.randomBytes(32).toString('hex');
-    user.verificationToken = token;
+    if (user.verificationStatus === 'pending') return res.status(400).json({ error: 'Ya tienes una solicitud en revisión.' });
+
+    const { fullName, documentType, documentNumber, country, birthDate, documentUrl, selfieUrl } = req.body;
+    if (!fullName || !documentType || !documentNumber || !country || !birthDate || !documentUrl || !selfieUrl)
+        return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+
+    user.verificationStatus = 'pending';
+    user.verificationData = {
+        fullName: fullName.trim(),
+        documentType,
+        documentNumber: documentNumber.trim(),
+        country: country.trim(),
+        birthDate,
+        documentUrl: documentUrl.trim(),
+        selfieUrl: selfieUrl.trim(),
+        submittedAt: new Date(),
+        reviewedAt: null,
+        rejectionReason: ''
+    };
     await user.save();
-    await sendVerificationEmail(user.email, user.name, token).catch(console.error);
     res.json({ ok: true });
 });
 
