@@ -65,15 +65,16 @@
     // ── WaveSurfer ──────────────────────────────────────────
     const ws = WaveSurfer.create({
         container: '#bp-waveform',
+        backend: 'MediaElement',
         waveColor: '#1b2330',
         progressColor: '#4ecdc4',
         cursorColor: '#4ecdc4',
         height: 44,
-        normalize: true,
         barWidth: 3,
         barGap: 2,
         barRadius: 8,
         cursorWidth: 2,
+        interact: true,
     });
 
     ws.on('ready', () => {

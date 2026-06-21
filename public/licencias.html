@@ -576,7 +576,7 @@ textarea:focus {
 </div>
 
 <audio id="audio-player"></audio>
-<script src="https://unpkg.com/wavesurfer.js"></script>
+<script src="https://unpkg.com/wavesurfer.js@6.6.4/dist/wavesurfer.js"></script>
 <script>
 const params = new URLSearchParams(window.location.search);
 
@@ -646,16 +646,17 @@ loadBeatData().then(beat => {
 
 const wavesurfer = WaveSurfer.create({
     container: '#waveform',
+    backend: 'MediaElement',
     waveColor: '#1b2330',
     progressColor: '#4ecdc4',
     cursorColor: '#4ecdc4',
     height: 55,
-    normalize: true,
     responsive: true,
     barWidth: 3,
     barGap: 2,
     barRadius: 8,
-    cursorWidth: 2
+    cursorWidth: 2,
+    interact: true,
 });
 
 const currentTime =
