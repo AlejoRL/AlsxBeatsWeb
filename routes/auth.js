@@ -129,6 +129,15 @@ router.post('/verify-otp', requireUser, async (req, res) => {
     res.json({ ok: true });
 });
 
+// POST /api/auth/avatar
+router.post('/avatar', requireUser, async (req, res) => {
+    const { avatar } = req.body;
+    if (!avatar?.startsWith('data:image/')) return res.status(400).json({ error: 'Imagen inválida.' });
+    if (avatar.length > 2_500_000) return res.status(400).json({ error: 'La imagen es demasiado grande. Máximo 2MB.' });
+    const user = await User.findOneAndUpdate({ id: req.session.userId }, { avatar }, { new: true });
+    res.json({ ok: true, avatar: user.avatar });
+});
+
 // PUT /api/auth/profile
 router.put('/profile', requireUser, async (req, res) => {
     const { name, email } = req.body;

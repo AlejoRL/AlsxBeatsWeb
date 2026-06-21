@@ -16,8 +16,8 @@ const PORT = process.env.PORT || 3000;
 // Webhook de Stripe necesita body raw ANTES del parser JSON
 app.use('/api/checkout/webhook', express.raw({ type: 'application/json' }));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '3mb' }));
+app.use(express.urlencoded({ extended: true, limit: '3mb' }));
 
 app.use(session({
     secret: process.env.SESSION_SECRET || 'alsxbeats-secret',

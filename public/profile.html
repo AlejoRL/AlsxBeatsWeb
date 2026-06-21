@@ -25,7 +25,10 @@
         .profile-sidebar{width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;position:sticky;top:88px;align-self:flex-start}
 
         .avatar-block{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:28px 20px;text-align:center;margin-bottom:4px}
-        .avatar-circle{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#2980b9);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#000;margin:0 auto 14px}
+        .avatar-circle{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#2980b9);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#000;margin:0 auto 14px;position:relative;cursor:pointer;overflow:hidden}
+        .avatar-circle img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+        .avatar-overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;font-size:18px;color:#fff}
+        .avatar-circle:hover .avatar-overlay{opacity:1}
         .avatar-name{font-size:16px;font-weight:700;margin-bottom:4px}
         .avatar-email{font-size:12px;color:var(--muted);margin-bottom:10px}
         .avatar-since{font-size:11px;color:#3a4556;background:#0b0d14;border-radius:6px;padding:4px 10px;display:inline-block}
@@ -238,7 +241,10 @@
     <!-- SIDEBAR -->
     <aside class="profile-sidebar">
         <div class="avatar-block">
-            <div class="avatar-circle" id="sb-avatar">?</div>
+            <div class="avatar-circle" id="sb-avatar" onclick="document.getElementById('avatar-input').click()" title="Cambiar foto">
+                <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
+            </div>
+            <input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
             <div class="avatar-name" id="sb-name">Cargando...</div>
             <div class="avatar-email" id="sb-email"></div>
             <span class="avatar-since" id="sb-since"></span>
@@ -399,10 +405,54 @@ let beats  = [];
 })();
 
 function populateSidebar() {
-    document.getElementById('sb-avatar').textContent = user.name.charAt(0).toUpperCase();
-    document.getElementById('sb-name').textContent   = user.name;
-    document.getElementById('sb-email').textContent  = user.email;
-    document.getElementById('sb-since').textContent  = 'Miembro desde ' + user.createdAt;
+    const av = document.getElementById('sb-avatar');
+    const overlay = av.querySelector('.avatar-overlay');
+    if (user.avatar) {
+        av.innerHTML = `<img src="${user.avatar}" alt="avatar"><div class="avatar-overlay"><i class="fas fa-camera"></i></div>`;
+        av.onclick = () => document.getElementById('avatar-input').click();
+    } else {
+        av.innerHTML = `<span style="font-size:28px;font-weight:900;color:#000">${user.name.charAt(0).toUpperCase()}</span><div class="avatar-overlay"><i class="fas fa-camera"></i></div>`;
+    }
+    document.getElementById('sb-name').textContent  = user.name;
+    document.getElementById('sb-email').textContent = user.email;
+    document.getElementById('sb-since').textContent = 'Miembro desde ' + user.createdAt;
+}
+
+async function uploadAvatar(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const av = document.getElementById('sb-avatar');
+    av.innerHTML = `<div style="font-size:11px;color:#000;font-weight:700">Subiendo...</div><div class="avatar-overlay"></div>`;
+
+    const base64 = await new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                const size = 200;
+                const canvas = document.createElement('canvas');
+                let w = img.width, h = img.height;
+                if (w > h) { h = Math.round(h * size / w); w = size; }
+                else       { w = Math.round(w * size / h); h = size; }
+                canvas.width = w; canvas.height = h;
+                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                resolve(canvas.toDataURL('image/jpeg', 0.82));
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    const res  = await fetch('/api/auth/avatar', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ avatar: base64 }) });
+    const data = await res.json();
+    if (res.ok) {
+        user.avatar = data.avatar;
+        populateSidebar();
+    } else {
+        alert(data.error || 'Error al subir la imagen.');
+        populateSidebar();
+    }
+    input.value = '';
 }
 
 function populateProfileForm() {

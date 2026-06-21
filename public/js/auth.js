@@ -58,12 +58,10 @@ function renderAuthNav(user) {
                 border-radius:999px;cursor:pointer;
                 font-family:Inter,sans-serif;font-size:14px;font-weight:600;
             ">
-                <span style="
-                    width:28px;height:28px;border-radius:50%;
-                    background:linear-gradient(135deg,#4ecdc4,#2980b9);
-                    display:flex;align-items:center;justify-content:center;
-                    font-size:12px;font-weight:800;color:#000;flex-shrink:0;
-                ">${initial}</span>
+                ${user.avatar
+                    ? `<img src="${user.avatar}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0">`
+                    : `<span style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#2980b9);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#000;flex-shrink:0">${initial}</span>`
+                }
                 <span class="user-name-label">${user.name.split(' ')[0]}</span>
                 ${verifiedBadge}
                 ${planBadge}
@@ -79,10 +77,18 @@ function renderAuthNav(user) {
         dd.style.cssText = 'position:fixed;background:#11151a;border:1px solid #1c232b;border-radius:14px;min-width:210px;box-shadow:0 16px 40px rgba(0,0,0,.7);padding:6px;display:none;z-index:99999;animation:ddFadeIn .15s ease;';
         dd.innerHTML = `
             <div style="padding:12px 14px 10px;border-bottom:1px solid #1c232b;margin-bottom:4px">
-                <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#fff">
-                    ${user.name} ${verifiedBadge} ${planBadge}
+                <div style="display:flex;align-items:center;gap:10px">
+                    ${user.avatar
+                        ? `<img src="${user.avatar}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0">`
+                        : `<span style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#2980b9);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0">${initial}</span>`
+                    }
+                    <div>
+                        <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#fff">
+                            ${user.name} ${verifiedBadge} ${planBadge}
+                        </div>
+                        <div style="font-size:11px;color:#94a3b8;margin-top:1px">${user.email}</div>
+                    </div>
                 </div>
-                <div style="font-size:11px;color:#94a3b8;margin-top:2px">${user.email}</div>
                 ${!user.verified ? renderVerifBadgeDropdown() : ''}
             </div>
             <a href="profile.html#perfil"   class="dd-item"><i class="fas fa-user"></i> Mi perfil</a>
