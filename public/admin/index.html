@@ -600,10 +600,10 @@ function renderBeats() {
                 <div class="card-title">${esc(b.title)}</div>
                 <div class="card-meta">${b.genre} · ${b.bpm} BPM · ${b.key}</div>
                 <div class="beat-card-prices">
-                    <span class="price-tag">B <strong>€${b.licenses.basic.price}</strong></span>
-                    <span class="price-tag">P <strong>€${b.licenses.premium.price}</strong></span>
-                    <span class="price-tag">U <strong>€${b.licenses.unlimited.price}</strong></span>
-                    <span class="price-tag">E <strong>€${b.licenses.exclusive.price}</strong></span>
+                    <span class="price-tag">B <strong>€${b.licenses?.basic?.price ?? '—'}</strong></span>
+                    <span class="price-tag">P <strong>€${b.licenses?.premium?.price ?? '—'}</strong></span>
+                    <span class="price-tag">U <strong>€${b.licenses?.unlimited?.price ?? '—'}</strong></span>
+                    <span class="price-tag">E <strong>€${b.licenses?.exclusive?.price ?? '—'}</strong></span>
                 </div>
                 <div class="card-actions">
                     <button class="btn-sm btn-edit" onclick="openEditBeat('${b.id}')"><i class="fas fa-pen"></i> Editar</button>

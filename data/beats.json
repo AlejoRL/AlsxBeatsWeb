@@ -10,11 +10,12 @@
     "image": "assets/images/typelofiryb1.png",
     "preview": "assets/audio/1781873812440.wav",
     "publishedAt": "2026-06-16",
+    "peaks": null,
     "licenses": {
-      "basic-mp3": { "price": 29.99, "label": "Basic Lease", "formats": ["MP3"] },
-      "basic-wav": { "price": 38.99, "label": "Basic Lease WAV", "formats": ["WAV", "MP3"] },
-      "premium":   { "price": 75.99, "label": "Premium Lease",  "formats": ["MP3", "WAV", "Stems"] },
-      "unlimited": { "price": 145.99,"label": "Unlimited Lease","formats": ["MP3", "WAV", "Stems"] }
+      "basic":     { "price": 29,  "label": "Basic Lease",      "formats": ["MP3"] },
+      "premium":   { "price": 75,  "label": "Premium Lease",    "formats": ["WAV", "MP3"] },
+      "unlimited": { "price": 145, "label": "Unlimited Lease",  "formats": ["WAV", "STEMS", "MP3"] },
+      "exclusive": { "price": 299, "label": "Exclusive Rights", "formats": ["WAV", "STEMS"] }
     }
   },
   {
@@ -28,11 +29,12 @@
     "image": "assets/images/alsxbeatsportada.png",
     "preview": null,
     "publishedAt": "2026-06-16",
+    "peaks": null,
     "licenses": {
-      "basic-mp3": { "price": 29.99, "label": "Basic Lease", "formats": ["MP3"] },
-      "basic-wav": { "price": 38.99, "label": "Basic Lease WAV", "formats": ["WAV", "MP3"] },
-      "premium":   { "price": 75.99, "label": "Premium Lease",  "formats": ["MP3", "WAV", "Stems"] },
-      "unlimited": { "price": 145.99,"label": "Unlimited Lease","formats": ["MP3", "WAV", "Stems"] }
+      "basic":     { "price": 29,  "label": "Basic Lease",      "formats": ["MP3"] },
+      "premium":   { "price": 75,  "label": "Premium Lease",    "formats": ["WAV", "MP3"] },
+      "unlimited": { "price": 145, "label": "Unlimited Lease",  "formats": ["WAV", "STEMS", "MP3"] },
+      "exclusive": { "price": 299, "label": "Exclusive Rights", "formats": ["WAV", "STEMS"] }
     }
   },
   {
@@ -46,11 +48,12 @@
     "image": "assets/images/parentaladvisory.png",
     "preview": null,
     "publishedAt": "2026-06-16",
+    "peaks": null,
     "licenses": {
-      "basic-mp3": { "price": 29.99, "label": "Basic Lease", "formats": ["MP3"] },
-      "basic-wav": { "price": 38.99, "label": "Basic Lease WAV", "formats": ["WAV", "MP3"] },
-      "premium":   { "price": 75.99, "label": "Premium Lease",  "formats": ["MP3", "WAV", "Stems"] },
-      "unlimited": { "price": 145.99,"label": "Unlimited Lease","formats": ["MP3", "WAV", "Stems"] }
+      "basic":     { "price": 29,  "label": "Basic Lease",      "formats": ["MP3"] },
+      "premium":   { "price": 75,  "label": "Premium Lease",    "formats": ["WAV", "MP3"] },
+      "unlimited": { "price": 145, "label": "Unlimited Lease",  "formats": ["WAV", "STEMS", "MP3"] },
+      "exclusive": { "price": 299, "label": "Exclusive Rights", "formats": ["WAV", "STEMS"] }
     }
   }
 ]
