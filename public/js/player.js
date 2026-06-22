@@ -129,16 +129,25 @@
     }
 
     function bpPrev() {
-        const rows = Array.from(document.querySelectorAll('.beat-row'));
+        const rows = Array.from(document.querySelectorAll('.beat-row, .beat-card'));
         const idx  = rows.indexOf(currentRow);
-        if (idx > 0) rows[idx - 1].querySelector('.row-play')?.click();
+        if (idx > 0) {
+            const prev = rows[idx - 1];
+            (prev.classList.contains('beat-card')
+                ? prev.querySelector('.card-play-circle')
+                : prev.querySelector('.row-play'))?.click();
+        }
     }
 
     function bpNext() {
-        const rows = Array.from(document.querySelectorAll('.beat-row'));
+        const rows = Array.from(document.querySelectorAll('.beat-row, .beat-card'));
         const idx  = rows.indexOf(currentRow);
-        if (idx !== -1 && idx < rows.length - 1)
-            rows[idx + 1].querySelector('.row-play')?.click();
+        if (idx !== -1 && idx < rows.length - 1) {
+            const next = rows[idx + 1];
+            (next.classList.contains('beat-card')
+                ? next.querySelector('.card-play-circle')
+                : next.querySelector('.row-play'))?.click();
+        }
     }
 
     function bpToggleLike() {

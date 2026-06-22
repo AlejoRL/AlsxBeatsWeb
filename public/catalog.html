@@ -3,78 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo — AlsxBeats</title>
+    <title>Tracks — AlsxBeats</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <!-- SEO -->
-    <meta name="description" content="Explora el catálogo completo de beats. Filtra por género, BPM y tonalidad. Trap, R&B, Drill, Lo-Fi, Afrobeats y más.">
-    <meta name="author" content="AlsxBeats">
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="AlsxBeats">
-    <meta property="og:locale" content="es_ES">
-    <meta property="og:title" content="Catálogo de Beats — AlsxBeats">
-    <meta property="og:description" content="Explora el catálogo completo de beats. Filtra por género, BPM y tonalidad. Trap, R&B, Drill, Lo-Fi, Afrobeats y más.">
-    <meta property="og:image" content="https://alsxbeats-web.onrender.com/og-image.png">
-    <meta property="og:url" content="https://alsxbeats-web.onrender.com/catalog.html">
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Catálogo de Beats — AlsxBeats">
-    <meta name="twitter:description" content="Explora el catálogo completo de beats. Filtra por género, BPM y tonalidad. Trap, R&B, Drill, Lo-Fi, Afrobeats y más.">
-    <meta name="twitter:image" content="https://alsxbeats-web.onrender.com/og-image.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/cart.css">
+    <!-- SEO -->
+    <meta name="description" content="Explora el catálogo completo de beats. Filtra por género, BPM y tonalidad. Trap, R&B, Drill, Lo-Fi, Afrobeats y más.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="AlsxBeats">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:title" content="Tracks — AlsxBeats">
+    <meta property="og:description" content="Explora el catálogo completo de beats. Filtra por género, BPM y tonalidad. Trap, R&B, Drill, Lo-Fi, Afrobeats y más.">
+    <meta property="og:image" content="https://alsxbeats-web.onrender.com/og-image.png">
+    <meta property="og:url" content="https://alsxbeats-web.onrender.com/catalog.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tracks — AlsxBeats">
+    <meta name="twitter:description" content="Explora el catálogo completo de beats. Filtra por género, BPM y tonalidad.">
+    <meta name="twitter:image" content="https://alsxbeats-web.onrender.com/og-image.png">
     <style>
-        *  { box-sizing: border-box; }
-        body { padding-bottom: 88px; }
+        * { box-sizing: border-box; }
+        body { padding-bottom: 100px; }
 
-        /* ── SEARCH BAR ─────────────────────────────────── */
-        .cat-search-section {
-            background: #11151a;
+        /* ── SEARCH BAR ─────────────────────────────────────────── */
+        .tracks-search-bar {
+            background: #0d1017;
             border-bottom: 1px solid #1c232b;
-            padding: 28px 40px;
+            padding: 16px 32px;
         }
-        .cat-search-wrap {
+        .tracks-search-wrap {
             max-width: 860px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             gap: 12px;
-            background: #0b0d14;
+            background: #11151a;
             border: 1.5px solid #1c232b;
-            border-radius: 14px;
-            padding: 0 20px;
+            border-radius: 12px;
+            padding: 0 18px;
             transition: border-color .2s;
         }
-        .cat-search-wrap:focus-within { border-color: var(--accent-celeste); }
-        .cat-search-wrap i { color: #3a4556; font-size: 15px; }
-        .cat-search-wrap input {
+        .tracks-search-wrap:focus-within { border-color: var(--accent-celeste); }
+        .tracks-search-wrap > i { color: #3a4556; font-size: 15px; flex-shrink: 0; }
+        .tracks-search-wrap input {
             flex: 1;
             background: none;
             border: none;
             outline: none;
             color: #fff;
-            font-size: 16px;
+            font-size: 15px;
             font-family: 'Inter', sans-serif;
-            padding: 16px 0;
+            padding: 14px 0;
         }
-        .cat-search-wrap input::placeholder { color: #3a4556; }
+        .tracks-search-wrap input::placeholder { color: #3a4556; }
+        .search-kbd {
+            font-size: 11px;
+            color: #3a4556;
+            background: #1c232b;
+            border-radius: 5px;
+            padding: 2px 6px;
+            font-family: monospace;
+            flex-shrink: 0;
+        }
 
-        /* ── LAYOUT ─────────────────────────────────────── */
-        .cat-body {
-            max-width: 1280px;
+        /* ── LAYOUT ─────────────────────────────────────────────── */
+        .tracks-body {
+            max-width: 1320px;
             margin: 0 auto;
-            padding: 28px 40px 60px;
+            padding: 24px 32px 60px;
             display: grid;
             grid-template-columns: 220px 1fr;
             gap: 24px;
             align-items: start;
         }
 
-        /* ── SIDEBAR ─────────────────────────────────────── */
-        .cat-sidebar {
+        /* ── SIDEBAR ─────────────────────────────────────────────── */
+        .tracks-sidebar {
             background: #11151a;
             border: 1px solid #1c232b;
             border-radius: 16px;
@@ -82,10 +88,8 @@
             position: sticky;
             top: 80px;
         }
-
-        .filter-block { margin-bottom: 22px; }
+        .filter-block { margin-bottom: 24px; }
         .filter-block:last-child { margin-bottom: 0; }
-
         .filter-label {
             font-size: 10px;
             font-weight: 700;
@@ -95,7 +99,6 @@
             margin-bottom: 10px;
             display: block;
         }
-
         .genre-tab {
             display: block;
             width: 100%;
@@ -113,7 +116,6 @@
         }
         .genre-tab:hover { background: rgba(255,255,255,.04); color: #fff; }
         .genre-tab.active { background: rgba(78,205,196,.1); color: var(--accent-celeste); font-weight: 600; }
-
         .filter-select {
             width: 100%;
             background: #0b0d14;
@@ -130,7 +132,6 @@
         }
         .filter-select:focus { border-color: var(--accent-celeste); }
         .filter-select option { background: #11151a; }
-
         .btn-clear-filters {
             width: 100%;
             background: rgba(239,68,68,.07);
@@ -149,20 +150,193 @@
         .btn-clear-filters:hover { background: rgba(239,68,68,.14); }
         .btn-clear-filters.show { display: block; }
 
-        /* ── BEAT LIST ──────────────────────────────────── */
-        .cat-main { min-width: 0; }
+        /* ── TAG CLOUD ───────────────────────────────────────────── */
+        .tag-cloud-pill {
+            background: rgba(255,255,255,.04);
+            border: 1px solid #1c232b;
+            color: #3a4556;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            padding: 4px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: .15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .tag-cloud-pill span { color: #2a3340; font-weight: 400; }
+        .tag-cloud-pill:hover { border-color: rgba(78,205,196,.3); color: #94a3b8; }
+        .tag-cloud-pill.active { background: rgba(78,205,196,.1); border-color: rgba(78,205,196,.3); color: var(--accent-celeste); }
+        .tag-cloud-pill.active span { color: rgba(78,205,196,.6); }
 
-        .cat-topbar {
+        /* ── MAIN CONTENT ────────────────────────────────────────── */
+        .tracks-main { min-width: 0; }
+        .tracks-topbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
-            padding: 8px 0;
+            margin-bottom: 16px;
+            padding: 4px 0;
         }
         .cat-count { font-size: 12px; color: #3a4556; }
         .cat-count strong { color: #94a3b8; }
+        .view-toggle { display: flex; gap: 4px; }
+        .view-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: none;
+            border: 1px solid #1c232b;
+            color: #3a4556;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: .15s;
+        }
+        .view-btn:hover { color: #94a3b8; border-color: #2a3340; }
+        .view-btn.active { background: rgba(78,205,196,.1); border-color: rgba(78,205,196,.3); color: var(--accent-celeste); }
 
-        /* Beat list header */
+        /* ── BEAT CARDS (grid view) ──────────────────────────────── */
+        .beats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 16px;
+        }
+        .beat-card {
+            background: #11151a;
+            border: 1px solid #1c232b;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color .2s, transform .2s;
+        }
+        .beat-card:hover { border-color: rgba(78,205,196,.35); transform: translateY(-3px); }
+        .beat-card.playing { border-color: var(--accent-celeste); }
+        .beat-card-cover {
+            position: relative;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            background: #1c232b;
+        }
+        .beat-card-cover img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform .3s;
+        }
+        .beat-card:hover .beat-card-cover img { transform: scale(1.05); }
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity .2s;
+        }
+        .beat-card:hover .card-overlay,
+        .beat-card.playing .card-overlay { opacity: 1; }
+        .card-play-circle {
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: var(--accent-celeste);
+            display: flex; align-items: center; justify-content: center;
+            color: #000;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            transition: transform .15s;
+        }
+        .card-play-circle:hover { transform: scale(1.1); }
+        .card-like-btn {
+            position: absolute; top: 10px; right: 10px;
+            background: rgba(0,0,0,.55);
+            border: none;
+            color: #fff;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
+            transition: .15s;
+            z-index: 2;
+        }
+        .card-like-btn:hover { background: rgba(0,0,0,.8); }
+        .card-like-btn.liked { color: #ef4444; }
+        .card-free-badge {
+            position: absolute; top: 10px; left: 10px;
+            background: rgba(78,205,196,.92);
+            color: #000;
+            font-size: 9px; font-weight: 800; letter-spacing: .8px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+        .beat-card-body { padding: 14px 14px 16px; }
+        .card-title {
+            font-size: 14px; font-weight: 700; color: #fff;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            margin-bottom: 3px;
+        }
+        .beat-card.playing .card-title { color: var(--accent-celeste); }
+        .card-producer { font-size: 11px; color: #94a3b8; margin-bottom: 9px; }
+        .card-meta {
+            display: flex; align-items: center;
+            gap: 6px; flex-wrap: wrap; margin-bottom: 8px;
+        }
+        .card-genre-tag {
+            font-size: 10px; font-weight: 700;
+            color: var(--accent-celeste);
+            background: rgba(78,205,196,.1);
+            border: 1px solid rgba(78,205,196,.2);
+            padding: 2px 8px; border-radius: 999px;
+            white-space: nowrap;
+        }
+        .card-bpm-key { font-size: 11px; color: #3a4556; }
+        .card-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
+        .card-tag-chip {
+            font-size: 10px; color: #3a4556;
+            background: rgba(255,255,255,.03);
+            border: 1px solid #1c232b;
+            padding: 2px 8px; border-radius: 999px;
+            cursor: pointer; transition: .15s;
+        }
+        .card-tag-chip:hover { color: #94a3b8; border-color: #2a3340; }
+        .card-actions { display: flex; gap: 8px; align-items: center; }
+        .btn-card-dl {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            background: rgba(78,205,196,.08);
+            border: 1px solid rgba(78,205,196,.2);
+            color: var(--accent-celeste);
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; font-size: 12px;
+            transition: .15s; flex-shrink: 0;
+        }
+        .btn-card-dl:hover { background: rgba(78,205,196,.18); }
+        .btn-card-buy {
+            flex: 1;
+            background: none;
+            border: 1px solid rgba(78,205,196,.3);
+            color: var(--accent-celeste);
+            border-radius: 8px;
+            font-size: 12px; font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            padding: 8px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: flex; align-items: center; justify-content: center;
+            gap: 5px; transition: .2s;
+        }
+        .btn-card-buy:hover { background: var(--accent-celeste); color: #000; border-color: var(--accent-celeste); }
+
+        /* ── LIST VIEW (beat-row) ────────────────────────────────── */
         .beat-list-head {
             display: grid;
             grid-template-columns: 40px 48px 1fr 120px 100px 90px 160px;
@@ -173,16 +347,10 @@
             margin-bottom: 4px;
         }
         .beat-list-head span {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            color: #3a4556;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 1.2px; text-transform: uppercase; color: #3a4556;
         }
-
-        /* Beat row */
         .beat-list { display: flex; flex-direction: column; }
-
         .beat-row {
             display: grid;
             grid-template-columns: 40px 48px 1fr 120px 100px 90px 160px;
@@ -196,129 +364,99 @@
         }
         .beat-row:hover { background: rgba(255,255,255,.04); }
         .beat-row.playing { background: rgba(78,205,196,.06); }
-
-        /* Play button */
         .row-play {
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            background: rgba(255,255,255,.07);
-            border: none;
-            color: #fff;
-            font-size: 11px;
-            cursor: pointer;
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255,255,255,.07); border: none;
+            color: #fff; font-size: 11px; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            transition: background .15s, transform .15s;
-            flex-shrink: 0;
+            transition: background .15s, transform .15s; flex-shrink: 0;
         }
         .row-play:hover { background: var(--accent-celeste); color: #000; transform: scale(1.08); }
         .beat-row.playing .row-play { background: var(--accent-celeste); color: #000; }
-
-        /* Cover */
         .row-cover {
-            width: 48px; height: 48px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: #1c232b;
-            flex-shrink: 0;
+            width: 48px; height: 48px; border-radius: 8px;
+            object-fit: cover; background: #1c232b; flex-shrink: 0;
         }
-
-        /* Info */
         .row-info { min-width: 0; }
         .row-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 3px;
+            font-size: 14px; font-weight: 700; color: #fff;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px;
         }
         .beat-row.playing .row-title { color: var(--accent-celeste); }
         .row-producer { font-size: 11px; color: #94a3b8; }
-
-        /* Genre tag */
         .row-genre {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--accent-celeste);
-            background: rgba(78,205,196,.08);
-            border: 1px solid rgba(78,205,196,.15);
-            border-radius: 999px;
-            padding: 3px 10px;
-            white-space: nowrap;
-            display: inline-block;
+            font-size: 11px; font-weight: 600; color: var(--accent-celeste);
+            background: rgba(78,205,196,.08); border: 1px solid rgba(78,205,196,.15);
+            border-radius: 999px; padding: 3px 10px; white-space: nowrap; display: inline-block;
         }
-
-        /* Stats */
         .row-stats { font-size: 12px; color: #94a3b8; white-space: nowrap; }
         .row-stats span { display: block; line-height: 1.8; }
-
-        /* Price */
         .row-price { font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; }
         .row-price small { font-size: 10px; font-weight: 400; color: #94a3b8; display: block; }
-
-        /* Actions */
         .row-actions { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
         .btn-row-lic {
-            background: var(--accent-celeste);
-            color: #000;
-            border: none;
-            padding: 7px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            text-decoration: none;
-            white-space: nowrap;
-            transition: opacity .2s;
+            background: var(--accent-celeste); color: #000; border: none;
+            padding: 7px 14px; border-radius: 8px;
+            font-size: 12px; font-weight: 700; font-family: 'Inter', sans-serif;
+            cursor: pointer; text-decoration: none; white-space: nowrap; transition: opacity .2s;
         }
         .btn-row-lic:hover { opacity: .85; }
         .btn-row-more {
-            width: 30px; height: 30px;
-            border-radius: 7px;
-            background: none;
-            border: 1px solid #1c232b;
-            color: #94a3b8;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: .15s;
+            width: 30px; height: 30px; border-radius: 7px;
+            background: none; border: 1px solid #1c232b;
+            color: #94a3b8; font-size: 12px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: .15s;
         }
         .btn-row-more:hover { background: #1c232b; color: #fff; }
 
-        /* No results */
+        /* ── NO RESULTS ─────────────────────────────────────────── */
         .no-results {
-            text-align: center;
-            padding: 80px 20px;
-            color: #3a4556;
+            text-align: center; padding: 80px 20px; color: #3a4556;
+            grid-column: 1/-1;
         }
         .no-results i { font-size: 40px; margin-bottom: 16px; display: block; }
         .no-results p { font-size: 15px; margin-bottom: 16px; }
 
-        /* ── MEDIUM DESKTOP (pantalla achicada) ─────────── */
-        @media (max-width: 1100px) and (min-width: 861px) {
-            .beat-row { grid-template-columns: 40px 48px 1fr 90px 140px; gap: 10px; }
+        /* ── SKELETON LOADING ───────────────────────────────────── */
+        .skeleton-card {
+            background: #11151a; border: 1px solid #1c232b;
+            border-radius: 16px; overflow: hidden;
+        }
+        .skeleton-cover {
+            aspect-ratio: 1/1; background: linear-gradient(90deg, #1c232b 25%, #232c38 50%, #1c232b 75%);
+            background-size: 200% 100%; animation: shimmer 1.5s infinite;
+        }
+        .skeleton-body { padding: 14px; }
+        .skeleton-line {
+            height: 12px; border-radius: 6px; margin-bottom: 8px;
+            background: linear-gradient(90deg, #1c232b 25%, #232c38 50%, #1c232b 75%);
+            background-size: 200% 100%; animation: shimmer 1.5s infinite;
+        }
+        .skeleton-line.short { width: 60%; }
+        .skeleton-line.xshort { width: 40%; }
+        @keyframes shimmer { to { background-position: -200% 0; } }
+
+        /* ── RESPONSIVE ─────────────────────────────────────────── */
+        @media (max-width: 1024px) {
+            .beat-row { grid-template-columns: 40px 48px 1fr 100px 140px; gap: 10px; }
             .row-genre-cell, .row-stats { display: none; }
         }
-
-        /* ── MOBILE ────────────────────────────────────── */
         @media (max-width: 860px) {
-            .cat-search-section { padding: 20px; }
-            .cat-body { grid-template-columns: 1fr; padding: 16px 20px 60px; gap: 16px; }
-            .cat-sidebar { position: static; }
-            .beat-list-head { display: none; }
+            .tracks-search-bar { padding: 14px 20px; }
+            .tracks-body { grid-template-columns: 1fr; padding: 16px 20px 60px; gap: 16px; }
+            .tracks-sidebar { position: static; }
+            .beat-list-head { display: none !important; }
             .beat-row { grid-template-columns: 36px 44px 1fr auto; gap: 10px; }
             .row-genre-cell, .row-stats, .row-price { display: none; }
-            .row-actions { gap: 6px; }
-            .btn-row-lic { font-size: 11px; padding: 7px 10px; }
-            .btn-row-more { width: 28px; height: 28px; }
+            .beats-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+        }
+        @media (max-width: 480px) {
+            .beats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
         }
     </style>
 </head>
 <body>
 
-<!-- NAV -->
 <header>
     <nav class="nav-container nav-grid">
         <a href="index.html" class="logo">Alsx<span>Beats</span></a>
@@ -336,25 +474,24 @@
     </nav>
     <div class="mobile-menu" id="mobile-menu">
         <a href="index.html">Inicio</a>
-        <a href="index.html#contacto">Contacto</a>
+        <a href="index.html#contacto" onclick="toggleMobileMenu()">Contacto</a>
         <div class="mobile-divider"></div>
         <a href="login.html">Iniciar sesión</a>
         <a href="register.html" class="mobile-register">Registrarse</a>
     </div>
 </header>
 
-<!-- SEARCH -->
-<div class="cat-search-section">
-    <div class="cat-search-wrap">
+<div class="tracks-search-bar">
+    <div class="tracks-search-wrap">
         <i class="fas fa-search"></i>
-        <input type="text" id="filter-search" placeholder="Buscar beats por título, género o tags..." autocomplete="off">
+        <input type="text" id="filter-search" placeholder="Busca tracks por título, género o tags..." autocomplete="off">
+        <span class="search-kbd">⌘K</span>
     </div>
 </div>
 
-<div class="cat-body">
+<div class="tracks-body">
 
-    <!-- SIDEBAR FILTROS -->
-    <aside class="cat-sidebar">
+    <aside class="tracks-sidebar">
         <div class="filter-block">
             <span class="filter-label">Género</span>
             <div id="genre-pills">
@@ -394,17 +531,30 @@
             </select>
         </div>
 
+        <div class="filter-block" id="tags-filter-block" style="display:none">
+            <span class="filter-label">Tags</span>
+            <div id="tag-cloud" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px"></div>
+        </div>
+
         <button class="btn-clear-filters" id="btn-clear" onclick="clearFilters()">
             <i class="fas fa-xmark"></i> Limpiar filtros
         </button>
     </aside>
 
-    <!-- BEAT LIST -->
-    <div class="cat-main">
-        <div class="cat-topbar">
+    <div class="tracks-main">
+        <div class="tracks-topbar">
             <p class="cat-count" id="results-count"></p>
+            <div class="view-toggle">
+                <button id="btn-grid-view" class="view-btn active" onclick="setView('grid')" title="Vista cuadrícula">
+                    <i class="fas fa-border-all"></i>
+                </button>
+                <button id="btn-list-view" class="view-btn" onclick="setView('list')" title="Vista lista">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
         </div>
-        <div class="beat-list-head">
+
+        <div class="beat-list-head" id="list-head" style="display:none">
             <span></span><span></span>
             <span>Título</span>
             <span>Género</span>
@@ -412,7 +562,14 @@
             <span>Precio</span>
             <span></span>
         </div>
-        <div class="beat-list" id="catalogue-grid"></div>
+
+        <div id="catalogue-grid" class="beats-grid">
+            <!-- skeleton -->
+            <div class="skeleton-card"><div class="skeleton-cover"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-line xshort"></div></div></div>
+            <div class="skeleton-card"><div class="skeleton-cover"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-line xshort"></div></div></div>
+            <div class="skeleton-card"><div class="skeleton-cover"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-line xshort"></div></div></div>
+            <div class="skeleton-card"><div class="skeleton-cover"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-line xshort"></div></div></div>
+        </div>
     </div>
 
 </div>
@@ -425,8 +582,49 @@
 <script src="https://unpkg.com/wavesurfer.js@6.6.4/dist/wavesurfer.js"></script>
 <script src="js/player.js"></script>
 <script>
+window._currentView = 'grid';
+
+function setView(v) {
+    window._currentView = v;
+    const grid    = document.getElementById('catalogue-grid');
+    const btnG    = document.getElementById('btn-grid-view');
+    const btnL    = document.getElementById('btn-list-view');
+    const listHead = document.getElementById('list-head');
+    if (v === 'grid') {
+        grid.classList.add('beats-grid');
+        grid.classList.remove('beat-list');
+        btnG.classList.add('active');
+        btnL.classList.remove('active');
+        if (listHead) listHead.style.display = 'none';
+    } else {
+        grid.classList.remove('beats-grid');
+        grid.classList.add('beat-list');
+        btnG.classList.remove('active');
+        btnL.classList.add('active');
+        if (listHead) listHead.style.display = 'grid';
+    }
+    renderCatalog();
+}
+
 function toggleMobileMenu() {
     document.getElementById('mobile-menu').classList.toggle('open');
+}
+
+// Keyboard shortcut ⌘K / Ctrl+K → focus search
+document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        document.getElementById('filter-search')?.focus();
+    }
+});
+
+// Pre-fill search from URL param
+const urlSearch = new URLSearchParams(location.search).get('search');
+if (urlSearch) {
+    document.addEventListener('DOMContentLoaded', () => {
+        const inp = document.getElementById('filter-search');
+        if (inp) { inp.value = urlSearch; }
+    });
 }
 </script>
 </body>

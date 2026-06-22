@@ -843,6 +843,109 @@
             .steps { grid-template-columns: 1fr; }
             .section-sub { max-width: 100%; }
         }
+
+        /* ── HERO SEARCH ───────────────────────────────────────── */
+        .hero-search { margin-top: 36px; width: 100%; max-width: 620px; position: relative; z-index: 1; }
+        .hero-search-wrap {
+            display: flex; align-items: center; gap: 0;
+            background: rgba(255,255,255,.05);
+            border: 1.5px solid rgba(255,255,255,.1);
+            border-radius: 14px; padding: 0 6px 0 20px;
+            transition: border-color .2s, background .2s;
+        }
+        .hero-search-wrap:focus-within { border-color: rgba(78,205,196,.45); background: rgba(255,255,255,.07); }
+        .hero-search-wrap > i { color: #3a4556; font-size: 15px; flex-shrink: 0; }
+        .hero-search-wrap input {
+            flex: 1; background: none; border: none; color: #fff;
+            font-size: 15px; font-family: 'Inter', sans-serif;
+            padding: 16px 14px; outline: none;
+        }
+        .hero-search-wrap input::placeholder { color: #3a4556; }
+        .hero-search-btn {
+            background: var(--accent-celeste); color: #000; border: none;
+            font-size: 13px; font-weight: 700; font-family: 'Inter', sans-serif;
+            padding: 10px 20px; border-radius: 10px; cursor: pointer;
+            transition: opacity .2s; white-space: nowrap; flex-shrink: 0;
+        }
+        .hero-search-btn:hover { opacity: .85; }
+        .hero-search-tags { display: flex; align-items: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; justify-content: center; }
+        .hero-search-tags span { font-size: 12px; color: #3a4556; }
+        .hero-tag-link {
+            font-size: 12px; color: #94a3b8; text-decoration: none;
+            background: rgba(255,255,255,.04); border: 1px solid #1c232b;
+            padding: 4px 12px; border-radius: 999px; transition: .15s;
+        }
+        .hero-tag-link:hover { color: var(--accent-celeste); border-color: rgba(78,205,196,.3); }
+
+        /* ── EXPLORE TABS ──────────────────────────────────────── */
+        .explore-section { padding: 72px 40px; background: #0d1017; border-top: 1px solid #1c232b; border-bottom: 1px solid #1c232b; }
+        .explore-tabs-bar {
+            display: flex; align-items: center; gap: 0;
+            border-bottom: 1px solid #1c232b; margin-bottom: 40px;
+            overflow-x: auto; scrollbar-width: none;
+        }
+        .explore-tabs-bar::-webkit-scrollbar { display: none; }
+        .explore-tab-btn {
+            background: none; border: none; color: #94a3b8;
+            font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif;
+            padding: 14px 22px; cursor: pointer;
+            border-bottom: 2px solid transparent; margin-bottom: -1px;
+            transition: .2s; white-space: nowrap;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .explore-tab-btn:hover { color: #fff; }
+        .explore-tab-btn.active { color: #fff; border-bottom-color: var(--accent-celeste); }
+        .tab-count {
+            background: rgba(255,255,255,.06); color: #3a4556;
+            font-size: 11px; padding: 2px 7px; border-radius: 999px;
+        }
+        .explore-tab-btn.active .tab-count { background: rgba(78,205,196,.12); color: var(--accent-celeste); }
+        .explore-tab-panel { display: none; }
+        .explore-tab-panel.active { display: block; }
+
+        /* Home beat cards */
+        .home-beats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px,1fr)); gap: 16px; margin-bottom: 32px; }
+        .home-beat-card {
+            background: #11151a; border: 1px solid #1c232b; border-radius: 14px;
+            overflow: hidden; cursor: pointer;
+            transition: border-color .2s, transform .2s; display: block; text-decoration: none;
+        }
+        .home-beat-card:hover { border-color: rgba(78,205,196,.3); transform: translateY(-3px); }
+        .home-beat-cover { aspect-ratio: 1/1; overflow: hidden; background: #1c232b; position: relative; }
+        .home-beat-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+        .home-beat-card:hover .home-beat-cover img { transform: scale(1.05); }
+        .home-beat-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .2s; }
+        .home-beat-card:hover .home-beat-overlay { opacity: 1; }
+        .home-play-circle { width: 44px; height: 44px; border-radius: 50%; background: var(--accent-celeste); display: flex; align-items: center; justify-content: center; color: #000; font-size: 15px; }
+        .home-beat-body { padding: 12px 14px 14px; }
+        .home-beat-title { font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+        .home-beat-meta { font-size: 11px; color: #94a3b8; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .home-beat-genre { font-size: 10px; font-weight: 700; color: var(--accent-celeste); background: rgba(78,205,196,.1); border: 1px solid rgba(78,205,196,.2); padding: 2px 7px; border-radius: 999px; }
+        .home-beat-price-btn {
+            width: 100%; background: none; border: 1px solid rgba(78,205,196,.3);
+            color: var(--accent-celeste); border-radius: 8px; font-size: 12px; font-weight: 700;
+            font-family: 'Inter', sans-serif; padding: 7px; cursor: pointer;
+            transition: .2s; display: flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none;
+        }
+        .home-beat-price-btn:hover { background: var(--accent-celeste); color: #000; border-color: var(--accent-celeste); }
+        .see-all-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: var(--accent-celeste); font-size: 14px; font-weight: 600;
+            text-decoration: none; border: 1px solid rgba(78,205,196,.2);
+            padding: 10px 22px; border-radius: 10px; transition: .2s;
+        }
+        .see-all-btn:hover { background: rgba(78,205,196,.07); }
+        .coming-soon { text-align: center; padding: 80px 20px; }
+        .coming-soon i { font-size: 44px; color: #1c232b; margin-bottom: 20px; display: block; }
+        .coming-soon h3 { font-size: 18px; font-weight: 700; color: #3a4556; margin-bottom: 10px; }
+        .coming-soon p { font-size: 14px; color: #2a3340; line-height: 1.7; max-width: 340px; margin: 0 auto; }
+
+        @media (max-width: 700px) {
+            .hero-search { max-width: 100%; }
+            .home-beats-grid { grid-template-columns: repeat(2,1fr); gap: 10px; }
+            .explore-section { padding: 48px 20px; }
+            .explore-tab-btn { padding: 12px 14px; font-size: 13px; }
+        }
     </style>
 </head>
 <script>sessionStorage.removeItem('bp_state'); sessionStorage.removeItem('bp_time');</script>
@@ -853,7 +956,7 @@
     <nav class="nav-container nav-grid">
         <div class="logo">Alsx<span>Beats</span></div>
         <ul class="nav-links nav-center">
-            <li><a href="catalog.html">Catálogo</a></li>
+            <li><a href="catalog.html">Tracks</a></li>
             <li><a href="#contacto">Contacto</a></li>
         </ul>
         <div id="auth-widget" class="nav-right">
@@ -865,7 +968,7 @@
         </button>
     </nav>
     <div class="mobile-menu" id="mobile-menu">
-        <a href="catalog.html">Catálogo</a>
+        <a href="catalog.html">Tracks</a>
         <a href="#contacto" onclick="toggleMobileMenu()">Contacto</a>
         <div class="mobile-divider"></div>
         <div id="mobile-auth-links">
@@ -890,6 +993,21 @@
             <i class="fas fa-store"></i> Empieza a vender
         </button>
     </div>
+    <div class="hero-search">
+        <div class="hero-search-wrap">
+            <i class="fas fa-search"></i>
+            <input type="text" id="hero-search-input" placeholder="Busca tracks, géneros, artistas..." onkeydown="if(event.key==='Enter')heroSearch()">
+            <button class="hero-search-btn" onclick="heroSearch()">Buscar</button>
+        </div>
+        <div class="hero-search-tags">
+            <span>Popular:</span>
+            <a href="catalog.html?search=trap" class="hero-tag-link">Trap</a>
+            <a href="catalog.html?search=drill" class="hero-tag-link">Drill</a>
+            <a href="catalog.html?search=r%26b" class="hero-tag-link">R&B</a>
+            <a href="catalog.html?search=lo-fi" class="hero-tag-link">Lo-Fi</a>
+            <a href="catalog.html?search=afrobeats" class="hero-tag-link">Afrobeats</a>
+        </div>
+    </div>
 </section>
 
 <!-- ── STATS ──────────────────────────────────────────────────── -->
@@ -913,6 +1031,54 @@
         </div>
     </div>
 </div>
+
+<!-- ── EXPLORE TABS ────────────────────────────────────────── -->
+<section class="explore-section">
+    <div class="container">
+        <div class="explore-tabs-bar">
+            <button class="explore-tab-btn active" onclick="switchExploreTab(this,'tracks')">
+                <i class="fas fa-music"></i> Tracks
+                <span class="tab-count" id="tab-count-tracks">—</span>
+            </button>
+            <button class="explore-tab-btn" onclick="switchExploreTab(this,'artists')">
+                <i class="fas fa-user-group"></i> Artists
+            </button>
+            <button class="explore-tab-btn" onclick="switchExploreTab(this,'collections')">
+                <i class="fas fa-layer-group"></i> Collections
+            </button>
+            <button class="explore-tab-btn" onclick="switchExploreTab(this,'soundkits')">
+                <i class="fas fa-drum"></i> Sound Kits
+            </button>
+        </div>
+
+        <div id="tab-panel-tracks" class="explore-tab-panel active">
+            <div class="home-beats-grid" id="home-beats-grid"></div>
+            <a href="catalog.html" class="see-all-btn">
+                Ver todos los tracks <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div id="tab-panel-artists" class="explore-tab-panel">
+            <div class="artists-scroll" id="home-artists-tab"></div>
+        </div>
+
+        <div id="tab-panel-collections" class="explore-tab-panel">
+            <div class="coming-soon">
+                <i class="fas fa-layer-group"></i>
+                <h3>Collections — Próximamente</h3>
+                <p>Packs curados de beats organizados por mood, género o proyecto. Próximamente disponible.</p>
+            </div>
+        </div>
+
+        <div id="tab-panel-soundkits" class="explore-tab-panel">
+            <div class="coming-soon">
+                <i class="fas fa-drum"></i>
+                <h3>Sound Kits — Próximamente</h3>
+                <p>Samples, drum kits y loops para producir tus propios beats desde cero.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- ── FEATURES ───────────────────────────────────────────────── -->
 <section class="features">
@@ -1070,7 +1236,7 @@
         <h2>¿Listo para crear<br>tu próximo hit?</h2>
         <p>Explora el catálogo completo, escucha previews y encuentra el beat perfecto para tu proyecto.</p>
         <a href="catalog.html" class="btn-hero-primary" style="display:inline-flex">
-            <i class="fas fa-headphones"></i> Explorar el Catálogo
+            <i class="fas fa-headphones"></i> Explorar Tracks
         </a>
     </div>
 </section>
@@ -1115,7 +1281,7 @@
             <h4>Navegación</h4>
             <ul>
                 <li><a href="index.html"><i class="fas fa-home"></i>Inicio</a></li>
-                <li><a href="catalog.html"><i class="fas fa-music"></i>Catálogo</a></li>
+                <li><a href="catalog.html"><i class="fas fa-music"></i>Tracks</a></li>
                 <li><a href="licencias.html"><i class="fas fa-file-contract"></i>Licencias</a></li>
                 <li><a href="#contacto"><i class="fas fa-envelope"></i>Contacto</a></li>
             </ul>
@@ -1176,13 +1342,77 @@
 
 <script src="js/cart.js"></script>
 <script>
-// Cargar stats de beats
+// Hero search
+function heroSearch() {
+    const q = (document.getElementById('hero-search-input')?.value || '').trim();
+    window.location.href = q ? `catalog.html?search=${encodeURIComponent(q)}` : 'catalog.html';
+}
+
+// Explore tabs
+function switchExploreTab(btn, tab) {
+    document.querySelectorAll('.explore-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.explore-tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-panel-' + tab)?.classList.add('active');
+    if (tab === 'artists') _loadHomeArtists();
+}
+
+let _homeArtistsLoaded = false;
+function _loadHomeArtists() {
+    if (_homeArtistsLoaded) return;
+    _homeArtistsLoaded = true;
+    fetch('/api/catalog/artists').then(r => r.json()).then(artists => {
+        const row = document.getElementById('home-artists-tab');
+        if (!row) return;
+        if (!artists.length) { row.innerHTML = '<p style="color:#3a4556;font-size:13px;padding:20px 0">Sin artistas aún.</p>'; return; }
+        row.innerHTML = artists.map(a => {
+            const initial = a.name.charAt(0).toUpperCase();
+            const avatarHTML = a.avatar ? `<img src="${a.avatar}" alt="${a.name}" onerror="this.parentElement.innerHTML='${initial}'">` : initial;
+            return `<div class="artist-chip" onclick="window.location.href='catalog.html'">
+                <div class="artist-chip-avatar">${avatarHTML}</div>
+                <div class="artist-chip-name">${a.name}${a.verified ? '<i class="fas fa-circle-check" style="color:#3897f0;font-size:11px;margin-left:4px"></i>' : ''}</div>
+                <div class="artist-chip-genre">${(a.genres||[]).slice(0,2).join(' · ')}</div>
+            </div>`;
+        }).join('');
+    });
+}
+
+function _minPrice(beat) {
+    if (!beat.licenses) return null;
+    const p = Object.values(beat.licenses).map(l => l.price).filter(Boolean);
+    return p.length ? Math.min(...p) : null;
+}
+
+// Load home beats grid + stats
 fetch('/api/beats').then(r => r.json()).then(beats => {
     const el = document.getElementById('stat-beats');
     if (el) el.textContent = beats.length;
+    const countEl = document.getElementById('tab-count-tracks');
+    if (countEl) countEl.textContent = beats.length;
+
+    const grid = document.getElementById('home-beats-grid');
+    if (!grid) return;
+    const shown = beats.slice(0, 8);
+    grid.innerHTML = shown.map(beat => {
+        const cover = beat.image || 'assets/images/alsxbeatsportada.png';
+        const price = _minPrice(beat);
+        return `<div class="home-beat-card" onclick="window.location.href='catalog.html'">
+            <div class="home-beat-cover">
+                <img src="${cover}" alt="${beat.title}" onerror="this.src='assets/images/alsxbeatsportada.png'" loading="lazy">
+                <div class="home-beat-overlay"><div class="home-play-circle"><i class="fas fa-play"></i></div></div>
+            </div>
+            <div class="home-beat-body">
+                <div class="home-beat-title">${beat.title}</div>
+                <div class="home-beat-meta">${beat.genre ? `<span class="home-beat-genre">${beat.genre}</span>` : ''}${beat.bpm ? `<span>${beat.bpm} BPM</span>` : ''}</div>
+                <a href="licencias.html?beatId=${beat.id}" class="home-beat-price-btn" onclick="event.stopPropagation()">
+                    <i class="fas fa-bag-shopping"></i> ${price ? `€${price}` : 'Ver licencias'}
+                </a>
+            </div>
+        </div>`;
+    }).join('') || '<p style="color:#3a4556;padding:40px;text-align:center">No hay beats disponibles aún.</p>';
 });
 
-// Cargar artistas en la fila
+// Cargar artistas en la fila (sección existente)
 fetch('/api/catalog/artists').then(r => r.json()).then(artists => {
     const row = document.getElementById('artists-row');
     if (!artists.length) {
