@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4ecdc4"/>
+      <stop offset="100%" stop-color="#2980b9"/>
+    </linearGradient>
+  </defs>
+  <!-- Fondo redondeado -->
+  <rect width="32" height="32" rx="7" fill="#0b0d14"/>
+  <!-- Letra A estilizada -->
+  <text x="16" y="23" font-family="Inter, Arial Black, sans-serif" font-size="20" font-weight="900" text-anchor="middle" fill="url(#g)">A</text>
+  <!-- Línea de acento debajo -->
+  <rect x="10" y="26" width="12" height="2" rx="1" fill="#4ecdc4" opacity="0.6"/>
+</svg>
