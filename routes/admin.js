@@ -117,10 +117,11 @@ router.post('/beats', (req, res) => {
         preview: null,
         publishedAt: new Date().toISOString().split('T')[0],
         licenses: {
-            basic:     { price: parseInt(p.basic)     || 29,  label: 'Basic Lease',     formats: ['MP3'] },
-            premium:   { price: parseInt(p.premium)   || 59,  label: 'Premium Lease',   formats: ['WAV', 'MP3'] },
-            unlimited: { price: parseInt(p.unlimited) || 149, label: 'Unlimited Lease', formats: ['WAV', 'STEMS', 'MP3'] },
-            exclusive: { price: parseInt(p.exclusive) || 299, label: 'Exclusive Rights',formats: ['WAV', 'STEMS'] }
+            basic:     { price: parseFloat(p.basic)     || 29.99,  label: 'Basic Lease',     formats: ['MP3'] },
+            basicWav:  { price: parseFloat(p.basicWav)  || 38.99,  label: 'Basic Lease WAV', formats: ['WAV', 'MP3'] },
+            premium:   { price: parseFloat(p.premium)   || 75.99,  label: 'Premium Lease',   formats: ['WAV', 'STEMS', 'MP3'] },
+            unlimited: { price: parseFloat(p.unlimited) || 145.99, label: 'Unlimited Lease', formats: ['WAV', 'STEMS', 'MP3'] },
+            exclusive: { price: null,                               label: 'Exclusive Rights',formats: ['WAV', 'STEMS', 'MP3'] }
         }
     };
 
@@ -147,10 +148,11 @@ router.put('/beats/:id', (req, res) => {
         key:    key    || beats[idx].key,
         tags:   tagList.length ? tagList : beats[idx].tags,
         licenses: {
-            basic:     { ...beats[idx].licenses.basic,     price: parseInt(p.basic)     || beats[idx].licenses.basic.price },
-            premium:   { ...beats[idx].licenses.premium,   price: parseInt(p.premium)   || beats[idx].licenses.premium.price },
-            unlimited: { ...beats[idx].licenses.unlimited, price: parseInt(p.unlimited) || beats[idx].licenses.unlimited.price },
-            exclusive: { ...beats[idx].licenses.exclusive, price: parseInt(p.exclusive) || beats[idx].licenses.exclusive.price }
+            basic:     { ...beats[idx].licenses.basic,     price: parseFloat(p.basic)     || beats[idx].licenses.basic.price },
+            basicWav:  { ...beats[idx].licenses.basicWav,  price: parseFloat(p.basicWav)  || beats[idx].licenses.basicWav?.price || 38.99 },
+            premium:   { ...beats[idx].licenses.premium,   price: parseFloat(p.premium)   || beats[idx].licenses.premium.price },
+            unlimited: { ...beats[idx].licenses.unlimited, price: parseFloat(p.unlimited) || beats[idx].licenses.unlimited.price },
+            exclusive: { ...beats[idx].licenses.exclusive, price: parseFloat(p.exclusive) || beats[idx].licenses.exclusive.price }
         }
     };
 
@@ -206,7 +208,7 @@ router.post('/beats/:beatId/license/:licenseType', privateUpload.single('file'),
 
 // GET /api/admin/beats/:beatId/files — qué archivos privados tiene cada tier
 router.get('/beats/:beatId/files', (req, res) => {
-    const tiers = ['basic', 'premium', 'unlimited', 'exclusive'];
+    const tiers = ['basic', 'basicWav', 'premium', 'unlimited', 'exclusive'];
     const result = {};
     tiers.forEach(t => {
         const dir = path.join(__dirname, '../private/beats', req.params.beatId, t);

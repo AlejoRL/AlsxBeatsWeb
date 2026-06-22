@@ -151,9 +151,10 @@ router.post('/create-session', async (req, res) => {
         const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
 
         for (const item of items) {
+            if (item.licenseType === 'exclusive') continue;
             const beat = beats.find(b => b.id === item.beatId);
             const license = beat?.licenses[item.licenseType];
-            if (!beat || !license) continue;
+            if (!beat || !license || !license.price) continue;
 
             lineItems.push({
                 price_data: {
@@ -163,7 +164,7 @@ router.post('/create-session', async (req, res) => {
                         description: `Formatos incluidos: ${license.formats.join(', ')}`,
                         images: beat.image ? [`${baseUrl}/${beat.image}`] : []
                     },
-                    unit_amount: license.price * 100
+                    unit_amount: Math.round(license.price * 100)
                 },
                 quantity: 1
             });

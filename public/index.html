@@ -844,39 +844,6 @@
             .section-sub { max-width: 100%; }
         }
 
-        /* ── HERO SEARCH ───────────────────────────────────────── */
-        .hero-search { margin-top: 36px; width: 100%; max-width: 620px; position: relative; z-index: 1; }
-        .hero-search-wrap {
-            display: flex; align-items: center; gap: 0;
-            background: rgba(255,255,255,.05);
-            border: 1.5px solid rgba(255,255,255,.1);
-            border-radius: 14px; padding: 0 6px 0 20px;
-            transition: border-color .2s, background .2s;
-        }
-        .hero-search-wrap:focus-within { border-color: rgba(78,205,196,.45); background: rgba(255,255,255,.07); }
-        .hero-search-wrap > i { color: #3a4556; font-size: 15px; flex-shrink: 0; }
-        .hero-search-wrap input {
-            flex: 1; background: none; border: none; color: #fff;
-            font-size: 15px; font-family: 'Inter', sans-serif;
-            padding: 16px 14px; outline: none;
-        }
-        .hero-search-wrap input::placeholder { color: #3a4556; }
-        .hero-search-btn {
-            background: var(--accent-celeste); color: #000; border: none;
-            font-size: 13px; font-weight: 700; font-family: 'Inter', sans-serif;
-            padding: 10px 20px; border-radius: 10px; cursor: pointer;
-            transition: opacity .2s; white-space: nowrap; flex-shrink: 0;
-        }
-        .hero-search-btn:hover { opacity: .85; }
-        .hero-search-tags { display: flex; align-items: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; justify-content: center; }
-        .hero-search-tags span { font-size: 12px; color: #3a4556; }
-        .hero-tag-link {
-            font-size: 12px; color: #94a3b8; text-decoration: none;
-            background: rgba(255,255,255,.04); border: 1px solid #1c232b;
-            padding: 4px 12px; border-radius: 999px; transition: .15s;
-        }
-        .hero-tag-link:hover { color: var(--accent-celeste); border-color: rgba(78,205,196,.3); }
-
         /* ── EXPLORE TABS ──────────────────────────────────────── */
         .explore-section { padding: 72px 40px; background: #0d1017; border-top: 1px solid #1c232b; border-bottom: 1px solid #1c232b; }
         .explore-tabs-bar {
@@ -941,7 +908,6 @@
         .coming-soon p { font-size: 14px; color: #2a3340; line-height: 1.7; max-width: 340px; margin: 0 auto; }
 
         @media (max-width: 700px) {
-            .hero-search { max-width: 100%; }
             .home-beats-grid { grid-template-columns: repeat(2,1fr); gap: 10px; }
             .explore-section { padding: 48px 20px; }
             .explore-tab-btn { padding: 12px 14px; font-size: 13px; }
@@ -955,10 +921,25 @@
 <header>
     <nav class="nav-container nav-grid">
         <div class="logo">Alsx<span>Beats</span></div>
-        <ul class="nav-links nav-center">
-            <li><a href="catalog.html">Tracks</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-        </ul>
+        <form class="nav-search-main" id="global-search-form">
+            <button type="button" class="nav-search-icon-btn" title="Buscar">
+                <i class="fas fa-search"></i>
+            </button>
+            <input type="text" id="global-search-input" placeholder="Buscar beats, géneros, moods…" autocomplete="off" spellcheck="false">
+            <div class="nav-search-type">
+                <button type="button" class="type-toggle" id="type-toggle-btn" onclick="toggleTypeDropdown()">
+                    <span id="type-label">TRACKS</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="type-dropdown" id="type-dropdown">
+                    <button type="button" onclick="selectType(this,'all','ALL')"><i class="fas fa-border-all"></i> All</button>
+                    <button type="button" class="active" onclick="selectType(this,'tracks','TRACKS')"><i class="fas fa-music"></i> Tracks</button>
+                    <button type="button" onclick="selectType(this,'artists','ARTISTS')"><i class="fas fa-user-group"></i> Artists</button>
+                    <button type="button" onclick="selectType(this,'collections','COLLECTIONS')"><i class="fas fa-layer-group"></i> Collections</button>
+                    <button type="button" onclick="selectType(this,'soundkits','SOUND KITS')"><i class="fas fa-drum"></i> Sound Kits</button>
+                </div>
+            </div>
+        </form>
         <div id="auth-widget" class="nav-right">
             <a href="login.html" style="color:#94a3b8;font-size:14px;font-weight:600;text-decoration:none;padding:8px 14px;">Iniciar sesión</a>
             <a href="register.html" style="background:#4ecdc4;color:#000;font-size:13px;font-weight:700;text-decoration:none;padding:8px 18px;border-radius:8px;">Registrarse</a>
@@ -992,21 +973,6 @@
         <button onclick="openPlans()" class="btn-hero-secondary">
             <i class="fas fa-store"></i> Empieza a vender
         </button>
-    </div>
-    <div class="hero-search">
-        <div class="hero-search-wrap">
-            <i class="fas fa-search"></i>
-            <input type="text" id="hero-search-input" placeholder="Busca tracks, géneros, artistas..." onkeydown="if(event.key==='Enter')heroSearch()">
-            <button class="hero-search-btn" onclick="heroSearch()">Buscar</button>
-        </div>
-        <div class="hero-search-tags">
-            <span>Popular:</span>
-            <a href="catalog.html?search=trap" class="hero-tag-link">Trap</a>
-            <a href="catalog.html?search=drill" class="hero-tag-link">Drill</a>
-            <a href="catalog.html?search=r%26b" class="hero-tag-link">R&B</a>
-            <a href="catalog.html?search=lo-fi" class="hero-tag-link">Lo-Fi</a>
-            <a href="catalog.html?search=afrobeats" class="hero-tag-link">Afrobeats</a>
-        </div>
     </div>
 </section>
 
@@ -1341,13 +1307,8 @@
 </footer>
 
 <script src="js/cart.js"></script>
+<script src="js/global-search.js"></script>
 <script>
-// Hero search
-function heroSearch() {
-    const q = (document.getElementById('hero-search-input')?.value || '').trim();
-    window.location.href = q ? `catalog.html?search=${encodeURIComponent(q)}` : 'catalog.html';
-}
-
 // Explore tabs
 function switchExploreTab(btn, tab) {
     document.querySelectorAll('.explore-tab-btn').forEach(b => b.classList.remove('active'));
@@ -1636,5 +1597,6 @@ function toggleMobileMenu() {
     document.getElementById('mobile-menu').classList.toggle('open');
 }
 </script>
+<script src="js/cookie-banner.js"></script>
 </body>
 </html>

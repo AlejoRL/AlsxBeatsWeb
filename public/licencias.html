@@ -443,13 +443,13 @@ textarea:focus {
 
     <div class="license-grid">
 
-        <div class="license-card active" data-price="29.99" data-type="basic-mp3">
+        <div class="license-card active" data-price="29.99" data-type="basic">
             <h3>Basic Lease</h3>
             <div class="license-price">€29.99</div>
             <span>MP3</span>
         </div>
 
-        <div class="license-card" data-price="38.99" data-type="basic-wav">
+        <div class="license-card" data-price="38.99" data-type="basicWav">
             <h3>Basic Lease WAV</h3>
             <div class="license-price">€38.99</div>
             <span>WAV + MP3</span>
@@ -914,9 +914,9 @@ addToCartBtn.addEventListener('click', () => {
 
 function priceToLicenseType(price) {
     return {
-        '29.99': 'basic-mp3', '38.99': 'basic-wav',
+        '29.99': 'basic', '38.99': 'basicWav',
         '75.99': 'premium', '145.99': 'unlimited', 'exclusive': 'exclusive'
-    }[price] || 'basic-mp3';
+    }[price] || 'basic';
 }
 
 function setExclusiveMode(isExclusive) {
@@ -992,7 +992,7 @@ if (playerCartBtn) {
             title: document.getElementById('beat-title').textContent,
             image: document.getElementById('beat-img').src.replace(window.location.origin + '/', ''),
             license: activeLicense ? activeLicense.querySelector('h3').textContent : 'Basic Lease',
-            price: activeLicense ? activeLicense.dataset.price : '29'
+            price: activeLicense ? activeLicense.dataset.price : '29.99'
         };
 
         if (window.Cart) {
@@ -1077,7 +1077,7 @@ loadMoreBeats();
             <i class="fas fa-envelope" style="color:#4ecdc4;font-size:15px"></i>
             <div>
                 <div style="font-size:10px;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Email del productor</div>
-                <a href="mailto:torresaldasdiego2004@gmail.com" style="color:#fff;font-size:14px;font-weight:600;text-decoration:none">torresaldasdiego2004@gmail.com</a>
+                <a href="mailto:alsxbeats@gmail.com" style="color:#fff;font-size:14px;font-weight:600;text-decoration:none">alsxbeats@gmail.com</a>
             </div>
         </div>
 

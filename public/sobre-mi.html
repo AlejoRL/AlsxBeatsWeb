@@ -12,12 +12,11 @@
         :root{--bg:#0b0d14;--panel:#11151a;--accent:#4ecdc4;--border:#1c232b;--muted:#94a3b8}
         body{font-family:'Inter',sans-serif;background:var(--bg);color:#fff;min-height:100vh}
 
-        header{padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+        header{padding:18px 32px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--border)}
         .logo{font-size:20px;font-weight:900;text-decoration:none;color:#fff}
         .logo span{color:var(--accent)}
-        .back-link{font-size:13px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s}
+        .back-link{font-size:13px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s;margin-left:auto}
         .back-link:hover{color:#fff}
-
         .hero{
             max-width:900px;margin:0 auto;
             padding:80px 32px 60px;
@@ -134,12 +133,52 @@
             .stat{min-width:50%}
             .cta-box{padding:32px 24px}
         }
+        .nav-search-main{display:flex;align-items:center;background:rgba(255,255,255,.05);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1.5px solid rgba(255,255,255,.09);border-radius:12px;height:40px;flex:1;min-width:0;position:relative;overflow:visible;transition:border-color .25s}
+        .nav-search-main:focus-within{border-color:rgba(78,205,196,.45);box-shadow:0 0 0 3px rgba(78,205,196,.08)}
+        .nav-search-icon-btn{width:40px;height:100%;background:none;border:none;border-right:1px solid rgba(255,255,255,.07);color:rgba(78,205,196,.55);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:color .2s}
+        .nav-search-icon-btn:hover,.nav-search-main:focus-within .nav-search-icon-btn{color:#4ecdc4}
+        .nav-search-main input{flex:1;background:none;border:none;outline:none;color:#fff;font-size:14px;font-family:'Inter',sans-serif;padding:0 12px;min-width:0}
+        .nav-search-main input::placeholder{color:rgba(148,163,184,.4)}
+        .nav-search-type{position:relative;height:100%;display:flex;align-items:center;flex-shrink:0;border-left:1px solid rgba(255,255,255,.07)}
+        .type-toggle{display:flex;align-items:center;gap:6px;background:none;border:none;color:#94a3b8;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;letter-spacing:.08em;padding:0 12px;height:100%;cursor:pointer;transition:color .2s;white-space:nowrap;border-radius:0 10px 10px 0}
+        .type-toggle i{font-size:9px;transition:transform .2s}
+        .type-toggle:hover{color:#fff}
+        .type-toggle.open{color:#4ecdc4}
+        .type-toggle.open i{transform:rotate(180deg)}
+        .type-dropdown{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#11151a;border:1px solid #1c232b;border-radius:12px;padding:6px;min-width:180px;box-shadow:0 20px 60px rgba(0,0,0,.6);z-index:9999}
+        .type-dropdown.open{display:block}
+        .type-dropdown button{width:100%;background:none;border:none;color:#94a3b8;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;padding:9px 12px;border-radius:8px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:.15s}
+        .type-dropdown button i{color:#3a4556;font-size:12px;width:14px;text-align:center}
+        .type-dropdown button:hover{background:rgba(255,255,255,.05);color:#fff}
+        .type-dropdown button:hover i{color:#4ecdc4}
+        .type-dropdown button.active{color:#4ecdc4;background:rgba(78,205,196,.07)}
+        .type-dropdown button.active i{color:#4ecdc4}
+        @media(max-width:600px){.nav-search-main{display:none}}
     </style>
 </head>
 <body>
 
 <header>
     <a href="index.html" class="logo">Alsx<span>Beats</span></a>
+    <form class="nav-search-main" id="global-search-form">
+        <button type="button" class="nav-search-icon-btn" title="Buscar">
+            <i class="fas fa-search"></i>
+        </button>
+        <input type="text" id="global-search-input" placeholder="Buscar beats, géneros, moods…" autocomplete="off" spellcheck="false">
+        <div class="nav-search-type">
+            <button type="button" class="type-toggle" id="type-toggle-btn" onclick="toggleTypeDropdown()">
+                <span id="type-label">TRACKS</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="type-dropdown" id="type-dropdown">
+                <button type="button" onclick="selectType(this,'all','ALL')"><i class="fas fa-border-all"></i> All</button>
+                <button type="button" class="active" onclick="selectType(this,'tracks','TRACKS')"><i class="fas fa-music"></i> Tracks</button>
+                <button type="button" onclick="selectType(this,'artists','ARTISTS')"><i class="fas fa-user-group"></i> Artists</button>
+                <button type="button" onclick="selectType(this,'collections','COLLECTIONS')"><i class="fas fa-layer-group"></i> Collections</button>
+                <button type="button" onclick="selectType(this,'soundkits','SOUND KITS')"><i class="fas fa-drum"></i> Sound Kits</button>
+            </div>
+        </div>
+    </form>
     <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
 </header>
 
@@ -294,5 +333,7 @@ fetch('/api/beats').then(r => r.json()).then(beats => {
     if (el && beats.length) el.textContent = beats.length;
 });
 </script>
+<script src="js/global-search.js"></script>
+<script src="js/cookie-banner.js"></script>
 </body>
 </html>

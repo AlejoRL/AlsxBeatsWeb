@@ -27,47 +27,6 @@
         * { box-sizing: border-box; }
         body { padding-bottom: 100px; }
 
-        /* ── SEARCH BAR ─────────────────────────────────────────── */
-        .tracks-search-bar {
-            background: #0d1017;
-            border-bottom: 1px solid #1c232b;
-            padding: 16px 32px;
-        }
-        .tracks-search-wrap {
-            max-width: 860px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: #11151a;
-            border: 1.5px solid #1c232b;
-            border-radius: 12px;
-            padding: 0 18px;
-            transition: border-color .2s;
-        }
-        .tracks-search-wrap:focus-within { border-color: var(--accent-celeste); }
-        .tracks-search-wrap > i { color: #3a4556; font-size: 15px; flex-shrink: 0; }
-        .tracks-search-wrap input {
-            flex: 1;
-            background: none;
-            border: none;
-            outline: none;
-            color: #fff;
-            font-size: 15px;
-            font-family: 'Inter', sans-serif;
-            padding: 14px 0;
-        }
-        .tracks-search-wrap input::placeholder { color: #3a4556; }
-        .search-kbd {
-            font-size: 11px;
-            color: #3a4556;
-            background: #1c232b;
-            border-radius: 5px;
-            padding: 2px 6px;
-            font-family: monospace;
-            flex-shrink: 0;
-        }
-
         /* ── LAYOUT ─────────────────────────────────────────────── */
         .tracks-body {
             max-width: 1320px;
@@ -460,10 +419,25 @@
 <header>
     <nav class="nav-container nav-grid">
         <a href="index.html" class="logo">Alsx<span>Beats</span></a>
-        <ul class="nav-links nav-center">
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="index.html#contacto">Contacto</a></li>
-        </ul>
+        <form class="nav-search-main" id="global-search-form">
+            <button type="button" class="nav-search-icon-btn" title="Buscar">
+                <i class="fas fa-search"></i>
+            </button>
+            <input type="text" id="filter-search" placeholder="Buscar beats, géneros, moods…" autocomplete="off" spellcheck="false">
+            <div class="nav-search-type">
+                <button type="button" class="type-toggle" id="type-toggle-btn" onclick="toggleTypeDropdown()">
+                    <span id="type-label">TRACKS</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="type-dropdown" id="type-dropdown">
+                    <button type="button" onclick="selectType(this,'all','ALL')"><i class="fas fa-border-all"></i> All</button>
+                    <button type="button" class="active" onclick="selectType(this,'tracks','TRACKS')"><i class="fas fa-music"></i> Tracks</button>
+                    <button type="button" onclick="selectType(this,'artists','ARTISTS')"><i class="fas fa-user-group"></i> Artists</button>
+                    <button type="button" onclick="selectType(this,'collections','COLLECTIONS')"><i class="fas fa-layer-group"></i> Collections</button>
+                    <button type="button" onclick="selectType(this,'soundkits','SOUND KITS')"><i class="fas fa-drum"></i> Sound Kits</button>
+                </div>
+            </div>
+        </form>
         <div id="auth-widget" class="nav-right">
             <a href="login.html" style="color:#94a3b8;font-size:14px;font-weight:600;text-decoration:none;padding:8px 14px;">Iniciar sesión</a>
             <a href="register.html" style="background:#4ecdc4;color:#000;font-size:13px;font-weight:700;text-decoration:none;padding:8px 18px;border-radius:8px;">Registrarse</a>
@@ -480,14 +454,6 @@
         <a href="register.html" class="mobile-register">Registrarse</a>
     </div>
 </header>
-
-<div class="tracks-search-bar">
-    <div class="tracks-search-wrap">
-        <i class="fas fa-search"></i>
-        <input type="text" id="filter-search" placeholder="Busca tracks por título, género o tags..." autocomplete="off">
-        <span class="search-kbd">⌘K</span>
-    </div>
-</div>
 
 <div class="tracks-body">
 
@@ -577,6 +543,7 @@
 <script src="js/main.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/catalog.js"></script>
+<script src="js/global-search.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/cookies.js"></script>
 <script src="https://unpkg.com/wavesurfer.js@6.6.4/dist/wavesurfer.js"></script>
@@ -618,14 +585,7 @@ document.addEventListener('keydown', e => {
     }
 });
 
-// Pre-fill search from URL param
-const urlSearch = new URLSearchParams(location.search).get('search');
-if (urlSearch) {
-    document.addEventListener('DOMContentLoaded', () => {
-        const inp = document.getElementById('filter-search');
-        if (inp) { inp.value = urlSearch; }
-    });
-}
 </script>
+<script src="js/cookie-banner.js"></script>
 </body>
 </html>

@@ -69,7 +69,68 @@ const Cart = {
             document.body.appendChild(div);
         }
 
-        // El checkout real lo gestiona Stripe (redireccion externa)
+        // 3. Consent Modal (desistimiento waiver — TRLGDCU art. 103.m)
+        if (!document.getElementById('consent-modal')) {
+            const style = document.createElement('style');
+            style.textContent = `
+                #consent-modal{display:none;position:fixed;inset:0;z-index:99998;align-items:center;justify-content:center}
+                #consent-modal.active{display:flex}
+                #consent-modal .cm-overlay{position:absolute;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px)}
+                #consent-modal .cm-box{position:relative;z-index:1;background:#11151a;border:1px solid #1c232b;border-radius:16px;padding:32px;max-width:480px;width:calc(100% - 48px);max-height:90vh;overflow-y:auto}
+                #consent-modal h3{font-size:18px;font-weight:700;color:#fff;margin-bottom:20px}
+                #consent-modal .cm-items{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+                #consent-modal .cm-item{display:flex;justify-content:space-between;font-size:14px;color:#94a3b8;border-bottom:1px solid #1c232b;padding-bottom:10px}
+                #consent-modal .cm-item strong{color:#fff;max-width:70%}
+                #consent-modal .cm-total{display:flex;justify-content:space-between;font-size:15px;font-weight:700;color:#fff;margin-bottom:24px}
+                #consent-modal .cm-consent{display:flex;gap:12px;align-items:flex-start;background:#0b0d14;border:1px solid #1c232b;border-radius:10px;padding:16px;margin-bottom:24px}
+                #consent-modal .cm-consent input[type=checkbox]{width:18px;height:18px;min-width:18px;margin-top:2px;accent-color:#4ecdc4;cursor:pointer}
+                #consent-modal .cm-consent label{font-size:13px;color:#94a3b8;line-height:1.6;cursor:pointer}
+                #consent-modal .cm-consent label a{color:#4ecdc4;text-decoration:none}
+                #consent-modal .cm-actions{display:flex;gap:12px}
+                #consent-modal .cm-cancel{flex:1;padding:12px;border:1px solid #1c232b;background:transparent;color:#94a3b8;border-radius:10px;font-size:14px;cursor:pointer;transition:.2s}
+                #consent-modal .cm-cancel:hover{border-color:#fff;color:#fff}
+                #consent-modal .cm-pay{flex:2;padding:12px;background:#4ecdc4;color:#0b0d14;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+                #consent-modal .cm-pay:disabled{background:#1c232b;color:#3a4556;cursor:not-allowed}
+                #consent-modal .cm-pay:not(:disabled):hover{background:#3db8b0}
+                #consent-modal .spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.3);border-top-color:#0b0d14;border-radius:50%;animation:spin .7s linear infinite}
+                @keyframes spin{to{transform:rotate(360deg)}}
+            `;
+            document.head.appendChild(style);
+
+            const modal = document.createElement('div');
+            modal.id = 'consent-modal';
+            modal.innerHTML = `
+                <div class="cm-overlay" id="cm-overlay"></div>
+                <div class="cm-box">
+                    <h3>Confirmar pedido</h3>
+                    <div class="cm-items" id="cm-items-list"></div>
+                    <div class="cm-total">
+                        <span>Total</span>
+                        <span id="cm-total-price"></span>
+                    </div>
+                    <div class="cm-consent">
+                        <input type="checkbox" id="cm-checkbox">
+                        <label for="cm-checkbox">
+                            Consiento que la entrega del contenido digital comience de forma inmediata tras el pago y reconozco que, una vez iniciada la descarga, <strong>renuncio a mi derecho de desistimiento de 14 días</strong> conforme al art.&nbsp;103.m) del Real Decreto Legislativo 1/2007 (TRLGDCU). He leído y acepto los <a href="terminos.html" target="_blank">Términos de uso</a>.
+                        </label>
+                    </div>
+                    <div class="cm-actions">
+                        <button class="cm-cancel" id="cm-cancel-btn">Cancelar</button>
+                        <button class="cm-pay" id="cm-pay-btn" disabled>
+                            <i class="fas fa-lock"></i> Confirmar y pagar
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            document.getElementById('cm-cancel-btn').addEventListener('click', () => Cart.closeConsentModal());
+            document.getElementById('cm-overlay').addEventListener('click', () => Cart.closeConsentModal());
+            document.getElementById('cm-checkbox').addEventListener('change', function() {
+                document.getElementById('cm-pay-btn').disabled = !this.checked;
+            });
+            document.getElementById('cm-pay-btn').addEventListener('click', () => Cart.proceedToStripe());
+        }
 
         // 4. Toast Notifications
         if (!document.getElementById('cart-toast')) {
@@ -93,7 +154,7 @@ const Cart = {
         if (closeBtn)      closeBtn.addEventListener('click', () => this.toggle());
         if (overlay)       overlay.addEventListener('click', () => this.toggle());
         if (applyPromoBtn) applyPromoBtn.addEventListener('click', () => this.applyPromo());
-        if (checkoutBtn)   checkoutBtn.addEventListener('click', () => this.openCheckout());
+        if (checkoutBtn)   checkoutBtn.addEventListener('click', () => this.showConsentModal());
     },
 
     get() {
@@ -288,14 +349,50 @@ const Cart = {
         input.value = '';
     },
 
-    openCheckout() {
+    showConsentModal() {
         const cart = this.get();
         if (!cart.length) return;
 
-        const checkoutBtn = document.getElementById('checkout-btn');
-        const originalHTML = checkoutBtn.innerHTML;
-        checkoutBtn.innerHTML = '<span class="spinner"></span> Redirigiendo a Stripe...';
-        checkoutBtn.disabled = true;
+        const subtotal = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
+        let total = subtotal;
+        if (this.discountPercent > 0) total = subtotal * (1 - this.discountPercent / 100);
+
+        const itemsList = document.getElementById('cm-items-list');
+        if (itemsList) {
+            itemsList.innerHTML = cart.map(item => `
+                <div class="cm-item">
+                    <strong>${item.title}</strong>
+                    <span>${item.license} — €${item.price}</span>
+                </div>
+            `).join('');
+        }
+        const totalEl = document.getElementById('cm-total-price');
+        if (totalEl) totalEl.textContent = `€${total.toFixed(0)}`;
+
+        const checkbox = document.getElementById('cm-checkbox');
+        if (checkbox) checkbox.checked = false;
+        const payBtn = document.getElementById('cm-pay-btn');
+        if (payBtn) {
+            payBtn.disabled = true;
+            payBtn.innerHTML = '<i class="fas fa-lock"></i> Confirmar y pagar';
+        }
+
+        const modal = document.getElementById('consent-modal');
+        if (modal) modal.classList.add('active');
+    },
+
+    closeConsentModal() {
+        const modal = document.getElementById('consent-modal');
+        if (modal) modal.classList.remove('active');
+    },
+
+    proceedToStripe() {
+        const cart = this.get();
+        if (!cart.length) return;
+
+        const payBtn = document.getElementById('cm-pay-btn');
+        if (payBtn) payBtn.innerHTML = '<span class="spinner"></span> Redirigiendo...';
+        if (payBtn) payBtn.disabled = true;
 
         const items = cart.map(item => ({
             beatId: item.beatId,
@@ -316,16 +413,19 @@ const Cart = {
             }
         })
         .catch(err => {
-            checkoutBtn.innerHTML = originalHTML;
-            checkoutBtn.disabled = false;
+            if (payBtn) {
+                payBtn.innerHTML = '<i class="fas fa-lock"></i> Confirmar y pagar';
+                payBtn.disabled = false;
+            }
             this.showToast('Error al conectar con el sistema de pago. Intenta de nuevo.', true);
             console.error('Checkout error:', err);
         });
     },
 
+    openCheckout() { this.showConsentModal(); },
+
     closeCheckout() {
-        const modal = document.getElementById('checkout-modal');
-        if (modal) modal.classList.remove('active');
+        this.closeConsentModal();
     },
 
     submitPayment() {},
