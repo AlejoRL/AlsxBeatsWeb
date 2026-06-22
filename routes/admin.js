@@ -182,8 +182,20 @@ router.post('/beats/:id/preview', previewUpload.single('audio'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Sin archivo' });
     const beats = readBeats();
     const idx = beats.findIndex(b => b.id === req.params.id);
-    if (idx !== -1) { beats[idx].preview = `assets/audio/${req.file.filename}`; writeBeats(beats); }
+    if (idx !== -1) { beats[idx].preview = `assets/audio/${req.file.filename}`; beats[idx].peaks = null; writeBeats(beats); }
     res.json({ path: `assets/audio/${req.file.filename}` });
+});
+
+// POST /api/admin/beats/:id/peaks
+router.post('/beats/:id/peaks', express.json({ limit: '64kb' }), (req, res) => {
+    const peaks = req.body?.peaks;
+    if (!Array.isArray(peaks) || peaks.length < 10) return res.status(400).json({ error: 'Peaks inválidos' });
+    const beats = readBeats();
+    const idx = beats.findIndex(b => b.id === req.params.id);
+    if (idx === -1) return res.status(404).json({ error: 'Beat no encontrado' });
+    beats[idx].peaks = peaks.map(v => Math.round(v * 1000) / 1000);
+    writeBeats(beats);
+    res.json({ ok: true });
 });
 
 // POST /api/admin/beats/:beatId/license/:licenseType

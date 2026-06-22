@@ -163,7 +163,7 @@
         bpPlayIcon.className = 'fas fa-play';
     };
 
-    window.bpLoad = function (src, title, cover, row, price) {
+    window.bpLoad = function (src, title, cover, row, price, peaks) {
         if (currentRow) currentRow.classList.remove('playing');
         currentRow    = row;
         currentBeatId = row ? row.dataset.id : null;
@@ -180,12 +180,13 @@
         if (priceEl) priceEl.textContent = price ? `€${price}` : '';
 
         sessionStorage.setItem('bp_state', JSON.stringify({
-            src, title, cover, beatId: currentBeatId, price: price || null
+            src, title, cover, beatId: currentBeatId, price: price || null, peaks: peaks || null
         }));
         sessionStorage.setItem('bp_time', '0');
         lastSavedSec = -1;
 
-        ws.load(src);
+        const loadPeaks = Array.isArray(peaks) && peaks.length ? [peaks] : null;
+        ws.load(src, loadPeaks);
         updateLike();
     };
 
@@ -201,7 +202,8 @@
         if (buyBtn) buyBtn.href = saved.beatId ? `licencias.html?beatId=${saved.beatId}` : '#';
         if (priceEl) priceEl.textContent = saved.price ? `€${saved.price}` : '';
         updateLike();
-        ws.load(saved.src);
+        const savedPeaks = Array.isArray(saved.peaks) && saved.peaks.length ? [saved.peaks] : null;
+        ws.load(saved.src, savedPeaks);
     }
 
 })();

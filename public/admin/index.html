@@ -702,6 +702,25 @@ async function openBeatFiles(id) {
     openModal('modal-files');
 }
 
+async function extractPeaks(file, numBars = 200) {
+    const buf = await file.arrayBuffer();
+    const ctx = new AudioContext();
+    const audio = await ctx.decodeAudioData(buf);
+    const data = audio.getChannelData(0);
+    const block = Math.floor(data.length / numBars);
+    const peaks = [];
+    for (let i = 0; i < numBars; i++) {
+        let max = 0;
+        for (let j = 0; j < block; j++) {
+            const v = Math.abs(data[i * block + j]);
+            if (v > max) max = v;
+        }
+        peaks.push(max);
+    }
+    await ctx.close();
+    return peaks;
+}
+
 async function uploadBeatFile(type) {
     const input = document.getElementById(`input-${type}`);
     const file  = input.files[0];
@@ -714,8 +733,24 @@ async function uploadBeatFile(type) {
     const res  = await fetch(url, { method: 'POST', body: fd });
     const data = await res.json();
     if (res.ok) {
-        setStatus(`status-${type}`, '✅ Subido correctamente', 'ok');
-        if (type === 'cover') { document.getElementById('img-preview').src = `/${data.path}?t=${Date.now()}`; document.getElementById('img-preview').style.display = 'block'; }
+        if (type === 'cover') {
+            document.getElementById('img-preview').src = `/${data.path}?t=${Date.now()}`;
+            document.getElementById('img-preview').style.display = 'block';
+            setStatus('status-cover', '✅ Subido correctamente', 'ok');
+        } else {
+            setStatus('status-preview', '⏳ Generando forma de onda...', '');
+            try {
+                const peaks = await extractPeaks(file);
+                await fetch(`/api/admin/beats/${currentBeatId}/peaks`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ peaks })
+                });
+                setStatus('status-preview', '✅ Subido y forma de onda lista', 'ok');
+            } catch {
+                setStatus('status-preview', '✅ Subido (sin forma de onda)', 'ok');
+            }
+        }
         await loadBeats(); toast('Archivo subido ✓', 'ok');
     } else { setStatus(`status-${type}`, `❌ ${data.error}`, 'error'); }
 }

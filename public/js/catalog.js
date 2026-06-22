@@ -102,7 +102,7 @@ function renderCatalog() {
             : `<button class="btn-row-more" disabled style="opacity:.3;cursor:default" title="Sin descarga gratuita"><i class="fas fa-download"></i></button>`;
 
         return `
-        <div class="beat-row" data-id="${beat.id}" data-preview="${beat.preview || ''}" data-title="${escHtml(beat.title)}" data-img="${cover}" data-price="${price || ''}">
+        <div class="beat-row" data-id="${beat.id}" data-preview="${beat.preview || ''}" data-title="${escHtml(beat.title)}" data-img="${cover}" data-price="${price || ''}" data-peaks='${JSON.stringify(beat.peaks || [])}'>
             <button class="row-play" onclick="rowPlay(this)" title="Reproducir">
                 <i class="fas fa-play"></i>
             </button>
@@ -241,7 +241,8 @@ function rowPlay(btn) {
         window.location.href = `licencias.html?beatId=${row.dataset.id}`;
         return;
     }
-    window.bpLoad?.(preview, row.dataset.title, row.dataset.img, row, row.dataset.price);
+    const peaks = JSON.parse(row.dataset.peaks || '[]');
+    window.bpLoad?.(preview, row.dataset.title, row.dataset.img, row, row.dataset.price, peaks);
 }
 
 document.addEventListener('DOMContentLoaded', loadCatalog);
