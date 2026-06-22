@@ -73,7 +73,7 @@
         <p>
             Usamos cookies propias para mejorar tu experiencia y procesar pagos de forma segura.
             Al continuar navegando aceptas su uso.
-            <a href="privacidad.html">Más información</a>
+            <a href="privacidad.html#cookies">Más información</a>
         </p>
         <div class="cb-actions">
             <button class="cb-btn cb-reject" id="cb-reject">Solo necesarias</button>
