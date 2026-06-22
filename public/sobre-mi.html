@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre mí — AlsxBeats</title>
+    <title>Sobre AlsxBeats — Premium Beats Store</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -69,17 +69,47 @@
 
         .section{margin-top:72px}
 
-        .gear-grid{
-            display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+        .cards-grid{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
             gap:16px;margin-top:20px;
         }
-        .gear-card{
+        .feat-card{
             background:var(--panel);border:1px solid var(--border);
-            border-radius:14px;padding:20px 22px;
+            border-radius:16px;padding:28px 24px;
+            transition:border-color .2s,transform .2s;
         }
-        .gear-card .gear-icon{font-size:20px;margin-bottom:10px}
-        .gear-card h4{font-size:14px;font-weight:700;margin-bottom:4px}
-        .gear-card p{font-size:13px;color:var(--muted);line-height:1.6}
+        .feat-card:hover{border-color:rgba(78,205,196,.3);transform:translateY(-3px)}
+        .feat-card .feat-icon{
+            width:48px;height:48px;border-radius:12px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:20px;margin-bottom:16px;
+        }
+        .feat-card h4{font-size:15px;font-weight:700;margin-bottom:8px}
+        .feat-card p{font-size:13px;color:var(--muted);line-height:1.7}
+
+        .profile-grid{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+            gap:20px;margin-top:20px;
+        }
+        .profile-card{
+            background:var(--panel);border:1px solid var(--border);
+            border-radius:20px;padding:32px 28px;
+            transition:border-color .2s;
+        }
+        .profile-card:hover{border-color:rgba(78,205,196,.3)}
+        .profile-card .profile-icon{
+            width:52px;height:52px;border-radius:14px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:22px;margin-bottom:20px;
+        }
+        .teal-icon{background:rgba(78,205,196,.1);color:var(--accent)}
+        .blue-icon{background:rgba(41,128,185,.1);color:#5dade2}
+        .purple-icon{background:rgba(142,68,173,.1);color:#bb8fce}
+        .profile-card h3{font-size:17px;font-weight:700;margin-bottom:10px}
+        .profile-card p{font-size:14px;color:var(--muted);line-height:1.75}
+        .profile-card ul{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:8px}
+        .profile-card li{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+        .profile-card li i{color:var(--accent);font-size:10px;flex-shrink:0}
 
         .cta-box{
             margin-top:72px;
@@ -115,12 +145,12 @@
 
 <div class="hero">
     <div class="avatar-wrap">
-        <div class="avatar" id="profile-avatar">A</div>
+        <div class="avatar">A</div>
     </div>
     <div class="hero-text">
-        <p class="label">Productor musical</p>
+        <p class="label">Plataforma musical global</p>
         <h1>AlsxBeats</h1>
-        <p>Productor independiente especializado en Trap, R&B, Drill y géneros urbanos. Creo beats de alta calidad desde España, con un sonido pensado para artistas que quieren destacar.</p>
+        <p>Un espacio creado para beatmakers, productores y artistas de todo el mundo. Beats de alta calidad, licencias transparentes y descarga instantánea — todo lo que necesitas para llevar tu música al siguiente nivel.</p>
     </div>
 </div>
 
@@ -146,14 +176,53 @@
 <div class="page-wrap">
 
     <div class="section">
-        <h2>Mi historia</h2>
-        <p>Empecé a producir música por pasión, experimentando con samples y sintetizadores hasta encontrar mi propio sonido. Con el tiempo, ese hobby se convirtió en algo serio: cada beat que subo al catálogo pasa por un proceso cuidadoso de producción, mezcla y masterización.</p>
-        <p>AlsxBeats nació con un objetivo claro: ofrecer instrumentales de calidad profesional a precios accesibles, con licencias transparentes y entrega instantánea. Sin intermediarios, directo del productor al artista.</p>
+        <h2>Nuestra misión</h2>
+        <p>AlsxBeats nació con un objetivo claro: eliminar las barreras entre los productores de beats y los artistas que los necesitan. Demasiados talentos se quedaban sin acceso a instrumentales de calidad por precios abusivos, contratos confusos o procesos complicados.</p>
+        <p>Aquí encontrarás beats producidos y mezclados a nivel profesional, con licencias claras desde el primer momento y entrega instantánea tras el pago. Sin intermediarios, sin letra pequeña, sin esperas.</p>
     </div>
 
     <div class="section">
-        <h2>Géneros</h2>
-        <p>Me muevo principalmente entre:</p>
+        <h2>Para quién es AlsxBeats</h2>
+        <div class="profile-grid">
+            <div class="profile-card">
+                <div class="profile-icon teal-icon"><i class="fas fa-microphone"></i></div>
+                <h3>Artistas y cantantes</h3>
+                <p>Encuentra el beat que encaja con tu voz y tu estilo. Escucha previews completos, compra la licencia que necesitas y descarga al instante.</p>
+                <ul>
+                    <li><i class="fas fa-check"></i>Previews completos antes de comprar</li>
+                    <li><i class="fas fa-check"></i>Licencias claras desde €29.99</li>
+                    <li><i class="fas fa-check"></i>MP3, WAV y stems disponibles</li>
+                    <li><i class="fas fa-check"></i>Válido en Spotify, YouTube y más</li>
+                </ul>
+            </div>
+            <div class="profile-card">
+                <div class="profile-icon blue-icon"><i class="fas fa-sliders"></i></div>
+                <h3>Productores</h3>
+                <p>Sube tus beats al catálogo, llega a artistas de todo el mundo y cobra directamente. Sin complicaciones técnicas ni burocracia.</p>
+                <ul>
+                    <li><i class="fas fa-check"></i>Distribución global del catálogo</li>
+                    <li><i class="fas fa-check"></i>Pagos seguros vía Stripe</li>
+                    <li><i class="fas fa-check"></i>Contratos automáticos por compra</li>
+                    <li><i class="fas fa-check"></i>Panel de gestión completo</li>
+                </ul>
+            </div>
+            <div class="profile-card">
+                <div class="profile-icon purple-icon"><i class="fas fa-headphones"></i></div>
+                <h3>Beatmakers</h3>
+                <p>Publica tu trabajo en una plataforma pensada para el sonido urbano. Trap, Drill, R&B, Lo-Fi — tu música tiene cabida aquí.</p>
+                <ul>
+                    <li><i class="fas fa-check"></i>Todos los géneros urbanos</li>
+                    <li><i class="fas fa-check"></i>Player con waveform integrado</li>
+                    <li><i class="fas fa-check"></i>Stems y packs organizados</li>
+                    <li><i class="fas fa-check"></i>Visibilidad ante artistas reales</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Géneros del catálogo</h2>
+        <p>Beats originales en los géneros más demandados del mercado urbano actual.</p>
         <div class="genres-grid">
             <span class="genre-pill">Trap</span>
             <span class="genre-pill">R&amp;B</span>
@@ -167,38 +236,41 @@
     </div>
 
     <div class="section">
-        <h2>Equipo y software</h2>
-        <div class="gear-grid">
-            <div class="gear-card">
-                <div class="gear-icon">🎹</div>
-                <h4>DAW</h4>
-                <p>FL Studio — el entorno donde nace cada beat.</p>
+        <h2>Por qué elegirnos</h2>
+        <div class="cards-grid">
+            <div class="feat-card">
+                <div class="feat-icon" style="background:rgba(78,205,196,.1);color:var(--accent)"><i class="fas fa-bolt"></i></div>
+                <h4>Descarga instantánea</h4>
+                <p>Paga y descarga en segundos. Tus archivos están disponibles al momento, sin esperas ni validaciones manuales.</p>
             </div>
-            <div class="gear-card">
-                <div class="gear-icon">🎛️</div>
-                <h4>Plugins</h4>
-                <p>Serum, Nexus, Omnisphere para síntesis y texturas.</p>
+            <div class="feat-card">
+                <div class="feat-icon" style="background:rgba(41,128,185,.1);color:#5dade2"><i class="fas fa-file-contract"></i></div>
+                <h4>Licencias transparentes</h4>
+                <p>Sin letra pequeña. Cada licencia especifica exactamente qué puedes hacer con el beat, con contrato incluido.</p>
             </div>
-            <div class="gear-card">
-                <div class="gear-icon">🎧</div>
-                <h4>Monitorización</h4>
-                <p>Auriculares y monitores de estudio para mezclas precisas.</p>
+            <div class="feat-card">
+                <div class="feat-icon" style="background:rgba(39,174,96,.1);color:#58d68d"><i class="fas fa-globe"></i></div>
+                <h4>Distribución global</h4>
+                <p>Sube tu canción a Spotify, Apple Music, YouTube y cualquier plataforma del mundo con total seguridad legal.</p>
             </div>
-            <div class="gear-card">
-                <div class="gear-icon">🎤</div>
-                <h4>Masterización</h4>
-                <p>Procesado final para que suene bien en cualquier plataforma.</p>
+            <div class="feat-card">
+                <div class="feat-icon" style="background:rgba(230,126,34,.1);color:#f0b27a"><i class="fas fa-shield-halved"></i></div>
+                <h4>Pagos seguros</h4>
+                <p>Todas las transacciones pasan por Stripe, el procesador de pagos más seguro del mundo. Tus datos, protegidos.</p>
             </div>
         </div>
     </div>
 
     <div class="cta-box">
-        <h2>¿Colaboramos?</h2>
-        <p>Si buscas un beat exclusivo, tienes un proyecto especial o simplemente quieres hablar de música, estoy disponible.</p>
-        <a href="mailto:alsxbeats@gmail.com" class="btn-cta">
-            <i class="fas fa-envelope"></i> Escríbeme
-        </a>
-        <div style="display:flex;gap:14px;justify-content:center;margin-top:24px;flex-wrap:wrap">
+        <h2>¿Tienes un proyecto musical?</h2>
+        <p>Tanto si eres artista buscando el beat perfecto como productor queriendo llegar a más gente, AlsxBeats es tu plataforma.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:32px">
+            <a href="catalog.html" class="btn-cta"><i class="fas fa-headphones"></i> Explorar beats</a>
+            <a href="mailto:alsxbeats@gmail.com" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);color:#fff;border:1px solid #1c232b;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;padding:13px 24px;border-radius:10px;text-decoration:none;transition:.2s" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='rgba(255,255,255,.06)'">
+                <i class="fas fa-envelope"></i> Contactar
+            </a>
+        </div>
+        <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap">
             <a href="https://www.instagram.com/alsxbeats?igsh=MXY2eDhma3ZkeTlvNg%3D%3D&utm_source=qr" target="_blank" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#94a3b8;text-decoration:none;transition:.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">
                 <i class="fab fa-instagram" style="color:#e1306c"></i> Instagram
             </a>
@@ -220,12 +292,6 @@
 fetch('/api/beats').then(r => r.json()).then(beats => {
     const el = document.getElementById('stat-beats-count');
     if (el && beats.length) el.textContent = beats.length;
-});
-fetch('/api/auth/me').then(r => r.json()).then(d => {
-    if (d.user?.avatar) {
-        const av = document.getElementById('profile-avatar');
-        av.innerHTML = `<img src="${d.user.avatar}" alt="AlsxBeats">`;
-    }
 });
 </script>
 </body>
