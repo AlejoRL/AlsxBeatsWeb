@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre mí — AlsxBeats</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        :root{--bg:#0b0d14;--panel:#11151a;--accent:#4ecdc4;--border:#1c232b;--muted:#94a3b8}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:#fff;min-height:100vh}
+
+        header{padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+        .logo{font-size:20px;font-weight:900;text-decoration:none;color:#fff}
+        .logo span{color:var(--accent)}
+        .back-link{font-size:13px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s}
+        .back-link:hover{color:#fff}
+
+        .hero{
+            max-width:900px;margin:0 auto;
+            padding:80px 32px 60px;
+            display:flex;align-items:center;gap:60px;
+            flex-wrap:wrap;
+        }
+        .avatar-wrap{flex-shrink:0}
+        .avatar{
+            width:180px;height:180px;border-radius:28px;
+            background:linear-gradient(135deg,#4ecdc4,#2980b9);
+            display:flex;align-items:center;justify-content:center;
+            font-size:72px;font-weight:900;color:#000;
+            overflow:hidden;
+        }
+        .avatar img{width:100%;height:100%;object-fit:cover}
+
+        .hero-text .label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+        .hero-text h1{font-size:44px;font-weight:900;letter-spacing:-1.5px;margin-bottom:16px}
+        .hero-text p{font-size:16px;color:var(--muted);line-height:1.8;max-width:500px}
+
+        .stats-row{
+            display:flex;gap:0;
+            max-width:900px;margin:0 auto;
+            border-top:1px solid var(--border);
+            border-bottom:1px solid var(--border);
+        }
+        .stat{flex:1;padding:32px 20px;text-align:center;border-right:1px solid var(--border)}
+        .stat:last-child{border-right:none}
+        .stat-n{font-size:36px;font-weight:900;color:#fff;letter-spacing:-1px}
+        .stat-n span{color:var(--accent)}
+        .stat-d{font-size:12px;color:var(--muted);margin-top:4px}
+
+        .page-wrap{max-width:900px;margin:0 auto;padding:72px 32px 120px}
+
+        h2{font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:20px}
+        p{font-size:15px;color:var(--muted);line-height:1.85}
+        p+p{margin-top:14px}
+
+        .genres-grid{
+            display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;
+        }
+        .genre-pill{
+            background:rgba(78,205,196,.08);
+            border:1px solid rgba(78,205,196,.2);
+            color:var(--accent);
+            font-size:13px;font-weight:600;
+            padding:7px 16px;border-radius:999px;
+        }
+
+        .section{margin-top:72px}
+
+        .gear-grid{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+            gap:16px;margin-top:20px;
+        }
+        .gear-card{
+            background:var(--panel);border:1px solid var(--border);
+            border-radius:14px;padding:20px 22px;
+        }
+        .gear-card .gear-icon{font-size:20px;margin-bottom:10px}
+        .gear-card h4{font-size:14px;font-weight:700;margin-bottom:4px}
+        .gear-card p{font-size:13px;color:var(--muted);line-height:1.6}
+
+        .cta-box{
+            margin-top:72px;
+            background:var(--panel);border:1px solid var(--border);
+            border-radius:20px;padding:48px 40px;text-align:center;
+        }
+        .cta-box h2{margin-bottom:12px}
+        .cta-box p{max-width:480px;margin:0 auto 32px;font-size:15px;color:var(--muted);line-height:1.7}
+        .btn-cta{
+            display:inline-flex;align-items:center;gap:8px;
+            background:var(--accent);color:#000;
+            font-size:14px;font-weight:700;font-family:'Inter',sans-serif;
+            padding:13px 28px;border-radius:10px;text-decoration:none;
+            transition:opacity .2s;
+        }
+        .btn-cta:hover{opacity:.85}
+
+        @media(max-width:640px){
+            .hero{flex-direction:column;gap:32px;padding:48px 24px 40px}
+            .hero-text h1{font-size:32px}
+            .stats-row{flex-wrap:wrap}
+            .stat{min-width:50%}
+            .cta-box{padding:32px 24px}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo">Alsx<span>Beats</span></a>
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+</header>
+
+<div class="hero">
+    <div class="avatar-wrap">
+        <div class="avatar" id="profile-avatar">A</div>
+    </div>
+    <div class="hero-text">
+        <p class="label">Productor musical</p>
+        <h1>AlsxBeats</h1>
+        <p>Productor independiente especializado en Trap, R&B, Drill y géneros urbanos. Creo beats de alta calidad desde España, con un sonido pensado para artistas que quieren destacar.</p>
+    </div>
+</div>
+
+<div class="stats-row">
+    <div class="stat">
+        <div class="stat-n" id="stat-beats-count">—</div>
+        <div class="stat-d">Beats en catálogo</div>
+    </div>
+    <div class="stat">
+        <div class="stat-n">4</div>
+        <div class="stat-d">Tipos de licencia</div>
+    </div>
+    <div class="stat">
+        <div class="stat-n">100<span>%</span></div>
+        <div class="stat-d">Producción original</div>
+    </div>
+    <div class="stat">
+        <div class="stat-n"><span>24h</span></div>
+        <div class="stat-d">Tiempo de respuesta</div>
+    </div>
+</div>
+
+<div class="page-wrap">
+
+    <div class="section">
+        <h2>Mi historia</h2>
+        <p>Empecé a producir música por pasión, experimentando con samples y sintetizadores hasta encontrar mi propio sonido. Con el tiempo, ese hobby se convirtió en algo serio: cada beat que subo al catálogo pasa por un proceso cuidadoso de producción, mezcla y masterización.</p>
+        <p>AlsxBeats nació con un objetivo claro: ofrecer instrumentales de calidad profesional a precios accesibles, con licencias transparentes y entrega instantánea. Sin intermediarios, directo del productor al artista.</p>
+    </div>
+
+    <div class="section">
+        <h2>Géneros</h2>
+        <p>Me muevo principalmente entre:</p>
+        <div class="genres-grid">
+            <span class="genre-pill">Trap</span>
+            <span class="genre-pill">R&amp;B</span>
+            <span class="genre-pill">Drill</span>
+            <span class="genre-pill">Lo-Fi</span>
+            <span class="genre-pill">Afrobeats</span>
+            <span class="genre-pill">Hip-Hop</span>
+            <span class="genre-pill">Reggaeton</span>
+            <span class="genre-pill">Pop urbano</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Equipo y software</h2>
+        <div class="gear-grid">
+            <div class="gear-card">
+                <div class="gear-icon">🎹</div>
+                <h4>DAW</h4>
+                <p>FL Studio — el entorno donde nace cada beat.</p>
+            </div>
+            <div class="gear-card">
+                <div class="gear-icon">🎛️</div>
+                <h4>Plugins</h4>
+                <p>Serum, Nexus, Omnisphere para síntesis y texturas.</p>
+            </div>
+            <div class="gear-card">
+                <div class="gear-icon">🎧</div>
+                <h4>Monitorización</h4>
+                <p>Auriculares y monitores de estudio para mezclas precisas.</p>
+            </div>
+            <div class="gear-card">
+                <div class="gear-icon">🎤</div>
+                <h4>Masterización</h4>
+                <p>Procesado final para que suene bien en cualquier plataforma.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-box">
+        <h2>¿Colaboramos?</h2>
+        <p>Si buscas un beat exclusivo, tienes un proyecto especial o simplemente quieres hablar de música, estoy disponible.</p>
+        <a href="mailto:alsxbeats@gmail.com" class="btn-cta">
+            <i class="fas fa-envelope"></i> Escríbeme
+        </a>
+    </div>
+
+</div>
+
+<script>
+fetch('/api/beats').then(r => r.json()).then(beats => {
+    const el = document.getElementById('stat-beats-count');
+    if (el && beats.length) el.textContent = beats.length;
+});
+fetch('/api/auth/me').then(r => r.json()).then(d => {
+    if (d.user?.avatar) {
+        const av = document.getElementById('profile-avatar');
+        av.innerHTML = `<img src="${d.user.avatar}" alt="AlsxBeats">`;
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo de Contrato — AlsxBeats</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        :root{--bg:#0b0d14;--panel:#11151a;--accent:#4ecdc4;--border:#1c232b;--muted:#94a3b8}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:#fff;min-height:100vh}
+
+        header{padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+        .logo{font-size:20px;font-weight:900;text-decoration:none;color:#fff}
+        .logo span{color:var(--accent)}
+        .back-link{font-size:13px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s}
+        .back-link:hover{color:#fff}
+
+        .page-wrap{max-width:800px;margin:0 auto;padding:72px 32px 120px}
+        .page-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+        h1{font-size:38px;font-weight:900;letter-spacing:-1px;margin-bottom:12px}
+        .subtitle{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:40px}
+
+        .info-bar{
+            display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;
+        }
+        .info-chip{
+            display:flex;align-items:center;gap:8px;
+            background:var(--panel);border:1px solid var(--border);
+            border-radius:10px;padding:10px 16px;
+            font-size:13px;color:var(--muted);
+        }
+        .info-chip i{color:var(--accent);font-size:12px}
+
+        .contract-box{
+            background:var(--panel);border:1px solid var(--border);
+            border-radius:20px;overflow:hidden;margin-bottom:32px;
+        }
+        .contract-header{
+            background:#0d1117;border-bottom:1px solid var(--border);
+            padding:20px 28px;display:flex;align-items:center;justify-content:space-between;
+        }
+        .contract-header h2{font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px}
+        .contract-header h2 i{color:var(--accent)}
+        .btn-copy{
+            background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);
+            color:var(--accent);font-size:12px;font-weight:600;
+            font-family:'Inter',sans-serif;
+            padding:7px 14px;border-radius:8px;cursor:pointer;
+            display:flex;align-items:center;gap:6px;transition:.2s;
+        }
+        .btn-copy:hover{background:rgba(78,205,196,.15)}
+
+        .contract-body{
+            padding:28px;
+            font-size:13px;color:var(--muted);line-height:2;
+            white-space:pre-wrap;font-family:'Inter',monospace;
+        }
+        .contract-body strong{color:#fff}
+        .placeholder{
+            background:rgba(78,205,196,.1);color:var(--accent);
+            padding:1px 6px;border-radius:4px;font-style:italic;
+        }
+
+        .notes{margin-top:48px}
+        .notes h2{font-size:20px;font-weight:800;margin-bottom:20px}
+        .note-item{
+            display:flex;gap:14px;padding:18px 0;border-bottom:1px solid var(--border);
+            align-items:flex-start;
+        }
+        .note-item:last-child{border-bottom:none}
+        .note-item i{color:var(--accent);margin-top:3px;flex-shrink:0;width:16px}
+        .note-item p{font-size:14px;color:var(--muted);line-height:1.7}
+        .note-item p strong{color:#fff}
+
+        .cta-row{
+            display:flex;gap:12px;margin-top:48px;flex-wrap:wrap;
+        }
+        .btn-primary{
+            display:inline-flex;align-items:center;gap:8px;
+            background:var(--accent);color:#000;
+            font-size:14px;font-weight:700;font-family:'Inter',sans-serif;
+            padding:13px 26px;border-radius:10px;text-decoration:none;transition:opacity .2s;
+        }
+        .btn-primary:hover{opacity:.85}
+        .btn-ghost{
+            display:inline-flex;align-items:center;gap:8px;
+            background:rgba(255,255,255,.05);color:#fff;border:1px solid var(--border);
+            font-size:14px;font-weight:600;font-family:'Inter',sans-serif;
+            padding:13px 26px;border-radius:10px;text-decoration:none;transition:.2s;
+        }
+        .btn-ghost:hover{background:rgba(255,255,255,.09)}
+
+        @media(max-width:600px){.contract-body{padding:20px;font-size:12px}}
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo">Alsx<span>Beats</span></a>
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+</header>
+
+<div class="page-wrap">
+    <p class="page-label">Legal</p>
+    <h1>Modelo de Contrato</h1>
+    <p class="subtitle">Este es el contrato estándar que acompaña a cada compra. Cuando adquieres una licencia en AlsxBeats, recibes automáticamente este acuerdo por email junto con tus archivos.</p>
+
+    <div class="info-bar">
+        <div class="info-chip"><i class="fas fa-check-circle"></i> Válido en España y UE</div>
+        <div class="info-chip"><i class="fas fa-bolt"></i> Se genera automáticamente al comprar</div>
+        <div class="info-chip"><i class="fas fa-envelope"></i> Llega a tu email tras el pago</div>
+    </div>
+
+    <div class="contract-box">
+        <div class="contract-header">
+            <h2><i class="fas fa-file-contract"></i> Contrato de Licencia de Beat</h2>
+            <button class="btn-copy" onclick="copyContract()">
+                <i class="fas fa-copy"></i> Copiar
+            </button>
+        </div>
+        <div class="contract-body" id="contract-text">
+<strong>CONTRATO DE LICENCIA DE BEAT</strong>
+<strong>AlsxBeats — Licencia de uso no exclusiva</strong>
+
+<strong>PARTES:</strong>
+
+Productor (Licenciante): AlsxBeats
+Email: alsxbeats@gmail.com
+
+Artista (Licenciatario): <span class="placeholder">[Nombre del artista]</span>
+Email: <span class="placeholder">[Email del artista]</span>
+
+<strong>OBJETO DEL CONTRATO:</strong>
+
+Beat: <span class="placeholder">[Nombre del beat]</span>
+Tipo de licencia: <span class="placeholder">[Basic / Premium / Unlimited]</span>
+Precio pagado: <span class="placeholder">[Precio en €]</span>
+Fecha de compra: <span class="placeholder">[Fecha]</span>
+
+<strong>DERECHOS CONCEDIDOS:</strong>
+
+El Productor concede al Artista una licencia <strong>no exclusiva, intransferible y no sublicenciable</strong>
+para usar el beat instrumental descrito arriba, bajo las siguientes condiciones:
+
+• Distribución: hasta <span class="placeholder">[X]</span> copias físicas o digitales
+• Streams: hasta <span class="placeholder">[X]</span> reproducciones acumuladas en todas las plataformas
+• Videoclips: hasta <span class="placeholder">[X]</span> vídeos musicales monetizados
+• Emisoras de radio: hasta <span class="placeholder">[X]</span> emisoras
+• Formatos incluidos: <span class="placeholder">[MP3 / MP3 + WAV / MP3 + WAV + Stems]</span>
+
+<strong>CONDICIONES OBLIGATORIAS:</strong>
+
+1. El Artista deberá acreditar la producción como <strong>"Prod. AlsxBeats"</strong> en el título
+   de la canción y/o en los créditos de todas las plataformas y publicaciones.
+
+2. El beat permanece en el catálogo de AlsxBeats y puede ser licenciado a otros
+   artistas (excepto en licencias Exclusive).
+
+3. Esta licencia es válida de forma indefinida mientras se respeten los límites
+   y condiciones indicados.
+
+<strong>PROPIEDAD INTELECTUAL:</strong>
+
+El Productor conserva todos los derechos de propiedad intelectual sobre el beat.
+Esta licencia únicamente concede el derecho de uso según los términos descritos.
+No se transfiere autoría ni propiedad del instrumental en ningún caso.
+
+<strong>LIMITACIONES:</strong>
+
+Está expresamente prohibido:
+— Revender, sublicenciar o ceder esta licencia a terceros.
+— Registrar el beat instrumental como composición propia.
+— Usar el beat superando los límites de la licencia contratada sin actualizar a
+  una licencia superior.
+
+<strong>ACTUALIZACIÓN DE LICENCIA:</strong>
+
+Si el Artista supera los límites de esta licencia, deberá contactar con AlsxBeats
+antes de hacerlo para acordar la diferencia de precio correspondiente.
+
+<strong>LEY APLICABLE:</strong>
+
+Este contrato se rige por la legislación española. Cualquier controversia se
+someterá a los tribunales de España.
+
+<strong>ACEPTACIÓN:</strong>
+
+La compra y descarga del beat implica la aceptación plena de este contrato.
+
+———————————————————————————
+AlsxBeats · alsxbeats@gmail.com
+© 2026 AlsxBeats. Todos los derechos reservados.
+        </div>
+    </div>
+
+    <div class="notes">
+        <h2>Notas importantes</h2>
+        <div class="note-item">
+            <i class="fas fa-info-circle"></i>
+            <p>Cuando compras un beat, este contrato se genera automáticamente con tus datos y los del beat, y se envía a tu email junto con los archivos de descarga.</p>
+        </div>
+        <div class="note-item">
+            <i class="fas fa-shield-halved"></i>
+            <p><strong>¿Recibiste una reclamación en YouTube?</strong> El contrato de licencia es el documento que acredita que tienes derechos sobre el beat. Guárdalo en un lugar seguro.</p>
+        </div>
+        <div class="note-item">
+            <i class="fas fa-rotate"></i>
+            <p><strong>¿Necesitas actualizar tu licencia?</strong> Escríbeme a <a href="mailto:alsxbeats@gmail.com" style="color:var(--accent)">alsxbeats@gmail.com</a> con tu número de pedido y te gestiono el cambio pagando solo la diferencia.</p>
+        </div>
+    </div>
+
+    <div class="cta-row">
+        <a href="catalog.html" class="btn-primary"><i class="fas fa-headphones"></i> Explorar beats</a>
+        <a href="licencias.html" class="btn-ghost"><i class="fas fa-file-contract"></i> Ver licencias</a>
+    </div>
+
+</div>
+
+<script>
+function copyContract() {
+    const text = document.getElementById('contract-text').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.btn-copy');
+        btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+        btn.style.color = '#fff';
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fas fa-copy"></i> Copiar';
+            btn.style.color = '';
+        }, 2000);
+    });
+}
+</script>
+</body>
+</html>

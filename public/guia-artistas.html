@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía para Artistas — AlsxBeats</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        :root{--bg:#0b0d14;--panel:#11151a;--accent:#4ecdc4;--border:#1c232b;--muted:#94a3b8}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:#fff;min-height:100vh}
+
+        header{padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+        .logo{font-size:20px;font-weight:900;text-decoration:none;color:#fff}
+        .logo span{color:var(--accent)}
+        .back-link{font-size:13px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s}
+        .back-link:hover{color:#fff}
+
+        .page-hero{max-width:760px;margin:0 auto;padding:72px 32px 56px;text-align:center}
+        .page-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+        h1{font-size:40px;font-weight:900;letter-spacing:-1.2px;margin-bottom:16px}
+        .subtitle{font-size:16px;color:var(--muted);line-height:1.7;max-width:560px;margin:0 auto}
+
+        .page-wrap{max-width:760px;margin:0 auto;padding:0 32px 120px}
+
+        .step-list{display:flex;flex-direction:column;gap:0;margin-bottom:72px}
+        .step-item{
+            display:grid;grid-template-columns:56px 1fr;
+            gap:24px;padding:36px 0;border-bottom:1px solid var(--border);
+            align-items:start;
+        }
+        .step-item:last-child{border-bottom:none}
+        .step-num{
+            width:48px;height:48px;border-radius:14px;flex-shrink:0;
+            background:linear-gradient(135deg,rgba(78,205,196,.15),rgba(41,128,185,.1));
+            border:1px solid rgba(78,205,196,.25);
+            display:flex;align-items:center;justify-content:center;
+            font-size:20px;font-weight:900;color:var(--accent);
+        }
+        .step-content h3{font-size:18px;font-weight:700;margin-bottom:10px}
+        .step-content p{font-size:15px;color:var(--muted);line-height:1.8}
+        .step-content a{color:var(--accent);text-decoration:none}
+        .step-content a:hover{text-decoration:underline}
+
+        .tip-box{
+            background:rgba(78,205,196,.05);border:1px solid rgba(78,205,196,.2);
+            border-radius:14px;padding:20px 24px;margin-top:16px;
+            display:flex;gap:14px;align-items:flex-start;
+        }
+        .tip-box i{color:var(--accent);margin-top:2px;flex-shrink:0}
+        .tip-box p{font-size:13px;color:var(--muted);line-height:1.7;margin:0}
+        .tip-box strong{color:#fff}
+
+        h2{font-size:26px;font-weight:800;letter-spacing:-.5px;margin-bottom:24px}
+
+        .license-compare{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+            gap:14px;margin-bottom:72px;
+        }
+        .lic-mini{
+            background:var(--panel);border:1px solid var(--border);
+            border-radius:14px;padding:22px 18px;
+        }
+        .lic-mini.featured{border-color:var(--accent);background:rgba(78,205,196,.04)}
+        .lic-mini .name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:8px}
+        .lic-mini .price{font-size:26px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:12px}
+        .lic-mini .price sup{font-size:14px;vertical-align:super}
+        .lic-mini ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+        .lic-mini li{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
+        .lic-mini li i{color:var(--accent);font-size:10px;flex-shrink:0}
+        .lic-mini .best-for{font-size:11px;color:#3a4556;margin-top:14px;line-height:1.5}
+
+        .cta-box{
+            background:var(--panel);border:1px solid var(--border);
+            border-radius:20px;padding:48px 40px;text-align:center;
+        }
+        .cta-box h2{margin-bottom:12px}
+        .cta-box p{font-size:15px;color:var(--muted);max-width:440px;margin:0 auto 28px;line-height:1.7}
+        .btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+        .btn-primary{
+            display:inline-flex;align-items:center;gap:8px;
+            background:var(--accent);color:#000;
+            font-size:14px;font-weight:700;font-family:'Inter',sans-serif;
+            padding:12px 24px;border-radius:10px;text-decoration:none;transition:opacity .2s;
+        }
+        .btn-primary:hover{opacity:.85}
+        .btn-ghost{
+            display:inline-flex;align-items:center;gap:8px;
+            background:rgba(255,255,255,.05);color:#fff;
+            border:1px solid var(--border);
+            font-size:14px;font-weight:600;font-family:'Inter',sans-serif;
+            padding:12px 24px;border-radius:10px;text-decoration:none;transition:.2s;
+        }
+        .btn-ghost:hover{background:rgba(255,255,255,.09)}
+
+        @media(max-width:600px){
+            .step-item{grid-template-columns:1fr;gap:14px}
+            .cta-box{padding:32px 24px}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo">Alsx<span>Beats</span></a>
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+</header>
+
+<div class="page-hero">
+    <p class="page-label">Guía</p>
+    <h1>Todo lo que necesitas saber para comprar tu primer beat</h1>
+    <p class="subtitle">Desde elegir el beat correcto hasta publicar tu canción. Simple, rápido y sin complicaciones.</p>
+</div>
+
+<div class="page-wrap">
+
+    <div class="step-list">
+        <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+                <h3>Explora el catálogo</h3>
+                <p>Ve al <a href="catalog.html">catálogo</a> y usa los filtros de género, BPM y tonalidad para encontrar el beat que encaja con tu estilo. Puedes escuchar el preview completo antes de decidir — no hay ningún compromiso.</p>
+                <div class="tip-box">
+                    <i class="fas fa-lightbulb"></i>
+                    <p><strong>Consejo:</strong> Empieza por el género que más produces y luego experimenta. A veces el beat que no esperabas encaja mejor con tu voz.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+                <h3>Elige la licencia correcta</h3>
+                <p>La licencia define qué puedes hacer con el beat. Si estás empezando, la <strong>Basic</strong> es más que suficiente. Si ya tienes audiencia y planeas distribución seria, considera la <strong>Premium</strong> o <strong>Unlimited</strong>.</p>
+                <div class="tip-box">
+                    <i class="fas fa-lightbulb"></i>
+                    <p><strong>Regla general:</strong> Si esperas más de 150.000 streams, empieza directamente con Premium. Es más barato que actualizar la licencia después.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+                <h3>Crea tu cuenta y paga</h3>
+                <p>Regístrate gratis en <a href="register.html">AlsxBeats</a> y añade el beat al carrito. El pago se procesa de forma segura con Stripe. Recibirás el recibo y el enlace de descarga al instante por email.</p>
+            </div>
+        </div>
+
+        <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-content">
+                <h3>Descarga tus archivos</h3>
+                <p>Según la licencia, recibirás el MP3, WAV y/o los stems individuales. El enlace está disponible 48 horas y también en tu perfil. Guarda siempre una copia en tu ordenador.</p>
+            </div>
+        </div>
+
+        <div class="step-item">
+            <div class="step-num">5</div>
+            <div class="step-content">
+                <h3>Graba y publica</h3>
+                <p>Graba tu voz, mezcla, masteriza y sube tu canción a Spotify, Apple Music, YouTube o donde quieras. Recuerda incluir siempre <strong>"Prod. AlsxBeats"</strong> en el título o créditos.</p>
+                <div class="tip-box">
+                    <i class="fas fa-lightbulb"></i>
+                    <p><strong>Formato recomendado:</strong> "Nombre de la canción (Prod. AlsxBeats)" en el título de la pista en todas las plataformas.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>Comparativa de licencias</h2>
+    <div class="license-compare">
+        <div class="lic-mini">
+            <div class="name">Basic MP3</div>
+            <div class="price"><sup>€</sup>29.99</div>
+            <ul>
+                <li><i class="fas fa-check"></i>MP3</li>
+                <li><i class="fas fa-check"></i>150K streams</li>
+                <li><i class="fas fa-check"></i>2.700 copias</li>
+                <li><i class="fas fa-check"></i>1 videoclip</li>
+            </ul>
+            <p class="best-for">Ideal para artistas emergentes y primeros lanzamientos.</p>
+        </div>
+        <div class="lic-mini">
+            <div class="name">Basic WAV</div>
+            <div class="price"><sup>€</sup>38.99</div>
+            <ul>
+                <li><i class="fas fa-check"></i>MP3 + WAV</li>
+                <li><i class="fas fa-check"></i>150K streams</li>
+                <li><i class="fas fa-check"></i>2.700 copias</li>
+                <li><i class="fas fa-check"></i>1 videoclip</li>
+            </ul>
+            <p class="best-for">Cuando quieres calidad de audio máxima en tu mezcla.</p>
+        </div>
+        <div class="lic-mini featured">
+            <div class="name">Premium</div>
+            <div class="price"><sup>€</sup>75.99</div>
+            <ul>
+                <li><i class="fas fa-check"></i>MP3 + WAV + Stems</li>
+                <li><i class="fas fa-check"></i>500K streams</li>
+                <li><i class="fas fa-check"></i>3.200 copias</li>
+                <li><i class="fas fa-check"></i>2 videoclips</li>
+            </ul>
+            <p class="best-for">La opción más popular. Control total sobre el beat.</p>
+        </div>
+        <div class="lic-mini">
+            <div class="name">Unlimited</div>
+            <div class="price"><sup>€</sup>145.99</div>
+            <ul>
+                <li><i class="fas fa-check"></i>MP3 + WAV + Stems</li>
+                <li><i class="fas fa-check"></i>Streams ilimitados</li>
+                <li><i class="fas fa-check"></i>Copias ilimitadas</li>
+                <li><i class="fas fa-check"></i>Vídeos ilimitados</li>
+            </ul>
+            <p class="best-for">Para artistas con gran audiencia o sello discográfico.</p>
+        </div>
+    </div>
+
+    <div class="cta-box">
+        <h2>¿Listo para empezar?</h2>
+        <p>Explora el catálogo, encuentra tu beat y crea sin límites.</p>
+        <div class="btn-row">
+            <a href="catalog.html" class="btn-primary"><i class="fas fa-headphones"></i> Ver catálogo</a>
+            <a href="faq.html" class="btn-ghost"><i class="fas fa-circle-question"></i> Ver FAQ</a>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

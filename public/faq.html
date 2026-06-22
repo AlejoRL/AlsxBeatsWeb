@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ — AlsxBeats</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        :root{--bg:#0b0d14;--panel:#11151a;--accent:#4ecdc4;--border:#1c232b;--muted:#94a3b8}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:#fff;min-height:100vh}
+
+        header{padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+        .logo{font-size:20px;font-weight:900;text-decoration:none;color:#fff}
+        .logo span{color:var(--accent)}
+        .back-link{font-size:13px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s}
+        .back-link:hover{color:#fff}
+
+        .page-wrap{max-width:760px;margin:0 auto;padding:72px 32px 120px}
+        .page-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+        h1{font-size:40px;font-weight:900;letter-spacing:-1.2px;margin-bottom:12px}
+        .subtitle{font-size:16px;color:var(--muted);margin-bottom:64px;line-height:1.7}
+
+        .faq-group{margin-bottom:48px}
+        .faq-group-title{
+            font-size:12px;font-weight:700;letter-spacing:2px;
+            text-transform:uppercase;color:var(--accent);
+            margin-bottom:16px;padding-bottom:12px;
+            border-bottom:1px solid var(--border);
+        }
+
+        .faq-item{border-bottom:1px solid var(--border)}
+        .faq-question{
+            width:100%;background:none;border:none;
+            color:#fff;font-size:15px;font-weight:600;
+            font-family:'Inter',sans-serif;
+            padding:20px 0;
+            display:flex;align-items:center;justify-content:space-between;
+            gap:16px;cursor:pointer;text-align:left;
+            transition:color .2s;
+        }
+        .faq-question:hover{color:var(--accent)}
+        .faq-question i{
+            font-size:12px;color:var(--muted);flex-shrink:0;
+            transition:transform .25s;
+        }
+        .faq-item.open .faq-question{color:var(--accent)}
+        .faq-item.open .faq-question i{transform:rotate(180deg);color:var(--accent)}
+
+        .faq-answer{
+            font-size:14px;color:var(--muted);line-height:1.8;
+            max-height:0;overflow:hidden;
+            transition:max-height .3s ease, padding .3s ease;
+        }
+        .faq-item.open .faq-answer{max-height:400px;padding-bottom:20px}
+        .faq-answer a{color:var(--accent);text-decoration:none}
+        .faq-answer a:hover{text-decoration:underline}
+
+        .cta-box{
+            margin-top:64px;background:var(--panel);border:1px solid var(--border);
+            border-radius:20px;padding:40px;text-align:center;
+        }
+        .cta-box h2{font-size:22px;font-weight:800;margin-bottom:10px}
+        .cta-box p{font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.7}
+        .btn-cta{
+            display:inline-flex;align-items:center;gap:8px;
+            background:var(--accent);color:#000;
+            font-size:14px;font-weight:700;font-family:'Inter',sans-serif;
+            padding:12px 26px;border-radius:10px;text-decoration:none;transition:opacity .2s;
+        }
+        .btn-cta:hover{opacity:.85}
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo">Alsx<span>Beats</span></a>
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+</header>
+
+<div class="page-wrap">
+    <p class="page-label">Ayuda</p>
+    <h1>Preguntas frecuentes</h1>
+    <p class="subtitle">Todo lo que necesitas saber antes de comprar. Si no encuentras tu respuesta, escríbeme directamente.</p>
+
+    <!-- LICENCIAS -->
+    <div class="faq-group">
+        <p class="faq-group-title">Licencias</p>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggle(this)">
+                ¿Qué diferencia hay entre las licencias?
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Cada licencia define cuántas copias puedes distribuir, cuántos streams permite y si recibes los stems (pistas separadas). La <strong>Basic</strong> es ideal para artistas emergentes; la <strong>Premium</strong> incluye stems y más streams; la <strong>Unlimited</strong> no tiene límites; y la <strong>Exclusive</strong> te da la propiedad única del beat, que se retira del catálogo. Consulta la <a href="licencias.html">página de licencias</a> para ver la tabla completa.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggle(this)">
+                ¿Puedo subir la canción a Spotify o Apple Music?
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Sí. Todas las licencias permiten distribución en plataformas digitales (Spotify, Apple Music, YouTube, etc.) dentro de los límites de streams indicados. Con la licencia Unlimited o Exclusive no hay límite de streams.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggle(this)">
+                ¿Tengo que acreditar a AlsxBeats?
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Sí. En todas las licencias debes incluir <strong>"Prod. AlsxBeats"</strong> en el título de la canción o en los créditos. Ejemplo: "Mi canción (Prod. AlsxBeats)". Es la única condición obligatoria en todas las licencias.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggle(this)">
+                ¿Qué pasa si supero los límites de la licencia?
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Debes actualizar tu licencia a una superior antes de superar los límites. Contáctame por email y te gestiono la diferencia de precio sin problema.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggle(this)">
+                ¿Qué son los stems?
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Los stems son las pistas individuales del beat: batería, bajo, melodía, efectos, etc. Te permiten mezclar y adaptar el beat a tu grabación con mucho más control. Están incluidos en las licencias Premium, Unlimited y Exclusive.
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGOS Y DESCARGAS -->
+    <div class="faq-group">
+        <p class="faq-group-title">Pagos y descargas</p>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggle(this)">
+                ¿Cómo recibo los archivos tras la compra?
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Inmediatamente después del pago recibes un email con el enlace de descarga. También puedes acceder a tus compras desde tu perfil en cualquier momento. El enlace de descarga estará disponible durante 48 horas.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggle(this)">
+                ¿Qué métodos de pago aceptáis?
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Los pagos se procesan a través de <strong>Stripe</strong>, una de las plataformas más seguras del mundo. Aceptamos tarjetas Visa, Mastercard, American Express y otros métodos según tu país.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggle(this)">
+                ¿Puedo obtener un reembolso?
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Al ser productos digitales de descarga inmediata, no se realizan reembolsos salvo en casos de archivo corrupto, error técnico documentado o cobro duplicado. Si tienes un problema, escríbeme a <a href="mailto:alsxbeats@gmail.com">alsxbeats@gmail.com</a> en las 48h siguientes a la compra.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggle(this)">
+                ¿Es seguro pagar aquí?
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Sí. AlsxBeats no almacena ningún dato de tarjeta. Todo el proceso de pago corre a cargo de Stripe, que cumple con los más altos estándares de seguridad (PCI DSS Level 1).
+            </div>
+        </div>
+    </div>
+
+    <!-- USO -->
+    <div class="faq-group">
+        <p class="faq-group-title">Uso de los beats</p>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggle(this)">
+                ¿Puedo usar el beat en un videoclip de YouTube?
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Sí, dentro de los límites de la licencia. La Basic permite 1 videoclip monetizado, la Premium 2, y la Unlimited/Exclusive son ilimitados. Si el vídeo recibe una reclamación de derechos, contáctame y lo resolvemos con el contrato de licencia.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggle(this)">
+                ¿Puedo usar el beat para contenido comercial o publicidad?
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Para uso en publicidad, proyectos audiovisuales comerciales o sincronización (TV, cine, anuncios) necesitas la licencia Exclusive o un acuerdo personalizado. Contáctame para hablar de tu proyecto.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggle(this)">
+                ¿Puedo compartir el beat con mi equipo o colaboradores?
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                La licencia te pertenece a ti. Puedes trabajar el beat con productores, ingenieros de mezcla o colaboradores dentro del mismo proyecto, pero no puedes ceder ni revender la licencia a terceros.
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-box">
+        <h2>¿Tienes otra pregunta?</h2>
+        <p>Escríbeme directamente y te respondo en menos de 24 horas.</p>
+        <a href="mailto:alsxbeats@gmail.com" class="btn-cta">
+            <i class="fas fa-envelope"></i> Contactar
+        </a>
+    </div>
+</div>
+
+<script>
+function toggle(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>
