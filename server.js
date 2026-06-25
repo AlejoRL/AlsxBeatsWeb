@@ -25,22 +25,7 @@ app.set('trust proxy', 1);
 
 // ── Seguridad: headers HTTP ──────────────────────────────────────────────────
 app.use(helmet({
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc:  ["'self'", "'unsafe-inline'", "'unsafe-eval'",
-                         "https://js.stripe.com", "https://unpkg.com"],
-            styleSrc:   ["'self'", "'unsafe-inline'",
-                         "https://fonts.googleapis.com",
-                         "https://cdnjs.cloudflare.com"],
-            fontSrc:    ["'self'",
-                         "https://fonts.gstatic.com",
-                         "https://cdnjs.cloudflare.com"],
-            imgSrc:     ["'self'", "data:", "https:"],
-            frameSrc:   ["https://js.stripe.com"],
-            connectSrc: ["'self'", "https://api.stripe.com"],
-        }
-    },
+    contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false
 }));
 
