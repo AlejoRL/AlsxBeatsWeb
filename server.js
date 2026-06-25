@@ -20,6 +20,9 @@ const app  = express();
 const PORT = process.env.PORT || 3000;
 const isProd = process.env.NODE_ENV === 'production';
 
+// Necesario para que Express detecte HTTPS correctamente detrás de Render/proxies
+app.set('trust proxy', 1);
+
 // ── Seguridad: headers HTTP ──────────────────────────────────────────────────
 app.use(helmet({
     contentSecurityPolicy: {
