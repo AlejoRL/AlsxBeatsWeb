@@ -1,8 +1,10 @@
 require('dotenv').config();
-const express  = require('express');
-const session  = require('express-session');
-const path     = require('path');
-const mongoose = require('mongoose');
+const express   = require('express');
+const session   = require('express-session');
+const path      = require('path');
+const mongoose  = require('mongoose');
+const helmet    = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 // Conectar a MongoDB
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/alsxbeats';
@@ -12,6 +14,48 @@ mongoose.connect(MONGO_URI)
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
+const isProd = process.env.NODE_ENV === 'production';
+
+// ── Seguridad: headers HTTP ──────────────────────────────────────────────────
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc:  ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
+            styleSrc:   ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            fontSrc:    ["'self'", "https://fonts.gstatic.com"],
+            imgSrc:     ["'self'", "data:", "https:"],
+            frameSrc:   ["https://js.stripe.com"],
+            connectSrc: ["'self'", "https://api.stripe.com"],
+        }
+    },
+    crossOriginEmbedderPolicy: false
+}));
+
+// ── Rate limiting ────────────────────────────────────────────────────────────
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 20,
+    message: { error: 'Demasiados intentos. Espera 15 minutos.' },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
+const otpLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 minutos
+    max: 5,
+    message: { error: 'Demasiados intentos de verificación. Espera 10 minutos.' },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
+const adminLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: { error: 'Demasiados intentos de acceso admin. Espera 15 minutos.' },
+    standardHeaders: true,
+    legacyHeaders: false
+});
 
 // Webhook de Stripe necesita body raw ANTES del parser JSON
 app.use('/api/checkout/webhook', express.raw({ type: 'application/json' }));
@@ -20,11 +64,23 @@ app.use(express.json({ limit: '3mb' }));
 app.use(express.urlencoded({ extended: true, limit: '3mb' }));
 
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'alsxbeats-secret',
+    secret: process.env.SESSION_SECRET || (() => { throw new Error('SESSION_SECRET no configurado en .env'); })(),
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 8 * 60 * 60 * 1000 } // 8 horas
+    cookie: {
+        maxAge:   8 * 60 * 60 * 1000, // 8 horas
+        httpOnly: true,                // JS del cliente NO puede leer la cookie
+        secure:   isProd,             // Solo HTTPS en producción
+        sameSite: 'lax'               // Protección CSRF básica
+    }
 }));
+
+// Aplicar rate limiters
+app.use('/api/auth/login',      authLimiter);
+app.use('/api/auth/register',   authLimiter);
+app.use('/api/auth/send-otp',   otpLimiter);
+app.use('/api/auth/verify-otp', otpLimiter);
+app.use('/api/admin/login',     adminLimiter);
 
 // API
 app.use('/api/auth',     require('./routes/auth'));
