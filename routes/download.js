@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
 
 const TOKENS_FILE = path.join(__dirname, '../data/tokens.json');
+const VALID_LICENSE_TYPES = new Set(['basic', 'basicWav', 'premium', 'unlimited', 'exclusive']);
+const SAFE_ID_REGEX = /^[a-z0-9\-]+$/;
 
 function loadTokens() {
     if (!fs.existsSync(TOKENS_FILE)) return {};
@@ -24,6 +26,12 @@ router.get('/info/:token', (req, res) => {
 
 // GET /api/download/file/:token/:beatId/:licenseType — sirve el archivo protegido
 router.get('/file/:token/:beatId/:licenseType', (req, res) => {
+    // Validación estricta de parámetros para evitar path traversal
+    if (!SAFE_ID_REGEX.test(req.params.beatId))
+        return res.status(400).json({ error: 'Parámetro inválido' });
+    if (!VALID_LICENSE_TYPES.has(req.params.licenseType))
+        return res.status(400).json({ error: 'Tipo de licencia inválido' });
+
     const tokens = loadTokens();
     const entry = tokens[req.params.token];
 

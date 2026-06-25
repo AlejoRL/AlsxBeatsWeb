@@ -4,6 +4,8 @@ const multer  = require('multer');
 const path    = require('path');
 const fs      = require('fs');
 
+const asyncHandler = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+
 const BEATS_FILE = path.join(__dirname, '../data/beats.json');
 
 function readBeats() {
@@ -51,6 +53,8 @@ const previewUpload = multer({
 });
 
 // ── Multer: archivos privados por licencia ───────────────────────────────────
+const VALID_LICENSE_TYPES = ['basic', 'basicWav', 'premium', 'unlimited', 'exclusive'];
+
 const privateUpload = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
@@ -62,7 +66,11 @@ const privateUpload = multer({
             }
             cb(null, dir);
         },
-        filename: (req, file, cb) => cb(null, file.originalname)
+        // Sanitiza el nombre del archivo original para evitar path traversal
+        filename: (req, file, cb) => {
+            const safe = path.basename(file.originalname).replace(/[^a-zA-Z0-9._\-]/g, '_');
+            cb(null, safe);
+        }
     }),
     limits: { fileSize: 500 * 1024 * 1024 }
 });
@@ -223,19 +231,19 @@ router.get('/beats/:beatId/files', (req, res) => {
 });
 
 // GET /api/admin/users
-router.get('/users', requireAdmin, async (req, res) => {
+router.get('/users', requireAdmin, asyncHandler(async (req, res) => {
     const User = require('../models/User');
     const users = await User.find({})
         .select('id name email plan verified createdAt')
         .sort({ createdAt: -1 });
     res.json(users);
-});
+}));
 
 // POST /api/admin/reset-verified — testing
-router.post('/reset-verified', requireAdmin, async (req, res) => {
+router.post('/reset-verified', requireAdmin, asyncHandler(async (req, res) => {
     const User = require('../models/User');
     const result = await User.updateMany({}, { verified: false, otpCode: null, otpExpiry: null });
     res.json({ ok: true, modified: result.modifiedCount });
-});
+}));
 
 module.exports = router;

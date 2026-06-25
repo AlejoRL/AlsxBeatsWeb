@@ -8,6 +8,9 @@ const User    = require('../models/User');
 
 const ADMIN_EMAIL = 'alsxbeats@gmail.com';
 
+// Evita que errores async en rutas crasheen el proceso
+const asyncHandler = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+
 function sanitize(user) {
     const obj = user.toObject ? user.toObject() : { ...user };
     const { password, _id, ...safe } = obj;
@@ -16,15 +19,15 @@ function sanitize(user) {
 }
 
 // GET /api/auth/me
-router.get('/me', async (req, res) => {
+router.get('/me', asyncHandler(async (req, res) => {
     if (!req.session?.userId) return res.json({ user: null });
     const user = await User.findOne({ id: req.session.userId });
     if (!user) { req.session.destroy(); return res.json({ user: null }); }
     res.json({ user: sanitize(user) });
-});
+}));
 
 // POST /api/auth/register
-router.post('/register', async (req, res) => {
+router.post('/register', asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name?.trim() || !email?.trim() || !password)
@@ -48,10 +51,10 @@ router.post('/register', async (req, res) => {
 
     req.session.userId = user.id;
     res.json({ user: sanitize(user) });
-});
+}));
 
 // POST /api/auth/login
-router.post('/login', async (req, res) => {
+router.post('/login', asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     if (!email?.trim() || !password)
         return res.status(400).json({ error: 'Email y contraseña son obligatorios.' });
@@ -64,7 +67,7 @@ router.post('/login', async (req, res) => {
 
     req.session.userId = user.id;
     res.json({ user: sanitize(user) });
-});
+}));
 
 // POST /api/auth/logout
 router.post('/logout', (req, res) => {
@@ -101,7 +104,7 @@ async function sendOtpEmail(to, name, code) {
 }
 
 // POST /api/auth/send-otp
-router.post('/send-otp', requireUser, async (req, res) => {
+router.post('/send-otp', requireUser, asyncHandler(async (req, res) => {
     const user = await User.findOne({ id: req.session.userId });
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
     if (user.verified) return res.json({ ok: true, already: true });
@@ -111,10 +114,10 @@ router.post('/send-otp', requireUser, async (req, res) => {
     await user.save();
     await sendOtpEmail(user.email, user.name, code).catch(console.error);
     res.json({ ok: true, email: user.email });
-});
+}));
 
 // POST /api/auth/verify-otp
-router.post('/verify-otp', requireUser, async (req, res) => {
+router.post('/verify-otp', requireUser, asyncHandler(async (req, res) => {
     const { code } = req.body;
     const user = await User.findOne({ id: req.session.userId });
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
@@ -127,19 +130,19 @@ router.post('/verify-otp', requireUser, async (req, res) => {
     user.otpExpiry = null;
     await user.save();
     res.json({ ok: true });
-});
+}));
 
 // POST /api/auth/avatar
-router.post('/avatar', requireUser, async (req, res) => {
+router.post('/avatar', requireUser, asyncHandler(async (req, res) => {
     const { avatar } = req.body;
     if (!avatar?.startsWith('data:image/')) return res.status(400).json({ error: 'Imagen inválida.' });
     if (avatar.length > 2_500_000) return res.status(400).json({ error: 'La imagen es demasiado grande. Máximo 2MB.' });
     const user = await User.findOneAndUpdate({ id: req.session.userId }, { avatar }, { new: true });
     res.json({ ok: true, avatar: user.avatar });
-});
+}));
 
 // PUT /api/auth/profile
-router.put('/profile', requireUser, async (req, res) => {
+router.put('/profile', requireUser, asyncHandler(async (req, res) => {
     const { name, email } = req.body;
     if (!name?.trim() || !email?.trim())
         return res.status(400).json({ error: 'Nombre y email son obligatorios.' });
@@ -156,10 +159,10 @@ router.put('/profile', requireUser, async (req, res) => {
         { new: true }
     );
     res.json({ user: sanitize(user) });
-});
+}));
 
 // PUT /api/auth/password
-router.put('/password', requireUser, async (req, res) => {
+router.put('/password', requireUser, asyncHandler(async (req, res) => {
     const { current, newPassword } = req.body;
     if (!current || !newPassword)
         return res.status(400).json({ error: 'Completa todos los campos.' });
@@ -175,16 +178,16 @@ router.put('/password', requireUser, async (req, res) => {
     user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
     res.json({ ok: true });
-});
+}));
 
 // GET /api/auth/likes
-router.get('/likes', requireUser, async (req, res) => {
+router.get('/likes', requireUser, asyncHandler(async (req, res) => {
     const user = await User.findOne({ id: req.session.userId });
     res.json({ likes: user?.likes || [] });
-});
+}));
 
 // POST /api/auth/likes/:beatId — toggle
-router.post('/likes/:beatId', requireUser, async (req, res) => {
+router.post('/likes/:beatId', requireUser, asyncHandler(async (req, res) => {
     const user = await User.findOne({ id: req.session.userId });
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
 
@@ -193,10 +196,10 @@ router.post('/likes/:beatId', requireUser, async (req, res) => {
     else            user.likes.splice(idx, 1);
     await user.save();
     res.json({ liked: idx === -1, likes: user.likes });
-});
+}));
 
 // POST /api/auth/listened/:beatId
-router.post('/listened/:beatId', requireUser, async (req, res) => {
+router.post('/listened/:beatId', requireUser, asyncHandler(async (req, res) => {
     const user = await User.findOne({ id: req.session.userId });
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
 
@@ -206,10 +209,10 @@ router.post('/listened/:beatId', requireUser, async (req, res) => {
     ].slice(0, 20);
     await user.save();
     res.json({ ok: true });
-});
+}));
 
 // GET /api/auth/orders
-router.get('/orders', requireUser, async (req, res) => {
+router.get('/orders', requireUser, asyncHandler(async (req, res) => {
     const TOKENS_FILE = path.join(__dirname, '../data/tokens.json');
     const user = await User.findOne({ id: req.session.userId });
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
@@ -221,16 +224,16 @@ router.get('/orders', requireUser, async (req, res) => {
         .map(([token, t]) => ({ token, ...t }))
         .sort((a, b) => b.createdAt - a.createdAt);
     res.json({ orders });
-});
+}));
 
 // GET /api/auth/playlists
-router.get('/playlists', requireUser, async (req, res) => {
+router.get('/playlists', requireUser, asyncHandler(async (req, res) => {
     const user = await User.findOne({ id: req.session.userId });
     res.json({ playlists: user?.playlists || [] });
-});
+}));
 
 // POST /api/auth/playlists
-router.post('/playlists', requireUser, async (req, res) => {
+router.post('/playlists', requireUser, asyncHandler(async (req, res) => {
     const { name } = req.body;
     if (!name?.trim()) return res.status(400).json({ error: 'El nombre es obligatorio.' });
 
@@ -241,10 +244,10 @@ router.post('/playlists', requireUser, async (req, res) => {
         { new: true }
     );
     res.json({ playlist });
-});
+}));
 
 // POST /api/auth/playlists/:id/beats/:beatId — toggle
-router.post('/playlists/:id/beats/:beatId', requireUser, async (req, res) => {
+router.post('/playlists/:id/beats/:beatId', requireUser, asyncHandler(async (req, res) => {
     const user = await User.findOne({ id: req.session.userId });
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
 
@@ -256,15 +259,15 @@ router.post('/playlists/:id/beats/:beatId', requireUser, async (req, res) => {
     else           pl.beats.splice(bi, 1);
     await user.save();
     res.json({ playlist: pl });
-});
+}));
 
 // DELETE /api/auth/playlists/:id
-router.delete('/playlists/:id', requireUser, async (req, res) => {
+router.delete('/playlists/:id', requireUser, asyncHandler(async (req, res) => {
     await User.findOneAndUpdate(
         { id: req.session.userId },
         { $pull: { playlists: { id: req.params.id } } }
     );
     res.json({ ok: true });
-});
+}));
 
 module.exports = router;

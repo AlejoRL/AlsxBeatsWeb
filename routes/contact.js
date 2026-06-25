@@ -1,6 +1,16 @@
 const express = require('express');
 const router  = express.Router();
 
+// Escapa caracteres HTML para prevenir XSS en el cuerpo del email
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;');
+}
+
 router.post('/', async (req, res) => {
     const { name, email, message, beat } = req.body;
 
@@ -12,6 +22,11 @@ router.post('/', async (req, res) => {
         return res.status(500).json({ error: 'Email no configurado en el servidor.' });
     }
 
+    const safeName    = escapeHtml(name);
+    const safeEmail   = escapeHtml(email);
+    const safeBeat    = escapeHtml(beat || '—');
+    const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
+
     try {
         const response = await fetch('https://api.resend.com/emails', {
             method: 'POST',
@@ -22,18 +37,18 @@ router.post('/', async (req, res) => {
             body: JSON.stringify({
                 from:     'AlsxBeats <onboarding@resend.dev>',
                 to:       'alsxbeats@gmail.com',
-                reply_to: `${name} <${email}>`,
-                subject:  `Exclusive Lease — ${beat || 'beat'}`,
+                reply_to: `${safeName} <${safeEmail}>`,
+                subject:  `Exclusive Lease — ${safeBeat}`,
                 html: `
                     <div style="font-family:sans-serif;max-width:520px">
                         <h2 style="color:#4ecdc4;margin-bottom:4px">Solicitud de Exclusive Lease</h2>
-                        <p style="color:#666;margin-top:0">Beat: <strong>${beat || '—'}</strong></p>
+                        <p style="color:#666;margin-top:0">Beat: <strong>${safeBeat}</strong></p>
                         <hr style="border:none;border-top:1px solid #eee">
-                        <p><strong>Nombre:</strong> ${name}</p>
-                        <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+                        <p><strong>Nombre:</strong> ${safeName}</p>
+                        <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
                         <p><strong>Mensaje:</strong></p>
                         <blockquote style="border-left:3px solid #4ecdc4;margin:0;padding:8px 16px;color:#333;background:#f9f9f9">
-                            ${message.replace(/\n/g, '<br>')}
+                            ${safeMessage}
                         </blockquote>
                     </div>
                 `

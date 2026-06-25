@@ -1,4 +1,8 @@
 require('dotenv').config();
+// Evita que promesas rechazadas sin catch colapsen el proceso
+process.on('unhandledRejection', (err) => {
+    console.error('UnhandledRejection:', err.message);
+});
 const express   = require('express');
 const session   = require('express-session');
 const path      = require('path');
