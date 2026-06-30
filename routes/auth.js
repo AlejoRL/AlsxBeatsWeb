@@ -180,6 +180,69 @@ router.put('/password', requireUser, asyncHandler(async (req, res) => {
     res.json({ ok: true });
 }));
 
+async function sendResetEmail(to, name, token, baseUrl) {
+    if (!process.env.RESEND_API_KEY) return;
+    const link = `${baseUrl}/reset-password.html?token=${token}`;
+    await fetch('https://api.resend.com/emails', {
+        method:  'POST',
+        headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            from:    'AlsxBeats <onboarding@resend.dev>',
+            to,
+            subject: 'Restablecer contraseña — AlsxBeats',
+            html: `
+                <div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#0b0d14;border-radius:16px;padding:32px">
+                    <h2 style="color:#4ecdc4;margin-bottom:4px">AlsxBeats</h2>
+                    <p style="color:#94a3b8;margin-bottom:24px">Hola ${name}, recibimos una solicitud para restablecer tu contraseña.</p>
+                    <a href="${link}" style="display:inline-block;background:#4ecdc4;color:#000;font-weight:700;padding:14px 28px;border-radius:10px;text-decoration:none;margin-bottom:20px">
+                        Restablecer contraseña
+                    </a>
+                    <p style="color:#64748b;font-size:12px;margin-top:16px">Este enlace expira en <strong style="color:#94a3b8">1 hora</strong>. Si no solicitaste esto, ignora este email.</p>
+                    <p style="color:#3a4556;font-size:11px;margin-top:8px;word-break:break-all">${link}</p>
+                </div>
+            `
+        })
+    });
+}
+
+// POST /api/auth/forgot-password
+router.post('/forgot-password', asyncHandler(async (req, res) => {
+    const { email } = req.body;
+    const OK = { ok: true, message: 'Si existe una cuenta con ese email, recibirás un enlace en breve.' };
+    if (!email?.trim()) return res.status(400).json({ error: 'Email obligatorio.' });
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) return res.json(OK); // No revelar si el email existe
+
+    const token  = crypto.randomBytes(32).toString('hex');
+    user.resetToken       = token;
+    user.resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
+    await user.save();
+
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+    await sendResetEmail(user.email, user.name, token, baseUrl).catch(console.error);
+    res.json(OK);
+}));
+
+// POST /api/auth/reset-password
+router.post('/reset-password', asyncHandler(async (req, res) => {
+    const { token, password } = req.body;
+    if (!token || !password)    return res.status(400).json({ error: 'Datos incompletos.' });
+    if (password.length < 6)    return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres.' });
+
+    const user = await User.findOne({
+        resetToken:       token,
+        resetTokenExpiry: { $gt: new Date() }
+    });
+    if (!user) return res.status(400).json({ error: 'El enlace no es válido o ha expirado. Solicita uno nuevo.' });
+
+    user.password         = await bcrypt.hash(password, 10);
+    user.resetToken       = null;
+    user.resetTokenExpiry = null;
+    await user.save();
+    res.json({ ok: true });
+}));
+
 // GET /api/auth/likes
 router.get('/likes', requireUser, asyncHandler(async (req, res) => {
     const user = await User.findOne({ id: req.session.userId });

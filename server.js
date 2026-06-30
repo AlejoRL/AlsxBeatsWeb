@@ -54,6 +54,14 @@ const adminLimiter = rateLimit({
     legacyHeaders: false
 });
 
+const resetLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hora
+    max: 5,
+    message: { error: 'Demasiadas solicitudes de recuperación. Espera una hora.' },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
 // Webhook de Stripe necesita body raw ANTES del parser JSON
 app.use('/api/checkout/webhook', express.raw({ type: 'application/json' }));
 
@@ -75,9 +83,11 @@ app.use(session({
 // Aplicar rate limiters
 app.use('/api/auth/login',      authLimiter);
 app.use('/api/auth/register',   authLimiter);
-app.use('/api/auth/send-otp',   otpLimiter);
-app.use('/api/auth/verify-otp', otpLimiter);
-app.use('/api/admin/login',     adminLimiter);
+app.use('/api/auth/send-otp',        otpLimiter);
+app.use('/api/auth/verify-otp',      otpLimiter);
+app.use('/api/auth/forgot-password', resetLimiter);
+app.use('/api/auth/reset-password',  resetLimiter);
+app.use('/api/admin/login',          adminLimiter);
 
 // API
 app.use('/api/auth',     require('./routes/auth'));
