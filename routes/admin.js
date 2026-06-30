@@ -239,6 +239,18 @@ router.get('/users', requireAdmin, asyncHandler(async (req, res) => {
     res.json(users);
 }));
 
+// PUT /api/admin/users/:id/plan
+router.put('/users/:id/plan', requireAdmin, asyncHandler(async (req, res) => {
+    const User = require('../models/User');
+    const { plan } = req.body;
+    if (!['starter', 'pro', 'elite'].includes(plan))
+        return res.status(400).json({ error: 'Plan no válido.' });
+    const user = await User.findOneAndUpdate({ id: req.params.id }, { plan }, { new: true })
+        .select('id name email plan');
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
+    res.json({ ok: true, user });
+}));
+
 // POST /api/admin/reset-verified — testing
 router.post('/reset-verified', requireAdmin, asyncHandler(async (req, res) => {
     const User = require('../models/User');
