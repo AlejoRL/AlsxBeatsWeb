@@ -289,15 +289,11 @@ const Cart = {
 
         // Render Cart Items
         container.innerHTML = cart.map((item, index) => {
-            // Fix images that could be missing prefix path
-            let imgSrc = item.image;
-            if (imgSrc && !imgSrc.startsWith('assets/images/') && !imgSrc.startsWith('parentaladvisory.png') && !imgSrc.startsWith('alsxbeatsportada.png') && !imgSrc.startsWith('typelofiryb1.png')) {
-                imgSrc = 'assets/images/' + imgSrc;
-            }
-            
+            const imgSrc = item.image || 'assets/images/alsxbeatsportada.png';
+
             return `
                 <div class="cart-item">
-                    <img src="${imgSrc}" alt="${item.title}" class="cart-item-img">
+                    <img src="${imgSrc}" alt="${item.title}" class="cart-item-img" onerror="this.src='assets/images/alsxbeatsportada.png'">
                     <div class="cart-item-info">
                         <h4 class="cart-item-title">${item.title}</h4>
                         <span class="cart-item-license">${item.license}</span>

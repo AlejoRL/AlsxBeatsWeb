@@ -614,9 +614,11 @@ async function loadBeatData() {
 }
 
 let currentBeatId = null;
+let currentBeatImage = '';
 
 loadBeatData().then(beat => {
     currentBeatId = beat.id;
+    currentBeatImage = beat.img || '';
 
     // Player
     document.getElementById('beat-title').textContent = beat.title;
@@ -896,7 +898,7 @@ addToCartBtn.addEventListener('click', () => {
         beatId: currentBeatId || params.get('beatId') || params.get('title'),
         licenseType: activeLicense.dataset.type || priceToLicenseType(activeLicense.dataset.price),
         title: document.getElementById('beat-title').textContent,
-        image: document.getElementById('beat-img').src.replace(window.location.origin + '/', ''),
+        image: currentBeatImage,
         license: activeLicense.querySelector('h3').textContent,
         price: activeLicense.dataset.price
     };
@@ -990,7 +992,7 @@ if (playerCartBtn) {
             beatId: currentBeatId || params.get('beatId') || params.get('title'),
             licenseType: activeLicense ? (activeLicense.dataset.type || priceToLicenseType(activeLicense.dataset.price)) : 'basic',
             title: document.getElementById('beat-title').textContent,
-            image: document.getElementById('beat-img').src.replace(window.location.origin + '/', ''),
+            image: currentBeatImage,
             license: activeLicense ? activeLicense.querySelector('h3').textContent : 'Basic Lease',
             price: activeLicense ? activeLicense.dataset.price : '29.99'
         };
