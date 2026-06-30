@@ -181,9 +181,14 @@ router.put('/password', requireUser, asyncHandler(async (req, res) => {
 }));
 
 async function sendResetEmail(to, name, token, baseUrl) {
-    if (!process.env.RESEND_API_KEY) return;
     const link = `${baseUrl}/reset-password.html?token=${token}`;
-    await fetch('https://api.resend.com/emails', {
+
+    if (!process.env.RESEND_API_KEY) {
+        console.warn('⚠️  RESEND_API_KEY no configurado. Enlace de reset:', link);
+        return;
+    }
+
+    const r    = await fetch('https://api.resend.com/emails', {
         method:  'POST',
         headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -203,6 +208,13 @@ async function sendResetEmail(to, name, token, baseUrl) {
             `
         })
     });
+
+    const body = await r.json();
+    if (!r.ok) {
+        console.error('❌ Resend error:', JSON.stringify(body));
+        throw new Error(body.message || 'Error enviando email');
+    }
+    console.log('✅ Reset email enviado a:', to);
 }
 
 // POST /api/auth/forgot-password
@@ -220,7 +232,12 @@ router.post('/forgot-password', asyncHandler(async (req, res) => {
     await user.save();
 
     const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-    await sendResetEmail(user.email, user.name, token, baseUrl).catch(console.error);
+    try {
+        await sendResetEmail(user.email, user.name, token, baseUrl);
+    } catch (emailErr) {
+        console.error('Reset email error:', emailErr.message);
+        return res.status(500).json({ error: 'No se pudo enviar el email. Error: ' + emailErr.message });
+    }
     res.json(OK);
 }));
 
