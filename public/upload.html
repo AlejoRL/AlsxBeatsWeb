@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Beat — AlsxBeats</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        :root{--bg:#0b0d14;--panel:#11151a;--accent:#4ecdc4;--border:#1c232b;--muted:#94a3b8}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column}
+
+        header{padding:16px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:var(--bg)}
+        .logo{font-size:20px;font-weight:900;text-decoration:none;color:#fff}.logo span{color:var(--accent)}
+        .back-link{font-size:13px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s}
+        .back-link:hover{color:#fff}
+
+        .page{max-width:780px;margin:0 auto;padding:40px 24px 80px;width:100%}
+
+        /* PLAN STATUS */
+        .plan-status{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px 24px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+        .plan-left{display:flex;align-items:center;gap:14px}
+        .plan-icon{width:42px;height:42px;border-radius:10px;background:rgba(78,205,196,.1);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:18px;flex-shrink:0}
+        .plan-name{font-size:15px;font-weight:700;color:#fff}
+        .plan-desc{font-size:12px;color:var(--muted);margin-top:2px}
+        .plan-bar-wrap{flex:1;min-width:160px}
+        .plan-bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
+        .plan-bar-label span:last-child{color:#fff;font-weight:600}
+        .plan-bar{height:6px;background:#1c232b;border-radius:999px;overflow:hidden}
+        .plan-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),#36b1a8);border-radius:999px;transition:width .4s ease}
+        .plan-bar-fill.full{background:linear-gradient(90deg,#ef4444,#f87171)}
+        .btn-upgrade{background:linear-gradient(135deg,var(--accent),#36b1a8);color:#000;border:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+        .btn-upgrade:hover{opacity:.88}
+
+        /* WALL (starter plan) */
+        .upgrade-wall{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:60px 40px;text-align:center;display:none}
+        .upgrade-wall i{font-size:48px;color:rgba(78,205,196,.3);margin-bottom:20px}
+        .upgrade-wall h2{font-size:22px;font-weight:800;margin-bottom:10px}
+        .upgrade-wall p{font-size:14px;color:var(--muted);max-width:380px;margin:0 auto 28px;line-height:1.7}
+        .plans-preview{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+        .plan-card{background:#0b0d14;border:1px solid var(--border);border-radius:14px;padding:20px 24px;text-align:left;min-width:160px}
+        .plan-card.featured{border-color:var(--accent)}
+        .plan-card-name{font-size:14px;font-weight:700;margin-bottom:6px}
+        .plan-card-price{font-size:22px;font-weight:900;color:var(--accent);margin-bottom:8px}
+        .plan-card-price span{font-size:13px;font-weight:400;color:var(--muted)}
+        .plan-card-limit{font-size:12px;color:var(--muted)}
+        .btn-go-plans{background:var(--accent);color:#000;border:none;padding:13px 32px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+        .btn-go-plans:hover{opacity:.88}
+
+        /* FORM */
+        .upload-form{display:none}
+        .section-title{font-size:18px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+        .section-title i{color:var(--accent);font-size:15px}
+
+        .drop-zone{border:2px dashed var(--border);border-radius:14px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s;background:#0b0d14;position:relative;overflow:hidden}
+        .drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent);background:rgba(78,205,196,.04)}
+        .drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+        .drop-icon{font-size:32px;color:rgba(78,205,196,.4);margin-bottom:12px}
+        .drop-label{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+        .drop-sub{font-size:12px;color:var(--muted)}
+        .file-selected{display:none;align-items:center;gap:10px;background:rgba(78,205,196,.07);border:1px solid rgba(78,205,196,.2);border-radius:10px;padding:12px 14px;margin-top:12px;font-size:13px}
+        .file-selected i{color:var(--accent)}
+        .file-selected .fname{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+        .file-selected .fclear{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px;flex-shrink:0}
+        .file-selected .fclear:hover{color:#ef4444}
+
+        .cover-row{display:grid;grid-template-columns:160px 1fr;gap:16px;margin-bottom:20px;align-items:start}
+        .cover-preview{width:160px;height:160px;border-radius:12px;object-fit:cover;border:2px dashed var(--border);display:none;cursor:pointer}
+        .cover-drop{height:160px}
+
+        .form-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .form-group{display:flex;flex-direction:column;gap:6px}
+        .form-group.full{grid-column:1/-1}
+        .form-group label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+        .form-group input,.form-group select{background:#0b0d14;border:1.5px solid var(--border);color:#fff;font-size:14px;font-family:'Inter',sans-serif;padding:11px 14px;border-radius:10px;outline:none;transition:.2s;-webkit-appearance:none}
+        .form-group select option{background:#11151a}
+        .form-group input:focus,.form-group select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(78,205,196,.08)}
+        .form-group input::placeholder{color:#3a4556}
+        .input-hint{font-size:11px;color:#3a4556;margin-top:2px}
+
+        .btn-submit{width:100%;height:52px;background:linear-gradient(135deg,var(--accent),#36b1a8);color:#000;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;margin-top:4px}
+        .btn-submit:hover:not(:disabled){opacity:.9;transform:translateY(-1px)}
+        .btn-submit:disabled{opacity:.5;cursor:not-allowed}
+
+        /* PROGRESS */
+        .upload-progress{display:none;margin-top:16px}
+        .progress-bar{height:6px;background:#1c232b;border-radius:999px;overflow:hidden;margin-bottom:8px}
+        .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#36b1a8);border-radius:999px;width:0%;transition:width .3s ease}
+        .progress-label{font-size:12px;color:var(--muted);text-align:center}
+
+        /* SUCCESS */
+        .success-box{display:none;background:rgba(78,205,196,.07);border:1px solid rgba(78,205,196,.25);border-radius:16px;padding:28px;text-align:center;margin-top:20px}
+        .success-box i{font-size:40px;color:var(--accent);margin-bottom:14px}
+        .success-box h3{font-size:18px;font-weight:800;margin-bottom:8px}
+        .success-box p{font-size:13px;color:var(--muted);margin-bottom:20px}
+        .success-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+        .btn-view{background:var(--accent);color:#000;border:none;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none}
+        .btn-upload-another{background:transparent;color:var(--accent);border:1px solid rgba(78,205,196,.3);padding:10px 22px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer}
+        .btn-upload-another:hover{background:rgba(78,205,196,.07)}
+
+        .error-msg{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#f87171;border-radius:10px;padding:12px 14px;font-size:13px;margin-top:12px;display:none}
+
+        .spinner{width:18px;height:18px;border:2px solid rgba(0,0,0,.25);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        @media(max-width:640px){
+            header{padding:14px 20px}
+            .page{padding:24px 16px 80px}
+            .plan-status{flex-direction:column;align-items:flex-start}
+            .cover-row{grid-template-columns:1fr}
+            .cover-preview{display:none!important}
+            .form-grid{grid-template-columns:1fr}
+            .form-group.full{grid-column:1}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo">Alsx<span>Beats</span></a>
+    <div style="display:flex;align-items:center;gap:16px">
+        <a href="profile.html" class="back-link"><i class="fas fa-user"></i> Mi perfil</a>
+        <a href="index.html" class="back-link"><i class="fas fa-home"></i> Inicio</a>
+    </div>
+</header>
+
+<div class="page">
+
+    <!-- STATUS DEL PLAN -->
+    <div class="plan-status" id="plan-status" style="display:none">
+        <div class="plan-left">
+            <div class="plan-icon"><i class="fas fa-layer-group"></i></div>
+            <div>
+                <div class="plan-name" id="ps-name">Plan Pro</div>
+                <div class="plan-desc" id="ps-desc">Subida de beats activa</div>
+            </div>
+        </div>
+        <div class="plan-bar-wrap" id="ps-bar-wrap">
+            <div class="plan-bar-label">
+                <span>Beats subidos</span>
+                <span id="ps-count">0 / 10</span>
+            </div>
+            <div class="plan-bar"><div class="plan-bar-fill" id="ps-fill" style="width:0%"></div></div>
+        </div>
+        <a href="index.html#pricing" class="btn-upgrade" id="ps-upgrade" style="display:none">
+            <i class="fas fa-arrow-up"></i> Ampliar plan
+        </a>
+    </div>
+
+    <!-- MURO DE ACTUALIZACIÓN (starter) -->
+    <div class="upgrade-wall" id="upgrade-wall">
+        <i class="fas fa-upload"></i>
+        <h2>Sube tus propios beats</h2>
+        <p>La subida de beats está disponible a partir del Plan Pro. Elige el plan que mejor se adapte a ti.</p>
+        <div class="plans-preview">
+            <div class="plan-card featured">
+                <div class="plan-card-name">Plan Pro</div>
+                <div class="plan-card-price">€9<span>/mes</span></div>
+                <div class="plan-card-limit"><i class="fas fa-upload" style="color:var(--accent);margin-right:5px"></i> Hasta 10 beats</div>
+            </div>
+            <div class="plan-card">
+                <div class="plan-card-name">Plan Elite</div>
+                <div class="plan-card-price">€19<span>/mes</span></div>
+                <div class="plan-card-limit"><i class="fas fa-infinity" style="color:var(--accent);margin-right:5px"></i> Beats ilimitados</div>
+            </div>
+        </div>
+        <a href="index.html#pricing" class="btn-go-plans">
+            <i class="fas fa-crown"></i> Ver planes
+        </a>
+    </div>
+
+    <!-- FORMULARIO DE SUBIDA -->
+    <div class="upload-form" id="upload-form">
+
+        <div class="section-title"><i class="fas fa-music"></i> Subir nuevo beat</div>
+
+        <!-- AUDIO -->
+        <div class="form-card">
+            <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px">Archivo de audio *</div>
+            <div class="drop-zone" id="audio-drop">
+                <input type="file" id="audio-input" accept=".mp3,.wav,audio/mpeg,audio/wav">
+                <div class="drop-icon"><i class="fas fa-file-audio"></i></div>
+                <div class="drop-label">Arrastra tu archivo de audio aquí</div>
+                <div class="drop-sub">MP3 o WAV · Máximo 80 MB</div>
+            </div>
+            <div class="file-selected" id="audio-selected">
+                <i class="fas fa-file-audio"></i>
+                <span class="fname" id="audio-fname"></span>
+                <span style="font-size:11px;color:var(--muted)" id="audio-fsize"></span>
+                <button class="fclear" onclick="clearFile('audio')" title="Quitar"><i class="fas fa-xmark"></i></button>
+            </div>
+        </div>
+
+        <!-- COVER + METADATA -->
+        <div class="form-card">
+            <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px">Portada (opcional)</div>
+            <div class="cover-row">
+                <img id="cover-preview" class="cover-preview" src="" alt="Portada">
+                <div>
+                    <div class="drop-zone cover-drop" id="cover-drop">
+                        <input type="file" id="cover-input" accept="image/jpeg,image/png,image/webp">
+                        <div class="drop-icon" style="font-size:24px"><i class="fas fa-image"></i></div>
+                        <div class="drop-label" style="font-size:13px">Subir portada</div>
+                        <div class="drop-sub">JPG, PNG, WEBP · Máx 5 MB</div>
+                    </div>
+                    <div class="file-selected" id="cover-selected" style="margin-top:10px">
+                        <i class="fas fa-image"></i>
+                        <span class="fname" id="cover-fname"></span>
+                        <button class="fclear" onclick="clearFile('cover')" title="Quitar"><i class="fas fa-xmark"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- METADATA -->
+        <div class="form-card">
+            <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:16px">Información del beat</div>
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Título *</label>
+                    <input type="text" id="f-title" placeholder="Ej: Dark Trap Beat" maxlength="80">
+                </div>
+                <div class="form-group">
+                    <label>Género</label>
+                    <select id="f-genre">
+                        <option value="">— Seleccionar —</option>
+                        <option>Trap</option>
+                        <option>Drill</option>
+                        <option>Lo-Fi</option>
+                        <option>R&B</option>
+                        <option>Hip-Hop</option>
+                        <option>Afrobeats</option>
+                        <option>Reggaeton</option>
+                        <option>Pop</option>
+                        <option>Boom Bap</option>
+                        <option>Jersey Club</option>
+                        <option>Dancehall</option>
+                        <option>Soul</option>
+                        <option>Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>BPM</label>
+                    <input type="number" id="f-bpm" placeholder="140" min="40" max="300">
+                </div>
+                <div class="form-group">
+                    <label>Tonalidad</label>
+                    <select id="f-key">
+                        <option value="">— Seleccionar —</option>
+                        <option>C</option><option>C#</option><option>D</option><option>D#</option>
+                        <option>E</option><option>F</option><option>F#</option><option>G</option>
+                        <option>G#</option><option>A</option><option>A#</option><option>B</option>
+                        <option>Cm</option><option>C#m</option><option>Dm</option><option>D#m</option>
+                        <option>Em</option><option>Fm</option><option>F#m</option><option>Gm</option>
+                        <option>G#m</option><option>Am</option><option>A#m</option><option>Bm</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>Etiquetas</label>
+                    <input type="text" id="f-tags" placeholder="dark, trap, hard, 808">
+                    <div class="input-hint">Separa las etiquetas con comas</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-msg" id="error-msg"></div>
+
+        <button class="btn-submit" id="btn-submit" onclick="submitUpload()">
+            <i class="fas fa-upload"></i> Subir beat
+        </button>
+
+        <div class="upload-progress" id="upload-progress">
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+            <div class="progress-label" id="progress-label">Subiendo...</div>
+        </div>
+
+        <div class="success-box" id="success-box">
+            <i class="fas fa-circle-check"></i>
+            <h3>¡Beat subido con éxito!</h3>
+            <p id="success-desc">Tu beat ya está disponible en el catálogo.</p>
+            <div class="success-actions">
+                <a id="btn-view-beat" href="#" class="btn-view"><i class="fas fa-eye"></i> Ver beat</a>
+                <button class="btn-upload-another" onclick="resetForm()"><i class="fas fa-plus"></i> Subir otro</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+let statusData = null;
+
+async function init() {
+    try {
+        const r    = await fetch('/api/auth/me');
+        const data = await r.json();
+        if (!data.user) { window.location.href = 'login.html'; return; }
+
+        const sr     = await fetch('/api/upload/status');
+        statusData   = await sr.json();
+
+        renderStatus(statusData);
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+function renderStatus(s) {
+    document.getElementById('plan-status').style.display = 'flex';
+
+    const names = { starter: 'Plan Starter', pro: 'Plan Pro', elite: 'Plan Elite' };
+    document.getElementById('ps-name').textContent = names[s.plan] || s.plan;
+
+    if (s.plan === 'starter') {
+        document.getElementById('plan-status').style.display = 'none';
+        document.getElementById('upgrade-wall').style.display = 'block';
+        return;
+    }
+
+    const isUnlimited = s.limit === null;
+    const pct         = isUnlimited ? Math.min((s.used / 20) * 100, 100) : Math.min((s.used / s.limit) * 100, 100);
+    const isFull      = !isUnlimited && s.used >= s.limit;
+
+    document.getElementById('ps-desc').textContent = isFull
+        ? 'Has alcanzado el límite de tu plan'
+        : 'Subida de beats activa';
+
+    document.getElementById('ps-count').textContent = isUnlimited
+        ? `${s.used} subidos`
+        : `${s.used} / ${s.limit}`;
+
+    if (isUnlimited) {
+        document.getElementById('ps-bar-wrap').style.display = 'none';
+    } else {
+        document.getElementById('ps-fill').style.width = pct + '%';
+        if (isFull) document.getElementById('ps-fill').classList.add('full');
+    }
+
+    if (isFull) {
+        document.getElementById('ps-upgrade').style.display = 'inline-flex';
+        document.getElementById('upgrade-wall').style.display = 'block';
+    } else {
+        document.getElementById('upload-form').style.display = 'block';
+    }
+}
+
+// ── File handling ────────────────────────────────────────────────
+function setupDrop(dropId, inputId, type) {
+    const drop  = document.getElementById(dropId);
+    const input = document.getElementById(inputId);
+
+    drop.addEventListener('dragover',  e => { e.preventDefault(); drop.classList.add('drag-over'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('drag-over'));
+    drop.addEventListener('drop', e => {
+        e.preventDefault();
+        drop.classList.remove('drag-over');
+        const f = e.dataTransfer.files[0];
+        if (f) handleFile(f, type);
+    });
+
+    input.addEventListener('change', () => {
+        if (input.files[0]) handleFile(input.files[0], type);
+    });
+}
+
+function handleFile(file, type) {
+    if (type === 'audio') {
+        if (file.size > 80 * 1024 * 1024) { showError('El archivo de audio no puede superar 80 MB.'); return; }
+        document.getElementById('audio-fname').textContent = file.name;
+        document.getElementById('audio-fsize').textContent = formatSize(file.size);
+        document.getElementById('audio-selected').style.display = 'flex';
+        // Keep input in sync
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        document.getElementById('audio-input').files = dt.files;
+    } else {
+        if (file.size > 5 * 1024 * 1024) { showError('La portada no puede superar 5 MB.'); return; }
+        document.getElementById('cover-fname').textContent = file.name;
+        document.getElementById('cover-selected').style.display = 'flex';
+        const preview = document.getElementById('cover-preview');
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        document.getElementById('cover-input').files = dt.files;
+    }
+    hideError();
+}
+
+function clearFile(type) {
+    if (type === 'audio') {
+        document.getElementById('audio-input').value = '';
+        document.getElementById('audio-selected').style.display = 'none';
+    } else {
+        document.getElementById('cover-input').value = '';
+        document.getElementById('cover-selected').style.display = 'none';
+        const preview = document.getElementById('cover-preview');
+        preview.src = '';
+        preview.style.display = 'none';
+    }
+}
+
+function formatSize(bytes) {
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+// ── Submit ───────────────────────────────────────────────────────
+async function submitUpload() {
+    hideError();
+
+    const audioFile = document.getElementById('audio-input').files[0];
+    const coverFile = document.getElementById('cover-input').files[0];
+    const title     = document.getElementById('f-title').value.trim();
+
+    if (!title)     { showError('El título es obligatorio.'); return; }
+    if (!audioFile) { showError('Selecciona un archivo de audio.'); return; }
+
+    const btn = document.getElementById('btn-submit');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Subiendo...';
+
+    document.getElementById('upload-progress').style.display = 'block';
+    document.getElementById('success-box').style.display = 'none';
+
+    const fd = new FormData();
+    fd.append('audio', audioFile);
+    if (coverFile) fd.append('cover', coverFile);
+    fd.append('title',  title);
+    fd.append('genre',  document.getElementById('f-genre').value);
+    fd.append('bpm',    document.getElementById('f-bpm').value);
+    fd.append('key',    document.getElementById('f-key').value);
+    fd.append('tags',   document.getElementById('f-tags').value);
+
+    // XHR for progress tracking
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/upload');
+
+    xhr.upload.addEventListener('progress', e => {
+        if (!e.lengthComputable) return;
+        const pct = Math.round((e.loaded / e.total) * 100);
+        document.getElementById('progress-fill').style.width = pct + '%';
+        document.getElementById('progress-label').textContent =
+            pct < 100 ? `Subiendo... ${pct}%` : 'Procesando...';
+    });
+
+    xhr.addEventListener('load', () => {
+        const res = JSON.parse(xhr.responseText);
+        if (xhr.status === 200 && res.ok) {
+            onSuccess(res);
+        } else {
+            showError(res.error || 'Error al subir el beat.');
+            resetBtn();
+        }
+    });
+
+    xhr.addEventListener('error', () => {
+        showError('Error de conexión. Intenta de nuevo.');
+        resetBtn();
+    });
+
+    xhr.send(fd);
+}
+
+function onSuccess(res) {
+    document.getElementById('upload-progress').style.display = 'none';
+    document.getElementById('btn-submit').style.display = 'none';
+
+    const beat = res.beat;
+    document.getElementById('success-desc').textContent =
+        `"${beat.title}" ya está disponible en el catálogo.`;
+    document.getElementById('btn-view-beat').href = `licencias.html?beatId=${beat.id}`;
+    document.getElementById('success-box').style.display = 'block';
+
+    // Update plan status counter
+    if (statusData) {
+        statusData.used = res.used;
+        const isUnlimited = res.limit === null;
+        const pct = isUnlimited ? Math.min((res.used / 20) * 100, 100) : Math.min((res.used / res.limit) * 100, 100);
+        document.getElementById('ps-fill').style.width = pct + '%';
+        document.getElementById('ps-count').textContent = isUnlimited
+            ? `${res.used} subidos`
+            : `${res.used} / ${res.limit}`;
+    }
+}
+
+function resetForm() {
+    clearFile('audio');
+    clearFile('cover');
+    document.getElementById('f-title').value  = '';
+    document.getElementById('f-genre').value  = '';
+    document.getElementById('f-bpm').value    = '';
+    document.getElementById('f-key').value    = '';
+    document.getElementById('f-tags').value   = '';
+    document.getElementById('success-box').style.display       = 'none';
+    document.getElementById('upload-progress').style.display   = 'none';
+    document.getElementById('progress-fill').style.width       = '0%';
+    const btn = document.getElementById('btn-submit');
+    btn.style.display = '';
+    btn.disabled      = false;
+    btn.innerHTML     = '<i class="fas fa-upload"></i> Subir beat';
+    hideError();
+}
+
+function resetBtn() {
+    const btn = document.getElementById('btn-submit');
+    btn.disabled      = false;
+    btn.innerHTML     = '<i class="fas fa-upload"></i> Subir beat';
+    document.getElementById('upload-progress').style.display = 'none';
+}
+
+function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent   = msg;
+    el.style.display = 'block';
+}
+
+function hideError() {
+    document.getElementById('error-msg').style.display = 'none';
+}
+
+setupDrop('audio-drop', 'audio-input', 'audio');
+setupDrop('cover-drop', 'cover-input', 'cover');
+init();
+</script>
+
+</body>
+</html>

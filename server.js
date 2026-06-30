@@ -87,6 +87,7 @@ app.use('/api/download', require('./routes/download'));
 app.use('/api/admin',    require('./routes/admin'));
 app.use('/api/catalog',  require('./routes/catalog'));
 app.use('/api/contact',  require('./routes/contact'));
+app.use('/api/upload',   require('./routes/upload'));
 
 // Proteger /admin — redirige al login si no hay sesión
 app.get('/admin', (req, res) => {
