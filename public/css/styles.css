@@ -124,7 +124,20 @@ header {
 .type-dropdown button.active { color: #4ecdc4; background: rgba(78,205,196,.07); }
 .type-dropdown button.active i { color: #4ecdc4; }
 
-@media (max-width: 768px) { .nav-search-main { display: none; } }
+.nav-search-wrap { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.nav-add-beat-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(78,205,196,.1); border: 1.5px solid rgba(78,205,196,.3);
+    color: #4ecdc4; font-size: 13px; font-weight: 700;
+    padding: 0 16px; height: 46px; border-radius: 12px;
+    text-decoration: none; white-space: nowrap; flex-shrink: 0;
+    transition: background .2s, border-color .2s;
+}
+.nav-add-beat-btn:hover { background: rgba(78,205,196,.18); border-color: rgba(78,205,196,.5); }
+.nav-add-beat-btn i { font-size: 12px; }
+
+@media (max-width: 900px) { .nav-add-beat-label { display: none; } .nav-add-beat-btn { padding: 0 14px; } }
+@media (max-width: 768px) { .nav-search-main { display: none; } .nav-add-beat-btn { display: none; } }
 
 /* Hamburger */
 .nav-hamburger {

@@ -921,25 +921,30 @@
 <header>
     <nav class="nav-container nav-grid">
         <div class="logo">Alsx<span>Beats</span></div>
-        <form class="nav-search-main" id="global-search-form">
-            <button type="button" class="nav-search-icon-btn" title="Buscar">
-                <i class="fas fa-search"></i>
-            </button>
-            <input type="text" id="global-search-input" placeholder="Buscar beats, géneros, moods…" autocomplete="off" spellcheck="false">
-            <div class="nav-search-type">
-                <button type="button" class="type-toggle" id="type-toggle-btn" onclick="toggleTypeDropdown()">
-                    <span id="type-label">TRACKS</span>
-                    <i class="fas fa-chevron-down"></i>
+        <div class="nav-search-wrap">
+            <form class="nav-search-main" id="global-search-form">
+                <button type="button" class="nav-search-icon-btn" title="Buscar">
+                    <i class="fas fa-search"></i>
                 </button>
-                <div class="type-dropdown" id="type-dropdown">
-                    <button type="button" onclick="selectType(this,'all','ALL')"><i class="fas fa-border-all"></i> All</button>
-                    <button type="button" class="active" onclick="selectType(this,'tracks','TRACKS')"><i class="fas fa-music"></i> Tracks</button>
-                    <button type="button" onclick="selectType(this,'artists','ARTISTS')"><i class="fas fa-user-group"></i> Artists</button>
-                    <button type="button" onclick="selectType(this,'collections','COLLECTIONS')"><i class="fas fa-layer-group"></i> Collections</button>
-                    <button type="button" onclick="selectType(this,'soundkits','SOUND KITS')"><i class="fas fa-drum"></i> Sound Kits</button>
+                <input type="text" id="global-search-input" placeholder="Buscar beats, géneros, moods…" autocomplete="off" spellcheck="false">
+                <div class="nav-search-type">
+                    <button type="button" class="type-toggle" id="type-toggle-btn" onclick="toggleTypeDropdown()">
+                        <span id="type-label">TRACKS</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="type-dropdown" id="type-dropdown">
+                        <button type="button" onclick="selectType(this,'all','ALL')"><i class="fas fa-border-all"></i> All</button>
+                        <button type="button" class="active" onclick="selectType(this,'tracks','TRACKS')"><i class="fas fa-music"></i> Tracks</button>
+                        <button type="button" onclick="selectType(this,'artists','ARTISTS')"><i class="fas fa-user-group"></i> Artists</button>
+                        <button type="button" onclick="selectType(this,'collections','COLLECTIONS')"><i class="fas fa-layer-group"></i> Collections</button>
+                        <button type="button" onclick="selectType(this,'soundkits','SOUND KITS')"><i class="fas fa-drum"></i> Sound Kits</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+            <a href="upload.html" class="nav-add-beat-btn" title="Subir beat">
+                <i class="fas fa-plus"></i> <span class="nav-add-beat-label">Subir beat</span>
+            </a>
+        </div>
         <div id="auth-widget" class="nav-right">
             <a href="login.html" style="color:#94a3b8;font-size:14px;font-weight:600;text-decoration:none;padding:8px 14px;">Iniciar sesión</a>
             <a href="register.html" style="background:#4ecdc4;color:#000;font-size:13px;font-weight:700;text-decoration:none;padding:8px 18px;border-radius:8px;">Registrarse</a>
@@ -950,6 +955,7 @@
     </nav>
     <div class="mobile-menu" id="mobile-menu">
         <a href="catalog.html">Tracks</a>
+        <a href="upload.html">Subir beat</a>
         <a href="#contacto" onclick="toggleMobileMenu()">Contacto</a>
         <div class="mobile-divider"></div>
         <div id="mobile-auth-links">
