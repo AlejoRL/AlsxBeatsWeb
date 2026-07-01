@@ -141,7 +141,9 @@ router.post('/create-session', async (req, res) => {
         }
 
         const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-        const beats = require('../data/beats.json');
+        const fs = require('fs');
+        const path = require('path');
+        const beats = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/beats.json'), 'utf8'));
         const { items } = req.body;
 
         if (!items?.length) return res.status(400).json({ error: 'El carrito está vacío' });

@@ -1,9 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const beats = require('../data/beats.json');
+const fs = require('fs');
+const path = require('path');
+
+const BEATS_FILE = path.join(__dirname, '../data/beats.json');
+
+function loadBeats() {
+    try { return JSON.parse(fs.readFileSync(BEATS_FILE, 'utf8')); }
+    catch { return []; }
+}
 
 router.get('/', (req, res) => {
     const { genre, search } = req.query;
+    const beats = loadBeats();
     let result = beats;
 
     if (genre && genre !== 'all') {
@@ -23,7 +32,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-    const beat = beats.find(b => b.id === req.params.id);
+    const beat = loadBeats().find(b => b.id === req.params.id);
     if (!beat) return res.status(404).json({ error: 'Beat not found' });
     res.json(beat);
 });
