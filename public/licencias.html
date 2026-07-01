@@ -10,12 +10,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --bg: #0b0d14; --panel: #11151a; --accent: #4ecdc4; --text: #fff; --muted: #94a3b8; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 40px 20px; }
-        
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+
         .page-top {
             width: 100%;
             max-width: 1400px;
-            margin: 0 auto 24px;
+            margin: 24px auto 24px;
             padding: 0 24px;
         }
 
@@ -479,6 +479,61 @@ textarea:focus {
     </style>
 </head>
 <body>
+
+<header>
+    <nav class="nav-container nav-grid">
+        <a href="index.html" class="logo">Alsx<span>Beats</span></a>
+        <div class="nav-search-wrap">
+            <form class="nav-search-main" id="global-search-form">
+                <button type="button" class="nav-search-icon-btn" title="Buscar">
+                    <i class="fas fa-search"></i>
+                </button>
+                <input type="text" id="filter-search" placeholder="Buscar beats, géneros, moods…" autocomplete="off" spellcheck="false">
+                <div class="nav-search-type">
+                    <button type="button" class="type-toggle" id="type-toggle-btn" onclick="toggleTypeDropdown()">
+                        <span id="type-label">TRACKS</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="type-dropdown" id="type-dropdown">
+                        <button type="button" onclick="selectType(this,'all','ALL')"><i class="fas fa-border-all"></i> All</button>
+                        <button type="button" class="active" onclick="selectType(this,'tracks','TRACKS')"><i class="fas fa-music"></i> Tracks</button>
+                        <button type="button" onclick="selectType(this,'artists','ARTISTS')"><i class="fas fa-user-group"></i> Artists</button>
+                        <button type="button" onclick="selectType(this,'collections','COLLECTIONS')"><i class="fas fa-layer-group"></i> Collections</button>
+                        <button type="button" onclick="selectType(this,'soundkits','SOUND KITS')"><i class="fas fa-drum"></i> Sound Kits</button>
+                    </div>
+                </div>
+            </form>
+            <a href="upload.html" class="nav-add-beat-btn" title="Subir beat" style="display:none">
+                <i class="fas fa-plus"></i> <span class="nav-add-beat-label">Subir beat</span>
+            </a>
+        </div>
+        <div id="auth-widget" class="nav-right">
+            <a href="login.html" style="color:#94a3b8;font-size:14px;font-weight:600;text-decoration:none;padding:8px 14px;">Iniciar sesión</a>
+            <a href="register.html" style="background:#4ecdc4;color:#000;font-size:13px;font-weight:700;text-decoration:none;padding:8px 18px;border-radius:8px;">Registrarse</a>
+        </div>
+        <button class="nav-hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menú">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="index.html">Inicio</a>
+        <a href="catalog.html">Catálogo</a>
+        <a href="upload.html" class="mobile-add-beat-link" style="display:none">Subir beat</a>
+        <a href="index.html#contacto">Contacto</a>
+        <div class="mobile-divider"></div>
+        <div id="mobile-auth-links">
+            <a href="login.html">Iniciar sesión</a>
+            <a href="register.html" class="mobile-register">Registrarse</a>
+        </div>
+    </div>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    document.getElementById('mobile-menu').classList.toggle('open');
+}
+</script>
+<script src="js/global-search.js"></script>
 
 <div class="page-top">
     <a href="catalog.html" class="back-btn">
