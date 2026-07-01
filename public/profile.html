@@ -61,6 +61,23 @@
         .beat-card-title{font-size:13px;font-weight:600;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .beat-card-meta{font-size:11px;color:var(--muted)}
 
+        /* MIS BEATS */
+        .mb-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+        .mb-card-top{display:flex;gap:14px;margin-bottom:16px}
+        .mb-card-top img,.mb-noimg{width:64px;height:64px;border-radius:10px;object-fit:cover;background:#1c232b;flex-shrink:0}
+        .mb-noimg{display:flex;align-items:center;justify-content:center;color:#3a4556;font-size:20px}
+        .mb-card-info{min-width:0}
+        .mb-card-title{font-size:14px;font-weight:700;margin-bottom:4px}
+        .mb-card-meta{font-size:12px;color:var(--muted);margin-bottom:6px}
+        .mb-view-link{font-size:12px;color:var(--accent);text-decoration:none;font-weight:600}
+        .mb-prices{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:14px}
+        .mb-price-row{background:#0b0d14;border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+        .mb-price-label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .mb-price-input{display:flex;align-items:center;gap:6px}
+        .mb-price-input span{font-size:13px;color:var(--muted)}
+        .mb-price-input input{width:100%;background:transparent;border:none;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none}
+        .mb-actions{display:flex;gap:10px;flex-wrap:wrap}
+
         /* EMPTY STATE */
         .empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
         .empty-state i{font-size:40px;margin-bottom:16px;opacity:.3}
@@ -258,6 +275,7 @@
             <button class="nav-item" onclick="goPanel('compras')"><i class="fas fa-download"></i> Mis compras</button>
             <button class="nav-item" onclick="goPanel('playlist')"><i class="fas fa-list-music"></i> Mis playlists</button>
             <a class="nav-item" href="upload.html" style="text-decoration:none"><i class="fas fa-upload"></i> Subir beat</a>
+            <button class="nav-item" onclick="goPanel('misbeats')"><i class="fas fa-record-vinyl"></i> Mis beats</button>
             <div class="nav-divider"></div>
             <button class="nav-item" onclick="goPanel('pedidos')"><i class="fas fa-receipt"></i> Pedidos</button>
             <button class="nav-item" onclick="goPanel('settings')"><i class="fas fa-gear"></i> Configuración</button>
@@ -332,6 +350,15 @@
             <div id="playlists-list"></div>
         </div>
 
+        <!-- MIS BEATS -->
+        <div class="panel" id="panel-misbeats">
+            <div class="panel-header">
+                <div class="panel-title">Mis beats</div>
+                <div class="panel-sub">Gestiona los beats que has subido: edita precios o elimínalos.</div>
+            </div>
+            <div id="misbeats-list"></div>
+        </div>
+
         <!-- PEDIDOS -->
         <div class="panel" id="panel-pedidos">
             <div class="panel-header">
@@ -402,7 +429,7 @@ let beats  = [];
     const hash = location.hash.replace('#', '');
     if (hash) {
         const btn = document.querySelector(`.nav-item[onclick="goPanel('${hash}')"]`);
-        if (btn) { document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active')); document.getElementById('panel-'+hash)?.classList.add('active'); btn.classList.add('active'); const loaders={likes:loadLikes,recientes:loadRecientes,compras:loadCompras,pedidos:loadPedidos,playlist:loadPlaylists}; if(loaders[hash]) loaders[hash](); }
+        if (btn) { document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active')); document.getElementById('panel-'+hash)?.classList.add('active'); btn.classList.add('active'); const loaders={likes:loadLikes,recientes:loadRecientes,compras:loadCompras,pedidos:loadPedidos,playlist:loadPlaylists,misbeats:loadMisBeats}; if(loaders[hash]) loaders[hash](); }
     }
 })();
 
@@ -474,7 +501,8 @@ function goPanel(id) {
         recientes:loadRecientes,
         compras:  loadCompras,
         pedidos:  loadPedidos,
-        playlist: loadPlaylists
+        playlist: loadPlaylists,
+        misbeats: loadMisBeats
     };
     if (loaders[id]) loaders[id]();
 }
@@ -568,6 +596,87 @@ async function loadPedidos() {
         }).join('');
         return `<div class="order-card"><div class="order-header"><span class="order-date"><i class="fas fa-calendar" style="margin-right:6px"></i>${date}</span><span class="order-badge">Completado</span></div><div class="order-items">${items}</div></div>`;
     }).join('');
+}
+
+// ── Mis beats ────────────────────────────────────────────────
+async function loadMisBeats() {
+    const list = document.getElementById('misbeats-list');
+    list.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0">Cargando...</div>';
+    const res  = await fetch('/api/upload/my-beats');
+    const data = await res.json();
+    const myBeats = data.beats || [];
+
+    list.innerHTML = myBeats.length
+        ? myBeats.map(misBeatCard).join('')
+        : emptyState('record-vinyl', 'Aún no has subido ningún beat.', 'upload.html', 'Subir mi primer beat');
+}
+
+function misBeatCard(beat) {
+    const img = beat.image
+        ? `<img src="${beat.image}" alt="${beat.title}">`
+        : `<div class="mb-noimg"><i class="fas fa-music"></i></div>`;
+
+    const meta = [beat.bpm ? beat.bpm + ' BPM' : '', beat.key || '', beat.genre || ''].filter(Boolean).join(' · ');
+
+    const priceRows = Object.entries(beat.licenses || {}).map(([key, lic]) => `
+        <div class="mb-price-row">
+            <span class="mb-price-label">${lic.label}</span>
+            <div class="mb-price-input">
+                <span>€</span>
+                <input type="number" min="0" step="0.01" value="${lic.price ?? ''}" placeholder="—" data-license="${key}">
+            </div>
+        </div>`).join('');
+
+    return `
+    <div class="mb-card" data-beat-id="${beat.id}">
+        <div class="mb-card-top">
+            ${img}
+            <div class="mb-card-info">
+                <div class="mb-card-title">${beat.title}</div>
+                <div class="mb-card-meta">${meta}</div>
+                <a href="licencias.html?beatId=${beat.id}" class="mb-view-link" target="_blank"><i class="fas fa-eye"></i> Ver beat</a>
+            </div>
+        </div>
+        <div class="mb-prices">${priceRows}</div>
+        <div class="mb-actions">
+            <button class="btn-save" onclick="saveBeatPrices('${beat.id}', this)"><i class="fas fa-check"></i> Guardar precios</button>
+            <button class="btn-danger" onclick="deleteMyBeat('${beat.id}')"><i class="fas fa-trash"></i> Eliminar beat</button>
+        </div>
+        <div class="msg" id="mb-msg-${beat.id}"></div>
+    </div>`;
+}
+
+async function saveBeatPrices(beatId, btn) {
+    const card   = document.querySelector(`.mb-card[data-beat-id="${beatId}"]`);
+    const inputs = card.querySelectorAll('input[data-license]');
+    const licenses = {};
+    inputs.forEach(inp => { licenses[inp.dataset.license] = inp.value; });
+
+    const orig = btn.innerHTML;
+    btn.disabled  = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+    const res  = await fetch(`/api/upload/${beatId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ licenses })
+    });
+    const data = await res.json();
+
+    btn.disabled  = false;
+    btn.innerHTML = orig;
+    showMsg(`mb-msg-${beatId}`, res.ok, res.ok ? 'Precios actualizados.' : (data.error || 'Error al guardar los precios.'));
+}
+
+async function deleteMyBeat(beatId) {
+    if (!confirm('¿Eliminar este beat? Esta acción no se puede deshacer.')) return;
+    const res = await fetch(`/api/upload/${beatId}`, { method: 'DELETE' });
+    if (res.ok) {
+        loadMisBeats();
+    } else {
+        const data = await res.json();
+        alert(data.error || 'Error al eliminar el beat.');
+    }
 }
 
 // ── Playlists ─────────────────────────────────────────────────

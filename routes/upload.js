@@ -147,6 +147,42 @@ router.post('/', requireUser, upload.fields([
     }
 });
 
+// PUT /api/upload/:beatId — editar precios de licencias de un beat propio
+router.put('/:beatId', requireUser, async (req, res) => {
+    try {
+        const user = await User.findOne({ id: req.session.userId });
+        if (!user) return res.status(404).json({ error: 'Usuario no encontrado.' });
+
+        const beats = loadBeats();
+        const beat  = beats.find(b => b.id === req.params.beatId);
+
+        if (!beat) return res.status(404).json({ error: 'Beat no encontrado.' });
+        if (beat.uploadedBy !== user.id) return res.status(403).json({ error: 'Sin permiso.' });
+
+        const { licenses } = req.body;
+        if (licenses && typeof licenses === 'object') {
+            for (const key of Object.keys(beat.licenses)) {
+                if (!(key in licenses)) continue;
+                const raw = licenses[key];
+                if (raw === '' || raw === null || raw === undefined) {
+                    beat.licenses[key].price = null;
+                    continue;
+                }
+                const price = Number(raw);
+                if (Number.isFinite(price) && price >= 0) {
+                    beat.licenses[key].price = Math.round(price * 100) / 100;
+                }
+            }
+        }
+
+        saveBeats(beats);
+        res.json({ ok: true, beat });
+    } catch (err) {
+        console.error('Update beat error:', err);
+        res.status(500).json({ error: 'Error al actualizar el beat.' });
+    }
+});
+
 // DELETE /api/upload/:beatId
 router.delete('/:beatId', requireUser, async (req, res) => {
     try {
