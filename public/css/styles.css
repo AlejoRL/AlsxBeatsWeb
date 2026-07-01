@@ -58,8 +58,8 @@ header {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1.5px solid rgba(255,255,255,.09);
-    border-radius: 14px;
-    height: 46px;
+    border-radius: 11px;
+    height: 38px;
     flex: 1;
     min-width: 0;
     position: relative;
@@ -71,9 +71,9 @@ header {
     box-shadow: 0 0 0 3px rgba(78,205,196,.08);
 }
 .nav-search-icon-btn {
-    width: 46px; height: 100%; background: none; border: none;
+    width: 38px; height: 100%; background: none; border: none;
     border-right: 1px solid rgba(255,255,255,.07);
-    color: rgba(78,205,196,.55); font-size: 16px; cursor: pointer;
+    color: rgba(78,205,196,.55); font-size: 14px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; transition: color .2s; border-radius: 0;
 }
@@ -81,7 +81,7 @@ header {
 .nav-search-main:focus-within .nav-search-icon-btn { color: #4ecdc4; }
 .nav-search-main input {
     flex: 1; background: none; border: none; outline: none;
-    color: #fff; font-size: 15px; font-family: 'Inter', sans-serif;
+    color: #fff; font-size: 14px; font-family: 'Inter', sans-serif;
     padding: 0 12px; min-width: 0;
 }
 .nav-search-main input::placeholder { color: rgba(148,163,184,.4); }
@@ -93,12 +93,12 @@ header {
     flex-shrink: 0; border-left: 1px solid rgba(255,255,255,.07);
 }
 .type-toggle {
-    display: flex; align-items: center; gap: 7px;
+    display: flex; align-items: center; gap: 6px;
     background: none; border: none; color: #94a3b8;
-    font-size: 11px; font-weight: 700; font-family: 'Inter', sans-serif;
-    letter-spacing: .08em; padding: 0 14px; height: 100%;
+    font-size: 10px; font-weight: 700; font-family: 'Inter', sans-serif;
+    letter-spacing: .08em; padding: 0 12px; height: 100%;
     cursor: pointer; transition: color .2s; white-space: nowrap;
-    border-radius: 0 12px 12px 0;
+    border-radius: 0 10px 10px 0;
 }
 .type-toggle i { font-size: 9px; transition: transform .2s; }
 .type-toggle:hover { color: #fff; }
@@ -130,7 +130,7 @@ header {
     display: flex; align-items: center; gap: 8px;
     background: rgba(78,205,196,.1); border: 1.5px solid rgba(78,205,196,.3);
     color: #4ecdc4; font-size: 13px; font-weight: 700;
-    padding: 0 16px; height: 46px; border-radius: 12px;
+    padding: 0 16px; height: 38px; border-radius: 11px;
     text-decoration: none; white-space: nowrap; flex-shrink: 0;
     transition: background .2s, border-color .2s;
 }

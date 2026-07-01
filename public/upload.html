@@ -96,10 +96,27 @@
         .success-box i{font-size:40px;color:var(--accent);margin-bottom:14px}
         .success-box h3{font-size:18px;font-weight:800;margin-bottom:8px}
         .success-box p{font-size:13px;color:var(--muted);margin-bottom:20px}
-        .success-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-        .btn-view{background:var(--accent);color:#000;border:none;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none}
-        .btn-upload-another{background:transparent;color:var(--accent);border:1px solid rgba(78,205,196,.3);padding:10px 22px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer}
-        .btn-upload-another:hover{background:rgba(78,205,196,.07)}
+        .success-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+        .btn-view{
+            background:linear-gradient(135deg,var(--accent),#36b1a8);color:#000;border:none;
+            padding:13px 28px;border-radius:11px;font-size:14px;font-weight:800;cursor:pointer;
+            text-decoration:none;display:inline-flex;align-items:center;gap:9px;
+            box-shadow:0 8px 22px rgba(78,205,196,.22);
+            transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+        }
+        .btn-view i{font-size:13px}
+        .btn-view:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(78,205,196,.32);opacity:.94}
+        .btn-upload-another{
+            background:rgba(255,255,255,.04);color:#fff;border:1.5px solid var(--border);
+            padding:13px 28px;border-radius:11px;font-size:14px;font-weight:700;cursor:pointer;
+            display:inline-flex;align-items:center;gap:9px;transition:.2s ease;
+        }
+        .btn-upload-another i{font-size:12px}
+        .btn-upload-another:hover{background:rgba(255,255,255,.08);border-color:rgba(78,205,196,.4);color:var(--accent);transform:translateY(-2px)}
+        @media(max-width:480px){
+            .success-actions{flex-direction:column}
+            .btn-view,.btn-upload-another{width:100%;justify-content:center}
+        }
 
         .error-msg{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#f87171;border-radius:10px;padding:12px 14px;font-size:13px;margin-top:12px;display:none}
 
