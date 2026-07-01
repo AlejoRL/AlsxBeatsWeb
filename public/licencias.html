@@ -374,7 +374,7 @@ textarea:focus {
             <!-- Productor: avatar pequeño + nombre + badge -->
             <div class="producer-row">
                 <div class="producer-avatar">A</div>
-                <span class="producer-name">AlsxBeats</span>
+                <span class="producer-name" id="beat-producer">AlsxBeats</span>
                 <i class="fas fa-circle-check verified-badge"></i>
             </div>
 
@@ -537,7 +537,7 @@ textarea:focus {
 
             <div class="player-info">
                 <div id="player-title">Beat Name</div>
-                <div class="player-producer">AlsxBeats</div>
+                <div class="player-producer" id="player-producer">AlsxBeats</div>
             </div>
         </div>
 
@@ -598,7 +598,8 @@ async function loadBeatData() {
                     key: beat.key,
                     genre: beat.genre,
                     tags: beat.tags || [],
-                    publishedAt: beat.publishedAt
+                    publishedAt: beat.publishedAt,
+                    producer: beat.producer || 'AlsxBeats'
                 };
             }
         } catch (e) { /* fallback */ }
@@ -625,6 +626,8 @@ loadBeatData().then(beat => {
     document.getElementById('beat-img').src = beat.img;
     document.getElementById('player-title').textContent = beat.title;
     document.getElementById('player-cover').src = beat.img;
+    document.getElementById('beat-producer').textContent = beat.producer || 'AlsxBeats';
+    document.getElementById('player-producer').textContent = beat.producer || 'AlsxBeats';
 
     const audio = document.getElementById('audio-player');
     audio.src = beat.audio;

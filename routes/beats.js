@@ -1,40 +1,43 @@
 const express = require('express');
-const router = express.Router();
-const fs = require('fs');
-const path = require('path');
+const router  = express.Router();
+const Beat    = require('../models/Beat');
 
-const BEATS_FILE = path.join(__dirname, '../data/beats.json');
+router.get('/', async (req, res) => {
+    try {
+        const { genre, search } = req.query;
+        const query = {};
 
-function loadBeats() {
-    try { return JSON.parse(fs.readFileSync(BEATS_FILE, 'utf8')); }
-    catch { return []; }
-}
+        if (genre && genre !== 'all') {
+            query.genre = new RegExp(`^${genre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
+        }
 
-router.get('/', (req, res) => {
-    const { genre, search } = req.query;
-    const beats = loadBeats();
-    let result = beats;
+        let beats = await Beat.find(query).lean();
 
-    if (genre && genre !== 'all') {
-        result = result.filter(b => b.genre.toLowerCase() === genre.toLowerCase());
+        if (search) {
+            const q = search.toLowerCase();
+            beats = beats.filter(b =>
+                b.title.toLowerCase().includes(q) ||
+                (b.tags || []).some(t => t.toLowerCase().includes(q)) ||
+                (b.genre || '').toLowerCase().includes(q)
+            );
+        }
+
+        res.json(beats);
+    } catch (err) {
+        console.error('List beats error:', err.message);
+        res.status(500).json({ error: 'Error al cargar el catálogo.' });
     }
-
-    if (search) {
-        const q = search.toLowerCase();
-        result = result.filter(b =>
-            b.title.toLowerCase().includes(q) ||
-            b.tags.some(t => t.toLowerCase().includes(q)) ||
-            b.genre.toLowerCase().includes(q)
-        );
-    }
-
-    res.json(result);
 });
 
-router.get('/:id', (req, res) => {
-    const beat = loadBeats().find(b => b.id === req.params.id);
-    if (!beat) return res.status(404).json({ error: 'Beat not found' });
-    res.json(beat);
+router.get('/:id', async (req, res) => {
+    try {
+        const beat = await Beat.findOne({ id: req.params.id }).lean();
+        if (!beat) return res.status(404).json({ error: 'Beat not found' });
+        res.json(beat);
+    } catch (err) {
+        console.error('Get beat error:', err.message);
+        res.status(500).json({ error: 'Error al cargar el beat.' });
+    }
 });
 
 module.exports = router;

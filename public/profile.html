@@ -77,6 +77,9 @@
         .mb-price-input span{font-size:13px;color:var(--muted)}
         .mb-price-input input{width:100%;background:transparent;border:none;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none}
         .mb-actions{display:flex;gap:10px;flex-wrap:wrap}
+        .btn-secondary{background:rgba(255,255,255,.05);color:#fff;border:1px solid var(--border);padding:11px 24px;border-radius:9px;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:8px}
+        .btn-secondary:hover{background:rgba(255,255,255,.09)}
+        .btn-secondary:disabled{opacity:.5;cursor:not-allowed}
 
         /* EMPTY STATE */
         .empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
@@ -640,6 +643,8 @@ function misBeatCard(beat) {
         <div class="mb-prices">${priceRows}</div>
         <div class="mb-actions">
             <button class="btn-save" onclick="saveBeatPrices('${beat.id}', this)"><i class="fas fa-check"></i> Guardar precios</button>
+            <button class="btn-secondary" onclick="document.getElementById('mb-audio-input-${beat.id}').click()"><i class="fas fa-file-audio"></i> Cambiar MP3</button>
+            <input type="file" id="mb-audio-input-${beat.id}" accept=".mp3,audio/mpeg" style="display:none" onchange="changeBeatAudio('${beat.id}', this)">
             <button class="btn-danger" onclick="deleteMyBeat('${beat.id}')"><i class="fas fa-trash"></i> Eliminar beat</button>
         </div>
         <div class="msg" id="mb-msg-${beat.id}"></div>
@@ -666,6 +671,35 @@ async function saveBeatPrices(beatId, btn) {
     btn.disabled  = false;
     btn.innerHTML = orig;
     showMsg(`mb-msg-${beatId}`, res.ok, res.ok ? 'Precios actualizados.' : (data.error || 'Error al guardar los precios.'));
+}
+
+async function changeBeatAudio(beatId, input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const isMp3 = /\.mp3$/i.test(file.name) && (file.type === 'audio/mpeg' || file.type === 'audio/mp3' || file.type === '');
+    if (!isMp3) {
+        showMsg(`mb-msg-${beatId}`, false, 'Solo se admiten archivos MP3.');
+        input.value = '';
+        return;
+    }
+
+    const card = document.querySelector(`.mb-card[data-beat-id="${beatId}"]`);
+    const btn  = card.querySelector('.btn-secondary');
+    const orig = btn.innerHTML;
+    btn.disabled  = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subiendo...';
+
+    const fd = new FormData();
+    fd.append('audio', file);
+
+    const res  = await fetch(`/api/upload/${beatId}/audio`, { method: 'PUT', body: fd });
+    const data = await res.json();
+
+    btn.disabled  = false;
+    btn.innerHTML = orig;
+    input.value   = '';
+    showMsg(`mb-msg-${beatId}`, res.ok, res.ok ? 'Archivo de audio actualizado.' : (data.error || 'Error al actualizar el audio.'));
 }
 
 async function deleteMyBeat(beatId) {

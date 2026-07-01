@@ -3,17 +3,11 @@ const router  = express.Router();
 const multer  = require('multer');
 const path    = require('path');
 const fs      = require('fs');
+const Beat    = require('../models/Beat');
+const { uploadBuffer, deleteFile, mediaRef } = require('../lib/gridfs');
 
 const asyncHandler = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
-const BEATS_FILE = path.join(__dirname, '../data/beats.json');
-
-function readBeats() {
-    return JSON.parse(fs.readFileSync(BEATS_FILE, 'utf8'));
-}
-function writeBeats(beats) {
-    fs.writeFileSync(BEATS_FILE, JSON.stringify(beats, null, 2));
-}
 function slugify(str) {
     return str.toLowerCase()
         .replace(/[áà]/g,'a').replace(/[éè]/g,'e').replace(/[íì]/g,'i')
@@ -28,24 +22,18 @@ function requireAdmin(req, res, next) {
     res.status(401).json({ error: 'No autorizado' });
 }
 
-// ── Multer: imágenes (public) ────────────────────────────────────────────────
+// ── Multer: imágenes de beats — se suben a GridFS (MongoDB), no al disco ──────
 const imageUpload = multer({
-    storage: multer.diskStorage({
-        destination: path.join(__dirname, '../public/assets/images'),
-        filename: (req, file, cb) => cb(null, `${Date.now()}${path.extname(file.originalname)}`)
-    }),
+    storage: multer.memoryStorage(),
     fileFilter: (req, file, cb) => {
         file.mimetype.startsWith('image/') ? cb(null, true) : cb(new Error('Solo imágenes'));
     },
     limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-// ── Multer: preview audio (public, watermarked) ──────────────────────────────
+// ── Multer: preview audio de beats (público, watermarked) — a GridFS también ──
 const previewUpload = multer({
-    storage: multer.diskStorage({
-        destination: path.join(__dirname, '../public/assets/audio'),
-        filename: (req, file, cb) => cb(null, `${Date.now()}${path.extname(file.originalname)}`)
-    }),
+    storage: multer.memoryStorage(),
     fileFilter: (req, file, cb) => {
         file.mimetype.startsWith('audio/') ? cb(null, true) : cb(new Error('Solo audio'));
     },
@@ -100,20 +88,21 @@ router.get('/session', (req, res) => {
 router.use(requireAdmin);
 
 // GET /api/admin/beats
-router.get('/beats', (req, res) => res.json(readBeats()));
+router.get('/beats', asyncHandler(async (req, res) => {
+    res.json(await Beat.find().sort({ publishedAt: -1 }).lean());
+}));
 
 // POST /api/admin/beats — crear beat (sin archivos, solo metadata)
-router.post('/beats', (req, res) => {
-    const beats = readBeats();
+router.post('/beats', asyncHandler(async (req, res) => {
     const { title, genre, bpm, key, tags, prices } = req.body;
 
     let id = slugify(title || 'beat');
-    if (beats.find(b => b.id === id)) id += `-${Date.now()}`;
+    if (await Beat.exists({ id })) id += `-${Date.now()}`;
 
     const tagList = (tags || '').split(',').map(t => t.trim()).filter(Boolean);
     const p = prices || {};
 
-    const beat = {
+    const beat = await Beat.create({
         id,
         title: title || 'Sin título',
         producer: 'AlsxBeats',
@@ -121,7 +110,7 @@ router.post('/beats', (req, res) => {
         key: key || 'Cm',
         genre: genre || 'Trap',
         tags: tagList,
-        image: '',
+        image: 'assets/images/alsxbeatsportada.png',
         preview: null,
         publishedAt: new Date().toISOString().split('T')[0],
         licenses: {
@@ -131,82 +120,89 @@ router.post('/beats', (req, res) => {
             unlimited: { price: parseFloat(p.unlimited) || 145.99, label: 'Unlimited Lease', formats: ['WAV', 'STEMS', 'MP3'] },
             exclusive: { price: null,                               label: 'Exclusive Rights',formats: ['WAV', 'STEMS', 'MP3'] }
         }
-    };
+    });
 
-    beats.unshift(beat);
-    writeBeats(beats);
-    res.json(beat);
-});
+    res.json(beat.toPublic());
+}));
 
 // PUT /api/admin/beats/:id — editar metadata
-router.put('/beats/:id', (req, res) => {
-    const beats = readBeats();
-    const idx = beats.findIndex(b => b.id === req.params.id);
-    if (idx === -1) return res.status(404).json({ error: 'Beat no encontrado' });
+router.put('/beats/:id', asyncHandler(async (req, res) => {
+    const beat = await Beat.findOne({ id: req.params.id });
+    if (!beat) return res.status(404).json({ error: 'Beat no encontrado' });
 
     const { title, genre, bpm, key, tags, prices } = req.body;
     const tagList = (tags || '').split(',').map(t => t.trim()).filter(Boolean);
     const p = prices || {};
 
-    beats[idx] = {
-        ...beats[idx],
-        title:  title  || beats[idx].title,
-        genre:  genre  || beats[idx].genre,
-        bpm:    parseInt(bpm) || beats[idx].bpm,
-        key:    key    || beats[idx].key,
-        tags:   tagList.length ? tagList : beats[idx].tags,
-        licenses: {
-            basic:     { ...beats[idx].licenses.basic,     price: parseFloat(p.basic)     || beats[idx].licenses.basic.price },
-            basicWav:  { ...beats[idx].licenses.basicWav,  price: parseFloat(p.basicWav)  || beats[idx].licenses.basicWav?.price || 38.99 },
-            premium:   { ...beats[idx].licenses.premium,   price: parseFloat(p.premium)   || beats[idx].licenses.premium.price },
-            unlimited: { ...beats[idx].licenses.unlimited, price: parseFloat(p.unlimited) || beats[idx].licenses.unlimited.price },
-            exclusive: { ...beats[idx].licenses.exclusive, price: parseFloat(p.exclusive) || beats[idx].licenses.exclusive.price }
-        }
-    };
+    beat.title = title || beat.title;
+    beat.genre = genre || beat.genre;
+    beat.bpm   = parseInt(bpm) || beat.bpm;
+    beat.key   = key || beat.key;
+    beat.tags  = tagList.length ? tagList : beat.tags;
 
-    writeBeats(beats);
-    res.json(beats[idx]);
-});
+    beat.licenses.basic.price     = parseFloat(p.basic)     || beat.licenses.basic.price;
+    beat.licenses.basicWav.price  = parseFloat(p.basicWav)  || beat.licenses.basicWav?.price || 38.99;
+    beat.licenses.premium.price   = parseFloat(p.premium)   || beat.licenses.premium.price;
+    beat.licenses.unlimited.price = parseFloat(p.unlimited) || beat.licenses.unlimited.price;
+    beat.licenses.exclusive.price = parseFloat(p.exclusive) || beat.licenses.exclusive.price;
+
+    await beat.save();
+    res.json(beat.toPublic());
+}));
 
 // DELETE /api/admin/beats/:id
-router.delete('/beats/:id', (req, res) => {
-    const beats = readBeats();
-    const idx = beats.findIndex(b => b.id === req.params.id);
-    if (idx === -1) return res.status(404).json({ error: 'Beat no encontrado' });
-    beats.splice(idx, 1);
-    writeBeats(beats);
+router.delete('/beats/:id', asyncHandler(async (req, res) => {
+    const beat = await Beat.findOne({ id: req.params.id });
+    if (!beat) return res.status(404).json({ error: 'Beat no encontrado' });
+
+    await Promise.all([deleteFile(beat.previewFileId), deleteFile(beat.imageFileId)]);
+    await Beat.deleteOne({ id: req.params.id });
     res.json({ ok: true });
-});
+}));
 
 // POST /api/admin/beats/:id/image
-router.post('/beats/:id/image', imageUpload.single('image'), (req, res) => {
+router.post('/beats/:id/image', imageUpload.single('image'), asyncHandler(async (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Sin archivo' });
-    const beats = readBeats();
-    const idx = beats.findIndex(b => b.id === req.params.id);
-    if (idx !== -1) { beats[idx].image = `assets/images/${req.file.filename}`; writeBeats(beats); }
-    res.json({ path: `assets/images/${req.file.filename}` });
-});
+    const beat = await Beat.findOne({ id: req.params.id });
+    if (!beat) return res.status(404).json({ error: 'Beat no encontrado' });
+
+    const oldFileId = beat.imageFileId;
+    const fileId = await uploadBuffer(req.file.buffer, req.file.originalname, req.file.mimetype);
+    beat.image = mediaRef(fileId);
+    beat.imageFileId = fileId;
+    await beat.save();
+    if (oldFileId) await deleteFile(oldFileId);
+
+    res.json({ path: beat.image });
+}));
 
 // POST /api/admin/beats/:id/preview
-router.post('/beats/:id/preview', previewUpload.single('audio'), (req, res) => {
+router.post('/beats/:id/preview', previewUpload.single('audio'), asyncHandler(async (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Sin archivo' });
-    const beats = readBeats();
-    const idx = beats.findIndex(b => b.id === req.params.id);
-    if (idx !== -1) { beats[idx].preview = `assets/audio/${req.file.filename}`; beats[idx].peaks = null; writeBeats(beats); }
-    res.json({ path: `assets/audio/${req.file.filename}` });
-});
+    const beat = await Beat.findOne({ id: req.params.id });
+    if (!beat) return res.status(404).json({ error: 'Beat no encontrado' });
+
+    const oldFileId = beat.previewFileId;
+    const fileId = await uploadBuffer(req.file.buffer, req.file.originalname, req.file.mimetype);
+    beat.preview = mediaRef(fileId);
+    beat.previewFileId = fileId;
+    beat.peaks = null;
+    await beat.save();
+    if (oldFileId) await deleteFile(oldFileId);
+
+    res.json({ path: beat.preview });
+}));
 
 // POST /api/admin/beats/:id/peaks
-router.post('/beats/:id/peaks', express.json({ limit: '64kb' }), (req, res) => {
+router.post('/beats/:id/peaks', express.json({ limit: '64kb' }), asyncHandler(async (req, res) => {
     const peaks = req.body?.peaks;
     if (!Array.isArray(peaks) || peaks.length < 10) return res.status(400).json({ error: 'Peaks inválidos' });
-    const beats = readBeats();
-    const idx = beats.findIndex(b => b.id === req.params.id);
-    if (idx === -1) return res.status(404).json({ error: 'Beat no encontrado' });
-    beats[idx].peaks = peaks.map(v => Math.round(v * 1000) / 1000);
-    writeBeats(beats);
+    const beat = await Beat.findOne({ id: req.params.id });
+    if (!beat) return res.status(404).json({ error: 'Beat no encontrado' });
+    beat.peaks = peaks.map(v => Math.round(v * 1000) / 1000);
+    await beat.save();
     res.json({ ok: true });
-});
+}));
 
 // POST /api/admin/beats/:beatId/license/:licenseType
 router.post('/beats/:beatId/license/:licenseType', privateUpload.single('file'), (req, res) => {

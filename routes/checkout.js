@@ -141,9 +141,7 @@ router.post('/create-session', async (req, res) => {
         }
 
         const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-        const fs = require('fs');
-        const path = require('path');
-        const beats = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/beats.json'), 'utf8'));
+        const Beat = require('../models/Beat');
         const { items } = req.body;
 
         if (!items?.length) return res.status(400).json({ error: 'El carrito está vacío' });
@@ -154,8 +152,8 @@ router.post('/create-session', async (req, res) => {
 
         for (const item of items) {
             if (item.licenseType === 'exclusive') continue;
-            const beat = beats.find(b => b.id === item.beatId);
-            const license = beat?.licenses[item.licenseType];
+            const beat = await Beat.findOne({ id: item.beatId }).lean();
+            const license = beat?.licenses?.[item.licenseType];
             if (!beat || !license || !license.price) continue;
 
             lineItems.push({
@@ -164,7 +162,7 @@ router.post('/create-session', async (req, res) => {
                     product_data: {
                         name: `${beat.title} — ${license.label}`,
                         description: `Formatos incluidos: ${license.formats.join(', ')}`,
-                        images: beat.image ? [`${baseUrl}/${beat.image}`] : []
+                        images: beat.image ? [`${baseUrl}${beat.image.startsWith('/') ? '' : '/'}${beat.image}`] : []
                     },
                     unit_amount: Math.round(license.price * 100)
                 },

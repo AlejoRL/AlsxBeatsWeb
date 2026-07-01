@@ -562,6 +562,12 @@ let currentArtistId = null;
 let currentKitId    = null;
 let currentColId    = null;
 
+// Los beats subidos usan rutas absolutas /media/<id> (GridFS); los assets
+// estáticos antiguos son rutas relativas tipo assets/images/x.png.
+function absUrl(p) {
+    return p.startsWith('/') ? p : `/${p}`;
+}
+
 const LICENSE_INFO = {
     basic:     { label: 'Basic Lease',      desc: 'MP3' },
     premium:   { label: 'Premium Lease',    desc: 'WAV + MP3' },
@@ -597,7 +603,7 @@ function renderBeats() {
     }
     grid.innerHTML = beats.map(b => `
         <div class="item-card" id="card-${b.id}">
-            ${b.image ? `<img class="card-img" src="/${b.image}" onerror="this.style.display='none'">` : `<div class="card-img-placeholder">🎵</div>`}
+            ${b.image ? `<img class="card-img" src="${absUrl(b.image)}" onerror="this.style.display='none'">` : `<div class="card-img-placeholder">🎵</div>`}
             <div class="card-body">
                 <div class="card-title">${esc(b.title)}</div>
                 <div class="card-meta">${b.genre} · ${b.bpm} BPM · ${b.key}</div>
@@ -685,7 +691,7 @@ async function openBeatFiles(id) {
     const files = await fetch(`/api/admin/beats/${id}/files`).then(r => r.json());
     if (b?.image) {
         const img = document.getElementById('img-preview');
-        img.src = `/${b.image}`; img.style.display = 'block';
+        img.src = absUrl(b.image); img.style.display = 'block';
     }
     ['basic','premium','unlimited','exclusive'].forEach(tier => {
         document.getElementById(`inner-${tier}`).innerHTML = `
@@ -736,7 +742,7 @@ async function uploadBeatFile(type) {
     const data = await res.json();
     if (res.ok) {
         if (type === 'cover') {
-            document.getElementById('img-preview').src = `/${data.path}?t=${Date.now()}`;
+            document.getElementById('img-preview').src = `${absUrl(data.path)}?t=${Date.now()}`;
             document.getElementById('img-preview').style.display = 'block';
             setStatus('status-cover', '✅ Subido correctamente', 'ok');
         } else {

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const { isMediaRef, mediaIdFromRef, streamFile } = require('../lib/gridfs');
 
 const TOKENS_FILE = path.join(__dirname, '../data/tokens.json');
 const VALID_LICENSE_TYPES = new Set(['basic', 'basicWav', 'premium', 'unlimited', 'exclusive']);
@@ -25,7 +26,7 @@ router.get('/info/:token', (req, res) => {
 });
 
 // GET /api/download/file/:token/:beatId/:licenseType — sirve el archivo protegido
-router.get('/file/:token/:beatId/:licenseType', (req, res) => {
+router.get('/file/:token/:beatId/:licenseType', async (req, res) => {
     // Validación estricta de parámetros para evitar path traversal
     if (!SAFE_ID_REGEX.test(req.params.beatId))
         return res.status(400).json({ error: 'Parámetro inválido' });
@@ -43,6 +44,8 @@ router.get('/file/:token/:beatId/:licenseType', (req, res) => {
     );
     if (!item) return res.status(403).json({ error: 'No tienes acceso a este archivo' });
 
+    const safeName = item.title.replace(/[^\w\s\-áéíóúñ]/gi, '').trim();
+
     // Busca primero en la carpeta privada (archivos de alta calidad)
     const privateDir = path.join(__dirname, '../private/beats', req.params.beatId, req.params.licenseType);
     let filePath = null;
@@ -52,22 +55,38 @@ router.get('/file/:token/:beatId/:licenseType', (req, res) => {
         if (files.length > 0) filePath = path.join(privateDir, files[0]);
     }
 
+    if (filePath) {
+        const ext = path.extname(filePath).slice(1);
+        res.setHeader('Content-Disposition', `attachment; filename="${safeName} - ${item.licenseLabel}.${ext}"`);
+        res.setHeader('Content-Type', ext === 'mp3' ? 'audio/mpeg' : 'audio/wav');
+        return res.sendFile(path.resolve(filePath));
+    }
+
     // Fallback al preview público (útil en desarrollo antes de tener los archivos finales)
-    if (!filePath && item.preview) {
-        filePath = path.join(__dirname, '../public', item.preview);
+    if (item.preview && isMediaRef(item.preview)) {
+        try {
+            return await streamFile(mediaIdFromRef(item.preview), req, res, {
+                download: true,
+                filename: `${safeName} - ${item.licenseLabel}.mp3`
+            });
+        } catch (err) {
+            console.error('Download stream error:', err.message);
+            if (!res.headersSent) return res.status(500).json({ error: 'Error al servir el archivo.' });
+            return;
+        }
     }
 
-    if (!filePath || !fs.existsSync(filePath)) {
-        return res.status(404).json({ error: 'Archivo no disponible. Contacta con alsxbeats@gmail.com' });
+    if (item.preview) {
+        const staticPath = path.join(__dirname, '../public', item.preview);
+        if (fs.existsSync(staticPath)) {
+            const ext = path.extname(staticPath).slice(1);
+            res.setHeader('Content-Disposition', `attachment; filename="${safeName} - ${item.licenseLabel}.${ext}"`);
+            res.setHeader('Content-Type', ext === 'mp3' ? 'audio/mpeg' : 'audio/wav');
+            return res.sendFile(path.resolve(staticPath));
+        }
     }
 
-    const ext = path.extname(filePath).slice(1);
-    const safeName = item.title.replace(/[^\w\s\-áéíóúñ]/gi, '').trim();
-    const fileName = `${safeName} - ${item.licenseLabel}.${ext}`;
-
-    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-    res.setHeader('Content-Type', ext === 'mp3' ? 'audio/mpeg' : 'audio/wav');
-    res.sendFile(path.resolve(filePath));
+    res.status(404).json({ error: 'Archivo no disponible. Contacta con alsxbeats@gmail.com' });
 });
 
 module.exports = router;

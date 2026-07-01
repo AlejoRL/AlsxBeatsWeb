@@ -181,10 +181,10 @@
         <div class="form-card">
             <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px">Archivo de audio *</div>
             <div class="drop-zone" id="audio-drop">
-                <input type="file" id="audio-input" accept=".mp3,.wav,audio/mpeg,audio/wav">
+                <input type="file" id="audio-input" accept=".mp3,audio/mpeg">
                 <div class="drop-icon"><i class="fas fa-file-audio"></i></div>
                 <div class="drop-label">Arrastra tu archivo de audio aquí</div>
-                <div class="drop-sub">MP3 o WAV · Máximo 80 MB</div>
+                <div class="drop-sub">Solo MP3 · Máximo 80 MB</div>
             </div>
             <div class="file-selected" id="audio-selected">
                 <i class="fas fa-file-audio"></i>
@@ -369,6 +369,8 @@ function setupDrop(dropId, inputId, type) {
 
 function handleFile(file, type) {
     if (type === 'audio') {
+        const isMp3 = /\.mp3$/i.test(file.name) && (file.type === 'audio/mpeg' || file.type === 'audio/mp3' || file.type === '');
+        if (!isMp3) { showError('Solo se admiten archivos MP3 para el audio.'); return; }
         if (file.size > 80 * 1024 * 1024) { showError('El archivo de audio no puede superar 80 MB.'); return; }
         document.getElementById('audio-fname').textContent = file.name;
         document.getElementById('audio-fsize').textContent = formatSize(file.size);

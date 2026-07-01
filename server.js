@@ -13,7 +13,14 @@ const rateLimit = require('express-rate-limit');
 // Conectar a MongoDB
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/alsxbeats';
 mongoose.connect(MONGO_URI)
-    .then(() => console.log('✅ MongoDB conectado'))
+    .then(async () => {
+        console.log('✅ MongoDB conectado');
+        try {
+            await require('./lib/seedBeats')();
+        } catch (err) {
+            console.error('❌ Seed de beats falló:', err.message);
+        }
+    })
     .catch(err => console.error('❌ MongoDB error:', err.message));
 
 const app  = express();
@@ -98,6 +105,7 @@ app.use('/api/admin',    require('./routes/admin'));
 app.use('/api/catalog',  require('./routes/catalog'));
 app.use('/api/contact',  require('./routes/contact'));
 app.use('/api/upload',   require('./routes/upload'));
+app.use('/media',        require('./routes/media'));
 
 // Proteger /admin — redirige al login si no hay sesión
 app.get('/admin', (req, res) => {

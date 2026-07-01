@@ -52,8 +52,8 @@ function filterBeats() {
         if (activeSearch) {
             const q = activeSearch.toLowerCase();
             const inTitle = beat.title.toLowerCase().includes(q);
-            const inTags  = beat.tags.some(t => t.toLowerCase().includes(q));
-            const inGenre = beat.genre.toLowerCase().includes(q);
+            const inTags  = (beat.tags || []).some(t => t.toLowerCase().includes(q));
+            const inGenre = (beat.genre || '').toLowerCase().includes(q);
             if (!inTitle && !inTags && !inGenre) return false;
         }
 
@@ -82,7 +82,7 @@ function renderCard(beat, price) {
         </div>
         <div class="beat-card-body">
             <div class="card-title">${escHtml(beat.title)}</div>
-            <div class="card-producer">AlsxBeats</div>
+            <div class="card-producer">${escHtml(beat.producer || 'AlsxBeats')}</div>
             <div class="card-meta">
                 ${beat.genre ? `<span class="card-genre-tag">${escHtml(beat.genre)}</span>` : ''}
                 ${beat.bpm || beat.key ? `<span class="card-bpm-key">${[beat.bpm ? beat.bpm + ' BPM' : '', beat.key || ''].filter(Boolean).join(' · ')}</span>` : ''}
@@ -159,7 +159,7 @@ function renderCatalog() {
                 <img class="row-cover" src="${cover}" alt="${escHtml(beat.title)}" onerror="this.src='assets/images/alsxbeatsportada.png'">
                 <div class="row-info">
                     <div class="row-title">${escHtml(beat.title)}</div>
-                    <div class="row-producer">AlsxBeats</div>
+                    <div class="row-producer">${escHtml(beat.producer || 'AlsxBeats')}</div>
                 </div>
                 <div class="row-genre-cell"><span class="row-genre">${beat.genre || '—'}</span></div>
                 <div class="row-stats">
