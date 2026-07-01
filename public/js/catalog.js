@@ -76,9 +76,6 @@ function renderCard(beat, price) {
                     <i class="fas fa-play"></i>
                 </button>
             </div>
-            <button class="card-like-btn" onclick="toggleCardLike(this, '${beat.id}', event)">
-                <i class="far fa-heart"></i>
-            </button>
         </div>
         <div class="beat-card-body">
             <div class="card-title">${escHtml(beat.title)}</div>
@@ -136,12 +133,11 @@ function renderCatalog() {
 
         document.querySelectorAll('.beat-card').forEach(card => {
             card.addEventListener('click', (e) => {
-                if (e.target.closest('.card-actions') || e.target.closest('.card-play-circle') || e.target.closest('.card-like-btn')) return;
+                if (e.target.closest('.card-actions') || e.target.closest('.card-play-circle')) return;
                 const btn = card.querySelector('.card-play-circle');
                 if (btn) btn.click();
             });
         });
-        initCardLikes();
     } else {
         grid.classList.remove('beats-grid');
         grid.classList.add('beat-list');
@@ -256,26 +252,6 @@ function cardPlay(btn, e) {
 
     const peaks = JSON.parse(card.dataset.peaks || '[]');
     window.bpLoad?.(preview, card.dataset.title, card.dataset.img, card, card.dataset.price, peaks);
-}
-
-function toggleCardLike(btn, id, e) {
-    if (e) e.stopPropagation();
-    const liked = JSON.parse(localStorage.getItem('likedBeats') || '{}');
-    liked[id] = !liked[id];
-    localStorage.setItem('likedBeats', JSON.stringify(liked));
-    btn.classList.toggle('liked', !!liked[id]);
-    btn.innerHTML = liked[id] ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
-}
-
-function initCardLikes() {
-    const liked = JSON.parse(localStorage.getItem('likedBeats') || '{}');
-    document.querySelectorAll('.card-like-btn').forEach(btn => {
-        const id = btn.closest('.beat-card')?.dataset.id;
-        if (id && liked[id]) {
-            btn.classList.add('liked');
-            btn.innerHTML = '<i class="fas fa-heart"></i>';
-        }
-    });
 }
 
 function filterByTag(tag, e) {

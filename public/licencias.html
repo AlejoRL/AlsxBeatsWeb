@@ -107,6 +107,139 @@
         .play-circle:hover { background: rgba(255,255,255,.25); transform: scale(1.06); }
         .play-circle.playing { opacity: 1; background: var(--accent); border-color: var(--accent); color: #000; }
 
+        /* Fila de acciones rápidas debajo de la portada */
+        .quick-actions-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 20px 0;
+        }
+
+        .qa-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #161b24;
+            border: 1px solid #1e2530;
+            color: var(--muted);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: .15s;
+            flex-shrink: 0;
+        }
+
+        .qa-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .qa-btn.active { color: #ef4444; border-color: #ef4444; }
+        .qa-btn#qa-repost-btn.active { color: var(--accent); border-color: var(--accent); }
+
+        /* Popover de playlists */
+        .qa-popover {
+            position: fixed;
+            background: #11151a;
+            border: 1px solid #1c232b;
+            border-radius: 14px;
+            min-width: 220px;
+            max-width: 260px;
+            box-shadow: 0 16px 40px rgba(0,0,0,.7);
+            padding: 8px;
+            z-index: 99999;
+            display: none;
+        }
+
+        .qa-popover-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            padding: 8px 10px 6px;
+        }
+
+        .qa-popover-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            width: 100%;
+            background: none;
+            border: none;
+            color: #fff;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 9px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .qa-popover-item:hover { background: rgba(255,255,255,.05); }
+        .qa-popover-item i.fa-check { color: var(--accent); display: none; }
+        .qa-popover-item.in-playlist i.fa-check { display: inline-block; }
+
+        .qa-popover-empty {
+            font-size: 12px;
+            color: var(--muted);
+            padding: 10px;
+        }
+
+        .qa-popover-new {
+            display: flex;
+            gap: 6px;
+            padding: 8px 6px 4px;
+            border-top: 1px solid #1c232b;
+            margin-top: 4px;
+        }
+
+        .qa-popover-new input {
+            flex: 1;
+            min-width: 0;
+            background: #0b0d14;
+            border: 1px solid #1c232b;
+            border-radius: 7px;
+            color: #fff;
+            font-size: 12px;
+            font-family: inherit;
+            padding: 7px 9px;
+            outline: none;
+        }
+
+        .qa-popover-new button {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 0 12px;
+            cursor: pointer;
+        }
+
+        .qa-toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: #11151a;
+            border: 1px solid #1c232b;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 999px;
+            box-shadow: 0 12px 30px rgba(0,0,0,.5);
+            z-index: 999999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s ease, transform .2s ease;
+        }
+
+        .qa-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
         /* Bloque de info debajo de la imagen */
         .sidebar-info {
             padding: 20px 20px 24px;
@@ -363,6 +496,22 @@ textarea:focus {
             <div class="cover-gradient"></div>
             <button class="play-circle" id="cover-play-btn">
                 <i class="fas fa-play"></i>
+            </button>
+        </div>
+
+        <!-- Acciones rápidas: playlist, me gusta, compartir, repost -->
+        <div class="quick-actions-row">
+            <button class="qa-btn" id="qa-playlist-btn" title="Añadir a playlist">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button class="qa-btn" id="qa-like-btn" title="Me gusta">
+                <i class="far fa-heart"></i>
+            </button>
+            <button class="qa-btn" id="qa-share-btn" title="Compartir enlace">
+                <i class="fas fa-share-nodes"></i>
+            </button>
+            <button class="qa-btn" id="qa-repost-btn" title="Repost">
+                <i class="fas fa-retweet"></i>
             </button>
         </div>
 
@@ -648,6 +797,8 @@ loadBeatData().then(beat => {
     if (tagsRow && beat.tags?.length) {
         tagsRow.innerHTML = beat.tags.map(t => `<span class="tag">${t}</span>`).join('');
     }
+
+    initQuickActions();
 });
 
 const wavesurfer = WaveSurfer.create({
@@ -1065,6 +1216,181 @@ async function loadMoreBeats() {
 }
 
 loadMoreBeats();
+</script>
+<script>
+// ── Acciones rápidas: playlist / me gusta / compartir / repost ──
+function qaEscHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function qaToast(msg) {
+    let el = document.getElementById('qa-toast');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'qa-toast';
+        el.className = 'qa-toast';
+        document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(el._hideTimer);
+    el._hideTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+function qaGoLogin() {
+    window.location.href = `login.html?next=${encodeURIComponent(location.pathname + location.search)}`;
+}
+
+const qaLikeBtn   = document.getElementById('qa-like-btn');
+const qaRepostBtn = document.getElementById('qa-repost-btn');
+
+async function initQuickActions() {
+    if (!currentBeatId) return;
+
+    try {
+        const res = await fetch('/api/auth/likes');
+        if (res.ok) {
+            const data = await res.json();
+            setQaLiked(data.likes.includes(currentBeatId));
+        }
+    } catch (e) { /* no logueado */ }
+
+    const reposted = JSON.parse(localStorage.getItem('repostedBeats') || '{}');
+    setQaReposted(!!reposted[currentBeatId]);
+}
+
+function setQaLiked(liked) {
+    qaLikeBtn.classList.toggle('active', liked);
+    qaLikeBtn.innerHTML = liked ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
+}
+
+function setQaReposted(active) {
+    qaRepostBtn.classList.toggle('active', active);
+}
+
+qaLikeBtn.addEventListener('click', async () => {
+    if (!currentBeatId) return;
+    const res = await fetch(`/api/auth/likes/${encodeURIComponent(currentBeatId)}`, { method: 'POST' }).catch(() => null);
+    if (!res) return;
+    if (res.status === 401) return qaGoLogin();
+    const data = await res.json();
+    setQaLiked(data.liked);
+    qaToast(data.liked ? 'Añadido a Me gusta' : 'Quitado de Me gusta');
+});
+
+qaRepostBtn.addEventListener('click', () => {
+    if (!currentBeatId) return;
+    const reposted = JSON.parse(localStorage.getItem('repostedBeats') || '{}');
+    reposted[currentBeatId] = !reposted[currentBeatId];
+    localStorage.setItem('repostedBeats', JSON.stringify(reposted));
+    setQaReposted(!!reposted[currentBeatId]);
+    qaToast(reposted[currentBeatId] ? 'Repost realizado' : 'Repost quitado');
+});
+
+document.getElementById('qa-share-btn').addEventListener('click', async () => {
+    const url   = location.href;
+    const title = document.getElementById('beat-title')?.textContent || 'Beat';
+
+    if (navigator.share) {
+        try { await navigator.share({ title, url }); } catch (e) { /* cancelado por el usuario */ }
+        return;
+    }
+    try {
+        await navigator.clipboard.writeText(url);
+        qaToast('Enlace copiado');
+    } catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        ta.style.position = 'fixed';
+        ta.style.opacity  = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        qaToast('Enlace copiado');
+    }
+});
+
+const qaPlaylistBtn = document.getElementById('qa-playlist-btn');
+let qaPopover = null;
+
+function qaClosePopover() {
+    if (qaPopover) { qaPopover.remove(); qaPopover = null; }
+}
+
+function renderQaPopover(playlists) {
+    qaPopover.innerHTML = `
+        <div class="qa-popover-title">Añadir a playlist</div>
+        ${playlists.length ? playlists.map(pl => `
+            <button class="qa-popover-item${pl.beats.includes(currentBeatId) ? ' in-playlist' : ''}" data-pl-id="${pl.id}">
+                <span>${qaEscHtml(pl.name)}</span>
+                <i class="fas fa-check"></i>
+            </button>
+        `).join('') : '<div class="qa-popover-empty">Aún no tienes playlists.</div>'}
+        <div class="qa-popover-new">
+            <input type="text" id="qa-new-pl-name" placeholder="Nueva playlist...">
+            <button id="qa-new-pl-btn"><i class="fas fa-plus"></i></button>
+        </div>
+    `;
+
+    qaPopover.querySelectorAll('.qa-popover-item').forEach(item => {
+        item.addEventListener('click', async () => {
+            const id  = item.dataset.plId;
+            const res = await fetch(`/api/auth/playlists/${id}/beats/${encodeURIComponent(currentBeatId)}`, { method: 'POST' }).catch(() => null);
+            if (!res || !res.ok) return;
+            const data  = await res.json();
+            const inPl  = data.playlist.beats.includes(currentBeatId);
+            item.classList.toggle('in-playlist', inPl);
+            qaToast(inPl ? 'Añadido a la playlist' : 'Quitado de la playlist');
+        });
+    });
+
+    qaPopover.querySelector('#qa-new-pl-btn').addEventListener('click', async () => {
+        const input = qaPopover.querySelector('#qa-new-pl-name');
+        const name  = input.value.trim();
+        if (!name) return;
+        const createRes = await fetch('/api/auth/playlists', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name })
+        }).catch(() => null);
+        if (!createRes || !createRes.ok) return;
+        const created = await createRes.json();
+        await fetch(`/api/auth/playlists/${created.playlist.id}/beats/${encodeURIComponent(currentBeatId)}`, { method: 'POST' });
+
+        const listRes  = await fetch('/api/auth/playlists');
+        const listData = await listRes.json();
+        renderQaPopover(listData.playlists || []);
+        qaToast('Playlist creada y beat añadido');
+    });
+}
+
+qaPlaylistBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    if (qaPopover) return qaClosePopover();
+    if (!currentBeatId) return;
+
+    const res = await fetch('/api/auth/playlists').catch(() => null);
+    if (!res) return;
+    if (res.status === 401) return qaGoLogin();
+    const data = await res.json();
+
+    qaPopover = document.createElement('div');
+    qaPopover.className = 'qa-popover';
+    document.body.appendChild(qaPopover);
+    renderQaPopover(data.playlists || []);
+
+    const rect = qaPlaylistBtn.getBoundingClientRect();
+    qaPopover.style.display = 'block';
+    qaPopover.style.top  = (rect.bottom + 8) + 'px';
+    qaPopover.style.left = rect.left + 'px';
+});
+
+document.addEventListener('click', (e) => {
+    if (qaPopover && !qaPopover.contains(e.target) && !qaPlaylistBtn.contains(e.target)) {
+        qaClosePopover();
+    }
+});
 </script>
 <script src="js/auth.js"></script>
 <script>window._bpNoAutoPlay = true;</script>
