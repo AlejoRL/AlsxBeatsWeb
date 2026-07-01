@@ -277,7 +277,7 @@
             <button class="nav-item" onclick="goPanel('recientes')"><i class="fas fa-clock-rotate-left"></i> Últimos escuchados</button>
             <button class="nav-item" onclick="goPanel('compras')"><i class="fas fa-download"></i> Mis compras</button>
             <button class="nav-item" onclick="goPanel('playlist')"><i class="fas fa-list-music"></i> Mis playlists</button>
-            <a class="nav-item" href="upload.html" style="text-decoration:none"><i class="fas fa-upload"></i> Subir beat</a>
+            <a class="nav-item" href="upload.html" id="upload-nav-item" style="text-decoration:none;display:none"><i class="fas fa-upload"></i> Subir beat</a>
             <button class="nav-item" onclick="goPanel('misbeats')"><i class="fas fa-record-vinyl"></i> Mis beats</button>
             <div class="nav-divider"></div>
             <button class="nav-item" onclick="goPanel('pedidos')"><i class="fas fa-receipt"></i> Pedidos</button>
@@ -447,6 +447,9 @@ function populateSidebar() {
     }
     document.getElementById('sb-name').textContent  = user.name;
     document.getElementById('sb-email').textContent = user.email;
+
+    const uploadNavItem = document.getElementById('upload-nav-item');
+    if (uploadNavItem) uploadNavItem.style.display = (user.plan === 'pro' || user.plan === 'elite') ? '' : 'none';
     document.getElementById('sb-since').textContent = 'Miembro desde ' + user.createdAt;
 }
 

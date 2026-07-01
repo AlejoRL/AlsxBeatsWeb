@@ -25,7 +25,16 @@ document.head.appendChild(ddStyle);
     const data = res ? await res.json() : { user: null };
     window.__authUser = data.user;
     renderAuthNav(data.user);
+    updateAddBeatAccess(data.user);
 })();
+
+// El botón de "Subir beat" solo se muestra a usuarios con plan de pago (Pro/Elite)
+function updateAddBeatAccess(user) {
+    const canAdd = !!(user && (user.plan === 'pro' || user.plan === 'elite'));
+    document.querySelectorAll('.nav-add-beat-btn, .mobile-add-beat-link').forEach(el => {
+        el.style.display = canAdd ? '' : 'none';
+    });
+}
 
 function renderAuthNav(user) {
     // Busca o crea el widget
