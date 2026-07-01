@@ -16,7 +16,9 @@ mongoose.connect(MONGO_URI)
     .then(async () => {
         console.log('✅ MongoDB conectado');
         try {
-            await require('./lib/seedBeats')();
+            const seedBeats = require('./lib/seedBeats');
+            await seedBeats();
+            await seedBeats.removeRetiredBeats();
         } catch (err) {
             console.error('❌ Seed de beats falló:', err.message);
         }

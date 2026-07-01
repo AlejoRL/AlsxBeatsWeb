@@ -60,6 +60,7 @@ header {
     border: 1.5px solid rgba(255,255,255,.09);
     border-radius: 14px;
     height: 46px;
+    flex: 1;
     min-width: 0;
     position: relative;
     overflow: visible;

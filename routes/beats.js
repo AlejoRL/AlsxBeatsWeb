@@ -5,7 +5,9 @@ const Beat    = require('../models/Beat');
 router.get('/', async (req, res) => {
     try {
         const { genre, search } = req.query;
-        const query = {};
+        // Un beat sin audio no se puede previsualizar ni comprar — nunca debe
+        // aparecer en el catálogo público.
+        const query = { preview: { $nin: [null, ''] } };
 
         if (genre && genre !== 'all') {
             query.genre = new RegExp(`^${genre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
